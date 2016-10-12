@@ -1,0 +1,69 @@
+I plan to incrementally build a library for a peer-to-peer (P2P), collaborative, text editor. It will allow the concurrent editing of a single string of text by 2 clients over a network.
+
+Initially, I will evaluate different possible platforms for my application to be built on e.g. web, desktop and Android
+Then, I will make sure I am familiar with a suitable language/framework for that platform.
+
+I will write first a library for editing a single string of text (an ordered list of characters) using operation-based CRDTs (Conflict-free Replicated Data Types). This will involve coming up with a data structure to represent the string, defining allowed operations for strings, and specifying how to perform those operations on a string.
+
+Next, I will use this to write code that can send and receive CRDTs over a network. Martin Kleppmann has written a server application that can connect clients like these and enable them to communicate (https://github.com/trvedata), so I can run my implementation with this.
+
+Then, I will create a service that simply allows discovery of other clients editing the same document as you, and make clients communicate P2P. 
+
+Extensions:
+a) Make a simple application that uses this library - this will have a very minimal UI, but will make it easier to 
+    use and test the library I have built
+b) Support >2 users & allow coming and going at any time
+c) Use the Tor network for all communication - this will involve sending data through a client-side proxy server,
+    and using/creating Tor hidden services.
+d) Make a GUI
+
+
+In order to evaluate my project, I plan to measure different communication metrics such as latency and bandwidth usage for my application, and potentially how these scale with numbers of users. I will compare these with the different versions of my application, as well as against the Google Realtime API, which provides concurrent editing functionality for collaborative applications. I will write unit tests for the CRDT library to test its correctness in specific cases. I will check that it is 'hard' to be able to edit a document if the owner doesn't want you to. If the Tor extension is implemented, I can also inspect packets coming into one client and observe if there is any data identifying the host from which it came.
+
+
+Timetable:
+17/10 - 31/10:
+    Evaluate available platforms/languages/frameworks
+    Research CRDTs, P2P archictures and applications, and Tor
+    Start writing CRDT library
+
+31/10 - 14/11
+    Setup dev environment
+    Finish CRDT library
+    Start writing client-server version
+GOAL : CRDT library
+
+14/11 - 28/11
+    Continue client-server version
+GOAL : Client-server version
+
+28/11 - 5/12 + vacation
+    Write peer-to-peer version
+    Start any extensions
+GOAL : P2P version
+
+23/1 - 3/2
+    Progress report
+
+6/2 - 20/2
+    Extensions
+
+20/2 - 6/3
+    Extensions
+GOAL : Code completed
+
+6/3 - 15/3 + vacation
+    Dissertation
+
+24/4 -8/5
+    Dissertation
+
+8/5 - 19/5
+    Dissertation
+
+
+Special resources:
+I will be using my own machine: 4x2GHz CPU, 8Gb RAM, 300Gb Disk, Ubuntu 16.04LTS
+I will keep everything in a git repository on GitHub.
+Weekly backups will also be done to an external hard drive.
+I will also need support for Tor on my machine.

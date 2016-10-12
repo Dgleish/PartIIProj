@@ -1,0 +1,51 @@
+Phase 1 Project Selection Status Report
+
+Name: Alex Dalgleish
+
+College: Robinson
+
+User Identifier: amd96
+
+Director of Studies: Alastair Beresford
+
+Please complete 1, 2 and 3 below.
+
+1. Please write 100 words on your current project ideas.
+
+    My core idea is to develop a collaborative, peer-to-peer, text editor.
+    This will use operation-based CRDTs to handle concurrent operations.
+    This may be an Android, desktop or web application, but will have minimal UI.
+
+    I plan to build it in stages:
+        1) Write a CRDT library
+        2) Create a client-server text editor using the library
+        3) Make it completely P2P
+        4) Extensions
+
+    Possible extensions are as follows:
+        a) Encrypt and use the Tor network for all communication
+        b) Support >2 users & allow coming and going at any time
+        c) Make a GUI
+        d) Create a generic library for collaborative P2P applications
+
+    This allows me to compare latency/bandwidth usage etc.
+    on the two different network architectures.
+
+2. Please list names of potential project supervisors.
+
+    Stephan Kollmann
+
+
+3. Is there any chance that your project will involve any
+computing resources other than the Computing Service's MCS and
+software that is already installed there, for example: your own
+machine, machines in College, special peripherals, imported
+software packages, special hardware, network access, substantial
+extra disc space on the MCS.
+
+If so indicate below what, and what it is needed for.
+
+    My own machine: 4x2GHz CPU, 8Gb RAM, 300Gb Disk, Ubuntu 16.04LTS
+    I will keep everything in a git repository on GitHub.
+    Weekly backups will also be done to an external hard drive.
+    I may also need support for Tor on my machine.
