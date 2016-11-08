@@ -1,0 +1,52 @@
+Android:
+Orbot for Tor controller
+
+Big setup overhead
+
+Good testing frameworks - JUnit
+
+In Java which v. familiar with
+
+Android studio IDE
+
+Simulating multiple clients difficult
+
+OOP
+
+Testing/Debugging difficult
+
+
+Python:
+
+Tor controller library (Stem)
+
+Lots of libs available
+
+Good testing frameworks - PyTest
+
+Python reasonably familiar
+
+PyCharm IDE
+
+Run with terminal command -> easy to run multiple instances
+
+OOP
+
+Debugging easy
+
+
+Web:
+
+Not really familiar with web architectures
+
+Various NodeJS packages for interacting with Tor 
+
+Good testing frameworks - Karma, Jasmine
+
+JS reasonably familiar
+
+WebStorm IDE
+
+Would need ES6 and bundling and browsersync etc.
+
+Debugging easy
