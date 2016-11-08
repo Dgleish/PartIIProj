@@ -1,3 +1,5 @@
+from base_ordered_list import BaseOrderedList
+
 class Node(object):
     def __init__(self, contents, special=False):
         self.contents = None
@@ -12,11 +14,15 @@ class Node(object):
         self.deleted = False
 
 
-class LLOrderedList(object):
+class LLOrderedList(BaseOrderedList):
     def __init__(self):
         self.head = Node('START', True)
         self.head.next = Node('END', True)
         self.nodes = {}
+
+    def get_head(self):
+        return self.head
+
 
     def _lookup(self, vertex):
         # special condition for representation of start node
@@ -32,6 +38,7 @@ class LLOrderedList(object):
         return next_node.contents
 
     def insert(self, vertex, new_vertex):
+
         left_node = self._lookup(vertex)
         # create node with that data
         new_node = Node(new_vertex)
@@ -55,5 +62,14 @@ class LLOrderedList(object):
         while curr is not None:
             if (not curr.deleted) and curr.contents is not None:
                 list_repr.append(curr.contents[0])
+            curr = curr.next
+        return ''.join(list_repr)
+
+    def get_detailed_repr(self):
+        list_repr = []
+        curr = self.head.next
+        while curr is not None:
+            if (not curr.deleted) and curr.contents is not None:
+                list_repr.append(str(curr.contents))
             curr = curr.next
         return ''.join(list_repr)

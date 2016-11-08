@@ -11,3 +11,6 @@ class BaseOrderedList(object):
 
     def get_repr(self):
         pass
+
+    def get_detailed_repr(self):
+        pass

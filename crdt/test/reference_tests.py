@@ -1,4 +1,3 @@
-from list_crdt import OrderedList
 import pytest
 
 @pytest.mark.parametrize("a,b", [
@@ -13,8 +12,7 @@ def test_eval(a,b):
     params=["a", "b"]
 )
 def o_list(request):
-    from ordered_list import OrderedList
-    return OrderedList(request.param)
+    pass
 
 def test_merge(o_list):
     assert 'a' == o_list.merge(1) or 'b' == o_list.merge(1)
