@@ -1,8 +1,8 @@
 import pytest
 
+from crdt_exceptions import VertexNotFound
 from list_crdt import ListCRDT
 from ll_ordered_list import LLOrderedList
-
 
 @pytest.fixture(
     params=['A']
@@ -34,10 +34,11 @@ def test_remote_insert(list_crdt):
 
     list_crdt.add_right_local('c')
 
-    list_crdt.add_right_remote(None, ('b', '1:C'))
+    list_crdt.add_right_remote(None, ('b', '2:C'))
+    list_crdt.delete(('b', '2:C'))
 
     other_list_crdt.add_right_remote(('a', '1:A'), ('c', '2:A'))
-
+    other_list_crdt.delete(('b', '2:C'))
     assert list_crdt.pretty_print() == other_list_crdt.pretty_print()
 
 
@@ -48,3 +49,9 @@ def test_add_local(list_crdt):
     list_crdt.add_right_local('c')
     res = list_crdt.pretty_print()
     assert res == 'abc'
+
+
+def test_vertex_not_found(list_crdt):
+    list_crdt.add_right_local('a')
+    with pytest.raises(VertexNotFound):
+        list_crdt.add_right_remote(('b', '2:A'), ('b', '2:A'))

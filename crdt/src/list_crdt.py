@@ -1,4 +1,3 @@
-
 # this relies on reliable inorder message delivery
 # -> clock values are increasing
 
@@ -18,7 +17,7 @@ class ListCRDT(object):
 
     def update_clock(self, t):
         old = int(self.clock.split(':')[0])
-        new_clk = max(old, int(t.split(':')[0]))
+        new_clk = max(old, int(t.split(':')[0]) + 1)
         self.clock = '{}:{}'.format(new_clk,self.uid)
 
     def increment_clock(self):
@@ -29,26 +28,20 @@ class ListCRDT(object):
 
     def add_right_local(self, a):
         t = self.clock
-        try:
-            op_performed = ('ins', self.cursor, (a, t))
-            self.add_right(self.cursor, (a, t))
-            self.increment_clock()
-            self.cursor = (a, t)
-            return op_performed
-        except KeyError:
-            pass
+        op_performed = ('ins', self.cursor, (a, t))
+        self.add_right(self.cursor, (a, t))
+        self.increment_clock()
+        self.cursor = (a, t)
+        return op_performed
 
     def add_right_remote(self, vertex, (a,t)):
-        try:
-            self.add_right(vertex, (a, t))
-            self.update_clock(t)
-        except KeyError:
-            pass
+        self.add_right(vertex, (a, t))
+        self.update_clock(t)
 
     def add_right(self, vertex, (a, t)):
         l = vertex
         r = self.olist.successor(vertex)
-        while r is not None and t < r[1]:
+        while r != l and t < r[1]:
             l, r = r, self.olist.successor(r)
         return self.olist.insert(l, (a, t))
 
@@ -62,11 +55,12 @@ class ListCRDT(object):
         return self.olist.get_repr()
 
     def detail_print(self):
-        return self.olist.get_detailed_repr()
+        return self.olist.get_detailed_repr() + ', cursor:' + str(self.cursor)
 
     def shift_cursor_right(self):
-        pass
+        # need a way to stop at end of the list
+        self.cursor = self.olist.successor(self.cursor)
 
     def shift_cursor_left(self):
-        pass
-
+        # uh oh going to need predecessor
+        self.cursor = self.olist.predecessor(self.cursor)
