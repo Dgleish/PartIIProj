@@ -1,15 +1,14 @@
 class BaseOrderedList(object):
-
-    def successor(self, vertex):
+    def successor(self, clock):
         pass
 
-    def predecessor(self, vertex):
+    def predecessor(self, clock):
         pass
 
-    def insert(self, vertex, new_vertex):
+    def insert(self, clock, new_vertex):
         pass
 
-    def delete(self, vertex):
+    def delete(self, clock):
         pass
 
     def get_repr(self):

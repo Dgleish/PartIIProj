@@ -1,0 +1,2 @@
+class CRDTNetwork(object):
+    pass
