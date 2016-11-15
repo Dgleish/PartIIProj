@@ -1,1 +1,3 @@
-{}
+{
+  "test_crdt_app.py::test_crdt_app": true
+}

@@ -92,6 +92,7 @@ class ListCRDT(object):
             return CRDTOpDeleteRemote(t)
         except VertexNotFound as e:
             logging.error('Failed to delete vertex with clock {}, {}'.format(t, e))
+            return None
 
     def pretty_print(self):
         return self.olist.get_repr()

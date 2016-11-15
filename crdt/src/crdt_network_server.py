@@ -23,6 +23,7 @@ class CRDTServer(object):
 
     def listen(self):
         self.sock.listen(5)
+        print 'waiting for connection'
         while True:
             client, addr = self.sock.accept()
             logger.info('client connected from {}'.format(addr))
@@ -39,15 +40,15 @@ class CRDTServer(object):
 
     @staticmethod
     def send_op(client, op):
+        logging.debug('sending {} to {}'.format(pickle.loads(op), client.getpeername()))
         # tell the client how long it is so we can delimit the stream
         header = struct.pack('!I', len(op))
-        client.send(header + op)
+        client.sendall(header + op)
 
     def handle_client(self, client, addr):
         self.stored_ops_lock.acquire()
         # TODO: make threadsafe iterable thing for stored_ops
         for o in self.stored_ops:
-            logger.debug('intial send op {} to {}'.format(o, addr))
             self.send_op(client, o)
         self.stored_ops_lock.release()
         while True:
@@ -67,11 +68,10 @@ class CRDTServer(object):
                 for ad, cl in self.clients.iteritems():
                     # send to all other clients
                     if ad != addr:
-                        logger.debug('sending op to {}'.format(ad))
                         self.send_op(cl, op)
                 self.clients_lock.release()
 
-            except socket.error:
+            except socket.error as e:
                 client.close()
                 # remove client from clients dict
                 try:

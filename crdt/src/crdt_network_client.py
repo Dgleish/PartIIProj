@@ -8,6 +8,7 @@ from logging.config import fileConfig
 from crdt_network import CRDTNetwork
 
 fileConfig('../logging_config.ini')
+import traceback
 
 
 class CRDTNetworkClient(CRDTNetwork):
@@ -18,27 +19,39 @@ class CRDTNetworkClient(CRDTNetwork):
         self.op_q = op_queue
         self.op_q_sem = op_queue_sem
         self.uid = uid
+        self.connected_sem = threading.Semaphore(0)
+        self.is_connected = False
 
     def connect(self):
         t = threading.Thread(target=self.listen_for_ops)
         t.daemon = True
         t.start()
 
-    @staticmethod
-    def recvall(sock, count):
+    def recvall(self, sock, count):
         buf = ''
-        while count:
-            newbuf = sock.recv(count)
-            if not newbuf:
-                return None
-            buf += newbuf
-            count -= len(newbuf)
-        return buf
+        try:
+            while count:
+                newbuf = sock.recv(count)
+                if not newbuf:
+                    return None
+                buf += newbuf
+                count -= len(newbuf)
+            return buf
+        except socket.error as e:
+            logging.error('{} had socket error {}'.format(self.uid, e))
 
     def listen_for_ops(self):
-        self.sock.connect((self.host, self.port))
+        try:
+            self.sock.connect((self.host, self.port))
+            self.connected_sem.release()
+            self.is_connected = True
+        except socket.error as e:
+            logging.error('Socket connection error {}'.format(e))
+            traceback.print_exc()
         while True:
             lengthbuf = self.sock.recv(4)
+            if lengthbuf is None:
+                return
             length, = struct.unpack('!I', lengthbuf)
             op = self.recvall(self.sock, length)
             # logging.debug('{} UNPARSED got op'.format(self.uid))
@@ -56,7 +69,11 @@ class CRDTNetworkClient(CRDTNetwork):
 
     def send_op(self, op):
         # logging.debug('{} sending operation'.format(self.uid))
-        self.sock.send(pickle.dumps(op))
+        if not self.is_connected:
+            self.connected_sem.acquire()
+        self.sock.sendall(pickle.dumps(op))
+
 
     def close(self):
+        logging.debug('{} closing socket'.format(self.uid))
         self.sock.close()
