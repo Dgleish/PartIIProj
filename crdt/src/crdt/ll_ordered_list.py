@@ -81,7 +81,7 @@ class LLOrderedList(BaseOrderedList):
     def delete(self, clock):
         node = self._lookup(clock)
         node.deleted = True
-        return node.contents
+        return node.clock
 
     def get_repr(self):
         list_repr = []

@@ -82,16 +82,18 @@ class ListCRDT(object):
             self.olist.delete(clock)
             return None
         except VertexNotFound as e:
-            logging.error('Failed to delete {}, {}'.format(clock, e))
+            logging.warn('Failed to delete {}, {}'.format(clock, e))
+            return None
 
     # noinspection PyUnusedLocal
     def delete_local(self, op):
         t = self.cursor
         try:
-            a, _ = self.olist.delete(self.olist.predecessor(t))
+            self.olist.delete(t)
+            self.shift_cursor_left()
             return CRDTOpDeleteRemote(t)
         except VertexNotFound as e:
-            logging.error('Failed to delete vertex with clock {}, {}'.format(t, e))
+            logging.warn('Failed to delete vertex with clock {}, {}'.format(t, e))
             return None
 
     def pretty_print(self):
@@ -105,5 +107,4 @@ class ListCRDT(object):
         self.cursor = self.olist.successor(self.cursor)
 
     def shift_cursor_left(self):
-        # uh oh going to need predecessor
         self.cursor = self.olist.predecessor(self.cursor)

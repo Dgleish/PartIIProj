@@ -1,4 +1,3 @@
-import logging
 import socket
 import threading
 from Queue import Queue
@@ -9,11 +8,9 @@ from time import sleep
 from crdt.crdt_ops import CRDTOpAddRightLocal
 from crdt.list_crdt import ListCRDT
 from crdt.ll_ordered_list import LLOrderedList
-from crdt_local_client import CRDTLocalClient
 from crdt_network_client import CRDTNetworkClient
 
 fileConfig('../logging_config.ini')
-logger = logging.getLogger('app')
 
 
 class CRDTApp(object):
@@ -42,9 +39,9 @@ class CRDTApp(object):
 
         op_queue_consumer.start()
 
-        self.local_client = CRDTLocalClient(
-            self.op_queue, self.op_queue_sem
-        )
+        # self.local_client = CRDTLocalClient(
+        #     self.op_queue, self.op_queue_sem
+        # )
 
 
         self.simulate_user_input(ops_to_do)
@@ -56,17 +53,17 @@ class CRDTApp(object):
             self.op_queue_sem.release()
 
     def consume_op_queue(self):
-        # logger.info('{} started op queue consumer'.format(self.uid))
+        # logging.info('{} started op queue consumer'.format(self.uid))
         while True:
             self.op_queue_sem.acquire()
             op = self.op_queue.get()
-            logger.info('{} got operation {}'.format(self.uid, op))
+            # logging.info('{} got operation {}'.format(self.uid, op))
             # TODO: handle exceptions better here
             op_to_send = self.crdt.perform_op(op)
-            # logger.debug('{}\'s state is now {}'.format(self.uid, self.crdt.pretty_print()))
+            # logging.debug('{}\'s state is now {}'.format(self.uid, self.crdt.detail_print()))
             if op_to_send is not None:
+                # logging.info('sending {}'.format(op_to_send))
                 self.network_client.send_op(op_to_send)
-                # logging.debug('{}\'s state is now {}'.format(self.uid, self.crdt.pretty_print()))
         self.network_client.close()
         return
 

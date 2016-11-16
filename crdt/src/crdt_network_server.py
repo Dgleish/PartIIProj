@@ -39,11 +39,24 @@ class CRDTServer(object):
             t.start()
 
     @staticmethod
-    def send_op(client, op):
-        logging.debug('sending {} to {}'.format(pickle.loads(op), client.getpeername()))
+    def send_op(sock, op):
+        logging.debug('sending {} to {}'.format(pickle.loads(op), sock.getpeername()))
         # tell the client how long it is so we can delimit the stream
         header = struct.pack('!I', len(op))
-        client.sendall(header + op)
+        sock.sendall(header + op)
+
+    def recvall(self, sock, count):
+        buf = ''
+        try:
+            while count:
+                newbuf = sock.recv(count)
+                if not newbuf:
+                    return None
+                buf += newbuf
+                count -= len(newbuf)
+            return buf
+        except socket.error as e:
+            logging.error('server had socket error {}'.format(e))
 
     def handle_client(self, client, addr):
         self.stored_ops_lock.acquire()
@@ -53,10 +66,11 @@ class CRDTServer(object):
         self.stored_ops_lock.release()
         while True:
             try:
-                op = client.recv(1024)
-                if not op:
-                    logger.debug('op was null, closing connection')
+                lengthbuf = client.recv(4)
+                if not lengthbuf:
                     raise socket.error
+                length, = struct.unpack('!I', lengthbuf)
+                op = self.recvall(client, length)
                 logger.debug('received operation {}'.format(pickle.loads(op)))
 
                 self.stored_ops_lock.acquire()

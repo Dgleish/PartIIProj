@@ -67,11 +67,13 @@ class CRDTNetworkClient(CRDTNetwork):
                 logging.error('weird index error unpickling {} {}'.format(op, e.message))
                 return
 
-    def send_op(self, op):
+    def send_op(self, unpickled_op):
         # logging.debug('{} sending operation'.format(self.uid))
         if not self.is_connected:
             self.connected_sem.acquire()
-        self.sock.sendall(pickle.dumps(op))
+        pickled_op = pickle.dumps(unpickled_op)
+        header = struct.pack('!I', len(pickled_op))
+        self.sock.sendall(header + pickled_op)
 
 
     def close(self):
