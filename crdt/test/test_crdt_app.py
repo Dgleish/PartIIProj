@@ -5,7 +5,7 @@ from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
 from crdt_app import CRDTApp
 from crdt_network_server import CRDTServer
 
-num_apps = 20
+num_apps = 10
 port = 12346
 
 
@@ -14,7 +14,7 @@ def test_crdt_app():
         [CRDTOpAddRightLocal(chr(ord('a') + i)), CRDTOpDeleteLocal(), CRDTOpAddRightLocal(chr(ord('A') + i))]
         for i in xrange(num_apps)
         ]
-    clients = [CRDTApp(chr(ord('A') + i), socket.gethostname(), port, ops[i], num_apps) for i in xrange(num_apps)]
+    clients = [CRDTApp(chr(ord('A') + i), socket.gethostname(), port, ops[i]) for i in xrange(num_apps)]
     sleep(10)
     assert len(set([cl.crdt.pretty_print() for cl in clients])) == 1
 

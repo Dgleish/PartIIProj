@@ -3,8 +3,10 @@
 import logging
 from logging.config import fileConfig
 
+from crdt_clock import CRDTClock
 from crdt_exceptions import MalformedOp, UnknownOp, VertexNotFound
-from crdt_ops import CRDTOp, CRDTOpAddRightLocal, CRDTOpAddRightRemote, CRDTOpDeleteLocal, CRDTOpDeleteRemote
+from crdt_ops import (CRDTOp, RemoteCRDTOp, CRDTOpAddRightLocal,
+                      CRDTOpAddRightRemote, CRDTOpDeleteLocal, CRDTOpDeleteRemote)
 
 fileConfig('../logging_config.ini')
 
@@ -16,9 +18,15 @@ class ListCRDT(object):
     def __init__(self, uid, olist):
         self.olist = olist
         # clock will be local clock , UID pair
-        self.clock = '1:' + uid
+        self.clock = CRDTClock(uid)
         self.uid = uid
         self.cursor = None
+
+    def can_perform_op(self, op):
+        if isinstance(op, RemoteCRDTOp):
+            return self.clock.can_do(op.clock)
+        else:
+            return True
 
     def perform_op(self, op):
         if isinstance(op, CRDTOpAddRightLocal):
@@ -39,32 +47,20 @@ class ListCRDT(object):
         else:
             raise MalformedOp
 
-    def update_clock(self, t):
-        old = int(self.clock.split(':')[0])
-        new_clk = max(old, int(t.split(':')[0]) + 1)
-        self.clock = '{}:{}'.format(new_clk, self.uid)
-
-    def increment_clock(self):
-        self.clock = '{}:{}'.format(
-            str(int(self.clock.split(':')[0]) + 1),
-            self.uid
-        )
-
     def add_right_local(self, op):
         a = op.atom
-        t = self.clock
-        left_clock, vertex_added = self._add_right(self.cursor, (a, t))
-        self.increment_clock()
-        self.cursor = t
+        cl = self.clock
+        left_clock, vertex_added = self._add_right(self.cursor, (a, cl))
+        self.clock.increment()
+        self.cursor = cl
         return CRDTOpAddRightRemote(left_clock, vertex_added)
 
     def add_right_remote(self, op):
-        left_clock = op.left_clock
+        left_clock = op.clock
         vertex_to_add = op.vertex_to_add
-        _, t = vertex_to_add
+        _, cl = vertex_to_add
         self._add_right(left_clock, vertex_to_add)
-        self.update_clock(t)
-        # TODO: work out what to return to indicate not to broadcast it
+        self.clock.update(cl)
         return None
 
     def _add_right(self, left_clock, (a, t)):
@@ -88,13 +84,9 @@ class ListCRDT(object):
     # noinspection PyUnusedLocal
     def delete_local(self, op):
         t = self.cursor
-        try:
-            self.olist.delete(t)
-            self.shift_cursor_left()
-            return CRDTOpDeleteRemote(t)
-        except VertexNotFound as e:
-            logging.warn('Failed to delete vertex with clock {}, {}'.format(t, e))
-            return None
+        self.olist.delete(t)
+        self.shift_cursor_left()
+        return CRDTOpDeleteRemote(t)
 
     def pretty_print(self):
         return self.olist.get_repr()

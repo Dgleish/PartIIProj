@@ -58,7 +58,7 @@ class CRDTNetworkClient(CRDTNetwork):
             try:
                 unpickled_op = pickle.loads(op)
                 # logging.debug('{} got op {}'.format(self.uid, unpickled_op))
-                self.op_q.put(unpickled_op)
+                self.op_q.appendleft(unpickled_op)
                 self.op_q_sem.release()
             except pickle.UnpicklingError as e:
                 logging.error('Failed to unpickle {} {}'.format(op, e.message))

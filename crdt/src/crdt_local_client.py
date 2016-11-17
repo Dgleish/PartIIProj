@@ -15,7 +15,7 @@ class CRDTLocalClient(object):
         while True:
             char = raw_input()
             if char == '\x08':
-                self.op_q.put(CRDTOpDeleteLocal())
+                self.op_q.appendleft(CRDTOpDeleteLocal())
             else:
-                self.op_q.put(CRDTOpAddRightLocal(char))
+                self.op_q.appendleft(CRDTOpAddRightLocal(char))
             self.op_q_sem.release()
