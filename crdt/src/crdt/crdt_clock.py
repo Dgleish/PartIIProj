@@ -25,3 +25,6 @@ class CRDTClock(object):
             return False
         assert isinstance(other_clock, CRDTClock)
         return cmp(self.value, other_clock.value)
+
+    def __hash__(self):
+        return hash(self.value)

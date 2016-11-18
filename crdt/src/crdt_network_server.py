@@ -13,23 +13,30 @@ class CRDTServer(object):
     def __init__(self, host, port):
         self.host = host
         self.port = port
+
         self.sock = socket.socket()
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.sock.bind((host, port))
+
+        # hash table of connected clients
         self.clients = {}
         self.clients_lock = threading.Lock()
+
+        # Operations performed by clients
         self.stored_ops = []
         self.stored_ops_lock = threading.Lock()
 
     def listen(self):
+
         self.sock.listen(5)
-        print 'waiting for connection'
+
         while True:
+            # block until client connects
             client, addr = self.sock.accept()
             logger.info('client connected from {}'.format(addr))
 
-            self.clients_lock.acquire()
             # add this client to the connected clients
+            self.clients_lock.acquire()
             self.clients[addr] = client
             self.clients_lock.release()
 
@@ -40,52 +47,56 @@ class CRDTServer(object):
 
     @staticmethod
     def send_op(sock, op):
-        logging.debug('sending {} to {}'.format(pickle.loads(op), sock.getpeername()))
         # tell the client how long it is so we can delimit the stream
         header = struct.pack('!I', len(op))
         sock.sendall(header + op)
 
-    def recvall(self, sock, count):
+    @staticmethod
+    def recvall(sock, length):
+        # repeatedly call receive until we get all the data
         buf = ''
         try:
-            while count:
-                newbuf = sock.recv(count)
+            while length:
+                newbuf = sock.recv(length)
                 if not newbuf:
                     return None
                 buf += newbuf
-                count -= len(newbuf)
+                length -= len(newbuf)
             return buf
         except socket.error as e:
             logging.error('server had socket error {}'.format(e))
 
     def handle_client(self, client, addr):
+        # send all operations up to this point to the new client
         self.stored_ops_lock.acquire()
-        # TODO: make threadsafe iterable thing for stored_ops
         for o in self.stored_ops:
             self.send_op(client, o)
         self.stored_ops_lock.release()
+
         while True:
             try:
+                # get length of next message which will be an int
                 lengthbuf = client.recv(4)
                 if not lengthbuf:
                     raise socket.error
                 length, = struct.unpack('!I', lengthbuf)
+
                 op = self.recvall(client, length)
                 logger.debug('received operation {}'.format(pickle.loads(op)))
 
+                # add this to the list of operations performed
                 self.stored_ops_lock.acquire()
                 self.stored_ops.append(op)
                 self.stored_ops_lock.release()
 
+                # for all other connected clients, send this operation
                 self.clients_lock.acquire()
-                # TODO: make threadsafe iterable thing for other_clients
                 for ad, cl in self.clients.iteritems():
-                    # send to all other clients
                     if ad != addr:
                         self.send_op(cl, op)
                 self.clients_lock.release()
 
-            except socket.error as e:
+            except socket.error:
                 client.close()
                 # remove client from clients dict
                 try:

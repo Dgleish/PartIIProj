@@ -10,11 +10,11 @@ from crdt.ll_ordered_list import LLOrderedList
     params=['A']
 )
 def list_crdt(request):
-    return ListCRDT(request.param,LLOrderedList())
+    return ListCRDT(request.param, LLOrderedList())
 
 
 def test_mixture(list_crdt):
-    assert isinstance(list_crdt,ListCRDT)
+    assert isinstance(list_crdt, ListCRDT)
     list_crdt._add_right(None, ('a', '1:A'))
     list_crdt._add_right(None, ('b', '2:A'))
     list_crdt._add_right(None, ('c', '3:A'))

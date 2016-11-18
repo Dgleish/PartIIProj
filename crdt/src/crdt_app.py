@@ -46,7 +46,6 @@ class CRDTApp(object):
         self.network_client.connect()
         op_queue_consumer.start()
 
-
         self.simulate_user_input(ops_to_do)
 
     def simulate_user_input(self, ops_to_do):
@@ -82,7 +81,7 @@ class CRDTApp(object):
             # add them to the front of the queue
             if op.clock is not None:
                 op.clock.increment()
-                if self.held_back_ops.has_key(op.clock):
+                if op.clock in self.held_back_ops.keys():
                     for new_op in self.held_back_ops[op.clock].itervalues():
                         self.op_queue.append(new_op)
                         self.op_queue_sem.release()

@@ -6,7 +6,6 @@ class RemoteCRDTOp(CRDTOp):
     def __init__(self):
         self.clock = None
 
-# have to convert add right local to remote etc.
 
 class CRDTOpAddRightLocal(CRDTOp):
     def __init__(self, atom):

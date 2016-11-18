@@ -11,24 +11,23 @@ from crdt_ops import (CRDTOp, RemoteCRDTOp, CRDTOpAddRightLocal,
 fileConfig('../logging_config.ini')
 
 
-# logger = logging.getLogger(__name__)
-
-
 class ListCRDT(object):
     def __init__(self, uid, olist):
         self.olist = olist
-        # clock will be local clock , UID pair
         self.clock = CRDTClock(uid)
         self.uid = uid
         self.cursor = None
 
     def can_perform_op(self, op):
+        # check if the incoming operation's clock is no more than one ahead of ours
+        # otherwise its out of order and gets held back
         if isinstance(op, RemoteCRDTOp):
             return self.clock.can_do(op.clock)
         else:
             return True
 
     def perform_op(self, op):
+        # call the relevant method based on what operation it is
         if isinstance(op, CRDTOpAddRightLocal):
             return self.add_right_local(op)
 
@@ -50,6 +49,7 @@ class ListCRDT(object):
     def add_right_local(self, op):
         a = op.atom
         cl = self.clock
+        # insert the specified element to the right of the current cursor with the current clock value
         left_clock, vertex_added = self._add_right(self.cursor, (a, cl))
         self.clock.increment()
         self.cursor = cl
@@ -66,8 +66,10 @@ class ListCRDT(object):
     def _add_right(self, left_clock, (a, t)):
         l_cl = left_clock
         r_cl = self.olist.successor(left_clock)
+        # determine where to insert after specified element (gives total ordering)
         while r_cl != l_cl and t < r_cl:
             l_cl, r_cl = r_cl, self.olist.successor(r_cl)
+
         if r_cl != t:
             self.olist.insert(l_cl, (a, t))
         return left_clock, (a, t)
@@ -76,10 +78,9 @@ class ListCRDT(object):
         clock = op.clock
         try:
             self.olist.delete(clock)
-            return None
         except VertexNotFound as e:
             logging.warn('Failed to delete {}, {}'.format(clock, e))
-            return None
+        return None
 
     # noinspection PyUnusedLocal
     def delete_local(self, op):
