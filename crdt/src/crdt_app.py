@@ -81,7 +81,7 @@ class CRDTApp(object):
             # add them to the front of the queue
             if op.clock is not None:
                 op.clock.increment()
-                if op.clock in self.held_back_ops.keys():
+                if op.clock in self.held_back_ops:
                     for new_op in self.held_back_ops[op.clock].itervalues():
                         self.op_queue.append(new_op)
                         self.op_queue_sem.release()
