@@ -11,7 +11,8 @@ from crdt.crdt_ops import RemoteCRDTOp
 from crdt.list_crdt import ListCRDT
 from crdt.ll_ordered_list import LLOrderedList
 from crdt.vector_clock import VectorClock
-from crdt_p2p_client import CRDTP2PClient
+from network.crdt_local_client import CRDTLocalClient
+from network.crdt_p2p_client import CRDTP2PClient
 from operation_queue import OperationQueue
 from operation_store import OperationStore
 
@@ -44,6 +45,8 @@ class CRDTApp(object):
         # peers to connect to
         self.known_peers = known_peers
 
+        self.local_client = CRDTLocalClient(self.op_queue)
+
         self.simulate_user_input(ops_to_do)
 
         op_queue_consumer = threading.Thread(
@@ -52,9 +55,11 @@ class CRDTApp(object):
         op_queue_consumer.daemon = True
         op_queue_consumer.start()
 
-        sleep(5)
+        network_thread = threading.Thread(target=self.connect, args=(host, port))
+        network_thread.daemon = True
+        network_thread.start()
 
-        self.connect(host, port)
+        self.local_client.display()
 
     def connect(self, host, port):
         # be nice to pass this in as argument then have CRDTNetwork as an interface to
@@ -63,8 +68,6 @@ class CRDTApp(object):
             host, port, self.op_queue, self.puid, self.seen_ops_vc,
             self.op_store, self.known_peers, self.connected_peers
         )
-        # self.local_client = CRDTLocalClient(self.op_queue)
-
         # go go go
         self.network_client.connect(self.offline_ops)
         self.offline_ops = []
@@ -110,7 +113,7 @@ class CRDTApp(object):
 
             self.op_store.add_op(op_to_store)
             logging.debug('{} stored op {} giving {}'.format(self.puid, op_to_store, self.crdt.detail_print()))
-
+            self.local_client.update(self.crdt.pretty_print(), self.crdt.pretty_cursor())
             # if we've got something to send to others, send to others
             if should_send:
                 if self.connected_peers.is_empty():
@@ -119,6 +122,8 @@ class CRDTApp(object):
                     self.network_client.send_op(op_to_store)
             else:
                 # increment corresponding component of vector clock
+                # TODO: move this earlier so that we don't ask everyone for the same ops
+                # TODO: but still need to be able to check if we are about to do the next operation in sequence
                 logging.debug('about to update vector clock {}'.format(self.seen_ops_vc))
                 self.seen_ops_vc.update(op_to_store)
 

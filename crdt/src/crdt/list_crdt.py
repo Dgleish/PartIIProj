@@ -113,6 +113,12 @@ class ListCRDT(object):
     def pretty_print(self):
         return self.olist.get_repr()
 
+    def pretty_cursor(self):
+        if self.cursor is None:
+            return 0
+        else:
+            return self.cursor.timestamp
+
     def detail_print(self):
         return self.olist.get_detailed_repr() + ', cursor:' + str(self.cursor)
 
