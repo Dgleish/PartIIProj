@@ -108,7 +108,7 @@ class CRDTP2PClient(CRDTClient):
                 try:
                     unpickled_op = pickle.loads(op)
                     logging.debug('{} got op {}'.format(self.puid, unpickled_op))
-
+                    self.seen_ops_vc.update(unpickled_op)
                     # add to the operation queue and signal something has been added
                     self.op_q.appendleft(unpickled_op)
 

@@ -26,6 +26,8 @@ class CRDTApp(object):
         crdt_clock = self.crdt.get_clock()
         self.seen_ops_vc = VectorClock(crdt_clock)
 
+        self.done_ops_vc = VectorClock(crdt_clock)
+
         # queue of operations consumed continuously in another thread
         self.op_queue = OperationQueue()
 
@@ -82,7 +84,7 @@ class CRDTApp(object):
         # Otherwise its out of order and gets held back
         if isinstance(op, RemoteCRDTOp):
             # return self.clock.can_do(op.clock)
-            return self.seen_ops_vc.is_next_op(op)
+            return self.done_ops_vc.is_next_op(op)
         else:
             return True
 
@@ -121,6 +123,7 @@ class CRDTApp(object):
                 # increment corresponding component of vector clock
                 logging.debug('about to update vector clock {}'.format(self.seen_ops_vc))
                 self.seen_ops_vc.update(op_to_store)
+                self.done_ops_vc.update(op_to_store)
 
             logging.debug('vector clock is now {}'.format(self.seen_ops_vc))
 
