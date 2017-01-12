@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="81b371f9-6977-4ed6-a966-2f167b395852" name="Default" comment="">
+    <list default="true" id="81b371f9-6977-4ed6-a966-2f167b395852" name="Default" comment="Basic P2P implementation">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/connected_peers.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/crdt/vector_clock.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/crdt_p2p_client.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/operation_queue.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/operation_store.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/test_operation_store.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test/test_p2p.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/crdt_local_client.py" afterPath="$PROJECT_DIR$/src/crdt_ui.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/crdt_network.py" afterPath="$PROJECT_DIR$/src/crdt_client.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/crdt_clock.py" afterPath="$PROJECT_DIR$/src/crdt/crdt_clock.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/crdt_ops.py" afterPath="$PROJECT_DIR$/src/crdt/crdt_ops.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/list_crdt.py" afterPath="$PROJECT_DIR$/src/crdt/list_crdt.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/ll_ordered_list.py" afterPath="$PROJECT_DIR$/src/crdt/ll_ordered_list.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt_app.py" afterPath="$PROJECT_DIR$/src/crdt_app.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt_network_client.py" afterPath="$PROJECT_DIR$/src/crdt_network_client.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_crdt_app.py" afterPath="$PROJECT_DIR$/test/test_crdt_app.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_list_crdt.py" afterPath="$PROJECT_DIR$/test/test_list_crdt.py" />
     </list>
     <ignored path="crdt.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -16,19 +34,25 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_ordered_list_py.coverage" NAME="py.test in test_ordered_list.py Coverage Results" MODIFIED="1477432069624" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_crdt_app.coverage" NAME="py.test in test_crdt_app Coverage Results" MODIFIED="1479242070029" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/crdt$py_test_in_test.coverage" NAME="py.test in test Coverage Results" MODIFIED="1476626280929" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/crdt$crdt_client.coverage" NAME="crdt_client Coverage Results" MODIFIED="1479076815788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_answer.coverage" NAME="py.test in test_answer Coverage Results" MODIFIED="1476624824504" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/crdt$py_test_in_test_orderedList_py.coverage" NAME="py.test in test_orderedList.py Coverage Results" MODIFIED="1476624583361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/crdt$py_test.coverage" NAME="py.test Coverage Results" MODIFIED="1479221827978" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/crdt$crdt_app.coverage" NAME="crdt_app Coverage Results" MODIFIED="1479401432145" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/crdt$crdt_server.coverage" NAME="crdt_server Coverage Results" MODIFIED="1479401770210" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/crdt$list_crdt.coverage" NAME="list_crdt Coverage Results" MODIFIED="1479114225442" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/crdt" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_remote_insert1.coverage" NAME="py.test in test_remote_insert1 Coverage Results" MODIFIED="1480434228628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/crdt$ordered_list.coverage" NAME="ordered_list Coverage Results" MODIFIED="1477234337739" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_crdt_app_py.coverage" NAME="py.test in test_crdt_app.py Coverage Results" MODIFIED="1479401771488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_list_crdt_py.coverage" NAME="py.test in test_list_crdt.py Coverage Results" MODIFIED="1479398941955" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$crdt_client.coverage" NAME="crdt_client Coverage Results" MODIFIED="1479076815788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/crdt$crdt_app.coverage" NAME="crdt_app Coverage Results" MODIFIED="1479401432145" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_remote_insert.coverage" NAME="py.test in test_remote_insert Coverage Results" MODIFIED="1480421202642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_mixture1.coverage" NAME="py.test in test_mixture1 Coverage Results" MODIFIED="1480439388424" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$crdt_server.coverage" NAME="crdt_server Coverage Results" MODIFIED="1479401770210" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/crdt$py_test.coverage" NAME="py.test Coverage Results" MODIFIED="1479221827978" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_answer.coverage" NAME="py.test in test_answer Coverage Results" MODIFIED="1476624824504" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_ordered_list_py.coverage" NAME="py.test in test_ordered_list.py Coverage Results" MODIFIED="1477432069624" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$crdt_network_server.coverage" NAME="crdt_network_server Coverage Results" MODIFIED="1481643550567" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/crdt$list_crdt.coverage" NAME="list_crdt Coverage Results" MODIFIED="1479114225442" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/crdt" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test.coverage" NAME="py.test in test Coverage Results" MODIFIED="1476626280929" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_crdt_app.coverage" NAME="py.test in test_crdt_app Coverage Results" MODIFIED="1481643559831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_crdt_app_py.coverage" NAME="py.test in test_crdt_app.py Coverage Results" MODIFIED="1480459053588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_p2p.coverage" NAME="py.test in test_p2p Coverage Results" MODIFIED="1481972030019" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_mixture.coverage" NAME="py.test in test_mixture Coverage Results" MODIFIED="1480417955982" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/crdt$py_test_in_test_list_crdt_py.coverage" NAME="py.test in test_list_crdt.py Coverage Results" MODIFIED="1480459033784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -39,11 +63,103 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="crdt_app.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="crdt_p2p_client.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/crdt_p2p_client.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="514">
+              <caret line="38" column="32" lean-forward="false" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="crdt_client.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/crdt_client.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="783">
+              <caret line="30" column="20" lean-forward="false" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="connected_peers.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/connected_peers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="58">
+              <caret line="3" column="10" lean-forward="false" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="operation_store.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/operation_store.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1363">
+              <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vector_clock.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/crdt/vector_clock.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1192">
+              <caret line="89" column="42" lean-forward="false" selection-start-line="89" selection-start-column="42" selection-end-line="89" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="crdt_clock.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/crdt/crdt_clock.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="725">
+              <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="list_crdt.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/crdt/list_crdt.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2352">
+              <caret line="99" column="30" lean-forward="false" selection-start-line="99" selection-start-column="30" selection-end-line="99" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ll_ordered_list.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/crdt/ll_ordered_list.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="597">
+              <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="crdt_app.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/crdt_app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="415">
-              <caret line="83" column="49" selection-start-line="83" selection-start-column="49" selection-end-line="83" selection-end-column="49" />
+            <state relative-caret-position="1888">
+              <caret line="135" column="54" lean-forward="true" selection-start-line="130" selection-start-column="48" selection-end-line="135" selection-end-column="54" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_crdt_app.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/test_crdt_app.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="319">
+              <caret line="15" column="76" lean-forward="false" selection-start-line="15" selection-start-column="76" selection-end-line="15" selection-end-column="76" />
               <folding />
             </state>
           </provider>
@@ -58,8 +174,44 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>element</find>
+      <find>#</find>
+      <find>print</find>
+      <find>pid</find>
+      <find>oid</find>
+      <find>owner_id</find>
+      <find>op_queue</find>
+      <find>self.uid</find>
+      <find>op_id</find>
+      <find>get</find>
+      <find>client</find>
+      <find>send_sync_ops</find>
+      <find>uid</find>
+      <find>vc_sem</find>
+      <find>threading.Thread</find>
+      <find>holding</find>
+      <find>connected_peers</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>logging.debug(</replace>
+      <replace>op_id</replace>
+      <replace>self.owner_id</replace>
+      <replace>owner_uid</replace>
+      <replace>self._uid</replace>
+      <replace>peer</replace>
+      <replace>puid</replace>
+      <replace>vc_lock</replace>
+    </replaceStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -81,24 +233,35 @@
         <option value="$PROJECT_DIR$/src/crdt_exceptions.py" />
         <option value="$PROJECT_DIR$/src/list_crdt.py" />
         <option value="$PROJECT_DIR$/src/crdt_server.py" />
-        <option value="$PROJECT_DIR$/src/crdt_client.py" />
         <option value="$PROJECT_DIR$/src/crdt/crdt_op.py" />
         <option value="$PROJECT_DIR$/src/crdt/base_ordered_list.py" />
-        <option value="$PROJECT_DIR$/src/crdt/crdt_exceptions.py" />
         <option value="$PROJECT_DIR$/src/crdt_clsv_client.py" />
-        <option value="$PROJECT_DIR$/src/crdt_network.py" />
         <option value="$PROJECT_DIR$/logging_config.ini" />
         <option value="$PROJECT_DIR$/src/crdt/arr_ordered_list.py" />
         <option value="$PROJECT_DIR$/test/local_client.py" />
         <option value="$PROJECT_DIR$/src/crdt_local_client.py" />
+        <option value="$PROJECT_DIR$/src/crdt_network.py" />
+        <option value="$PROJECT_DIR$/test/test_list_crdt.py" />
+        <option value="$PROJECT_DIR$/src/crdt/ll_ordered_list.py" />
+        <option value="$PROJECT_DIR$/src/crdt/crdt_exceptions.py" />
+        <option value="$PROJECT_DIR$/src/crdt_ui.py" />
+        <option value="$PROJECT_DIR$/src/operation_queue.py" />
         <option value="$PROJECT_DIR$/test/test_crdt_app.py" />
         <option value="$PROJECT_DIR$/src/crdt_network_server.py" />
-        <option value="$PROJECT_DIR$/src/crdt/crdt_ops.py" />
-        <option value="$PROJECT_DIR$/test/test_list_crdt.py" />
-        <option value="$PROJECT_DIR$/src/crdt/crdt_clock.py" />
-        <option value="$PROJECT_DIR$/src/crdt/ll_ordered_list.py" />
-        <option value="$PROJECT_DIR$/src/crdt/list_crdt.py" />
+        <option value="$PROJECT_DIR$/src/crdt/operation_store.py" />
+        <option value="$PROJECT_DIR$/src/crdt_client.py" />
+        <option value="$PROJECT_DIR$/src/test_operationStore.py" />
+        <option value="$PROJECT_DIR$/test/test_operation_store.py" />
         <option value="$PROJECT_DIR$/src/crdt_network_client.py" />
+        <option value="$PROJECT_DIR$/test/test_p2p.py" />
+        <option value="$PROJECT_DIR$/src/crdt/crdt_ops.py" />
+        <option value="$PROJECT_DIR$/src/test_p2p.py" />
+        <option value="$PROJECT_DIR$/src/connected_peers.py" />
+        <option value="$PROJECT_DIR$/src/operation_store.py" />
+        <option value="$PROJECT_DIR$/src/crdt/list_crdt.py" />
+        <option value="$PROJECT_DIR$/src/crdt/crdt_clock.py" />
+        <option value="$PROJECT_DIR$/src/crdt/vector_clock.py" />
+        <option value="$PROJECT_DIR$/src/crdt_p2p_client.py" />
         <option value="$PROJECT_DIR$/src/crdt_app.py" />
       </list>
     </option>
@@ -115,21 +278,12 @@
     </layout>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1345" />
-    <option name="y" value="24" />
-    <option name="width" value="1855" />
-    <option name="height" value="1056" />
+    <option name="x" value="1985" />
+    <option name="y" value="48" />
+    <option name="width" value="2236" />
+    <option name="height" value="2112" />
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <OptionsSetting value="true" id="Add" />
-    <OptionsSetting value="true" id="Remove" />
-    <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
-    <OptionsSetting value="true" id="Status" />
-    <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
-    <ConfirmationsSetting value="0" id="Remove" />
-  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -145,16 +299,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crdt" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="crdt" />
@@ -213,27 +360,33 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="/usr/bin/python2.7" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="js-jscs-nodeInterpreter" value="$USER_HOME$/.nvm/versions/node/v6.6.0/bin/node" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
+    <property name="nodejs_interpreter_path" value="$USER_HOME$/.nvm/versions/node/v6.6.0/bin/node" />
+    <property name="js.eslint.eslintPackage" value="$USER_HOME$/.nvm/versions/node/v6.6.0/lib/node_modules/eslint" />
+    <property name="node.js.path.for.package.jscs" value="project" />
+    <property name="node.js.selected.package.jscs" value="" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="$USER_HOME$/.nvm/versions/node/v6.6.0/lib/node_modules/eslint" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/test" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/crdt" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/test" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/test" />
-    </key>
   </component>
-  <component name="RunManager" selected="Python tests.py.test in test_crdt_app.py">
+  <component name="RunManager" selected="Python tests.py.test in test_p2p">
     <configuration default="false" name="py.test in test_list_crdt.py" type="tests" factoryName="py.test" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -259,7 +412,7 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="crdt_server" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration default="false" name="crdt_network_server" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -273,24 +426,6 @@
       <module name="crdt" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/crdt_network_server.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="crdt_app" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="crdt" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/crdt_app.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -345,6 +480,31 @@
       <option name="USE_KEYWORD" value="true" />
       <method />
     </configuration>
+    <configuration default="false" name="py.test in test_p2p" type="tests" factoryName="py.test" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="crdt" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="testToRun" value="$PROJECT_DIR$/test/test_p2p.py" />
+      <option name="keywords" value="test_p2p" />
+      <option name="params" value="" />
+      <option name="USE_PARAM" value="false" />
+      <option name="USE_KEYWORD" value="true" />
+      <method />
+    </configuration>
     <configuration default="true" type="DjangoTestsConfigurationType" factoryName="Django tests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -363,6 +523,12 @@
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
@@ -427,6 +593,9 @@
       <module name="crdt" />
       <method />
     </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="Docker Deployment">
+      <method />
+    </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
       <node-interpreter>project</node-interpreter>
       <node-options />
@@ -437,7 +606,7 @@
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.npm" factoryName="npm">
-      <command value="run-script" />
+      <command value="run" />
       <scripts />
       <node-interpreter value="project" />
       <envs />
@@ -581,23 +750,26 @@
     <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Python tests.py.test" />
       <item index="1" class="java.lang.String" itemvalue="Python tests.py.test in test_list_crdt.py" />
-      <item index="2" class="java.lang.String" itemvalue="Python.crdt_server" />
-      <item index="3" class="java.lang.String" itemvalue="Python.crdt_app" />
-      <item index="4" class="java.lang.String" itemvalue="Python tests.py.test in test_crdt_app.py" />
-      <item index="5" class="java.lang.String" itemvalue="Python tests.py.test in test_crdt_app" />
+      <item index="2" class="java.lang.String" itemvalue="Python.crdt_network_server" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.py.test in test_crdt_app.py" />
+      <item index="4" class="java.lang.String" itemvalue="Python tests.py.test in test_crdt_app" />
+      <item index="5" class="java.lang.String" itemvalue="Python tests.py.test in test_p2p" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.py.test in test_crdt_app.py" />
-        <item index="1" class="java.lang.String" itemvalue="Python.crdt_server" />
-        <item index="2" class="java.lang.String" itemvalue="Python.crdt_app" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.py.test in test_list_crdt.py" />
-        <item index="4" class="java.lang.String" itemvalue="Python tests.py.test in test_crdt_app" />
+        <item index="0" class="java.lang.String" itemvalue="Python tests.py.test in test_p2p" />
+        <item index="1" class="java.lang.String" itemvalue="Python tests.py.test in test_crdt_app" />
+        <item index="2" class="java.lang.String" itemvalue="Python.crdt_network_server" />
+        <item index="3" class="java.lang.String" itemvalue="Python tests.py.test in test_crdt_app.py" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.py.test in test_list_crdt.py" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -656,39 +828,46 @@
       <option name="project" value="LOCAL" />
       <updated>1479461447234</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Change dict contains to a constant time op">
+      <created>1479461668798</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1479461668798</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.16 at 13h 37m 46s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_crdt_app - 2016.12.13 at 15h 29m 05s.xml">
+      <configuration name="py.test in test_crdt_app" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.16 at 13h 43m 52s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_crdt_app - 2016.12.13 at 15h 30m 33s.xml">
+      <configuration name="py.test in test_crdt_app" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.16 at 13h 44m 32s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_crdt_app - 2016.12.13 at 15h 31m 59s.xml">
+      <configuration name="py.test in test_crdt_app" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.16 at 13h 45m 26s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_crdt_app - 2016.12.13 at 15h 34m 37s.xml">
+      <configuration name="py.test in test_crdt_app" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.17 at 16h 51m 16s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_crdt_app - 2016.12.13 at 15h 35m 04s.xml">
+      <configuration name="py.test in test_crdt_app" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.17 at 16h 52m 14s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_crdt_app - 2016.12.13 at 15h 37m 27s.xml">
+      <configuration name="py.test in test_crdt_app" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.17 at 16h 55m 17s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_crdt_app - 2016.12.13 at 15h 38m 54s.xml">
+      <configuration name="py.test in test_crdt_app" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.17 at 16h 55m 53s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_crdt_app - 2016.12.13 at 15h 39m 23s.xml">
+      <configuration name="py.test in test_crdt_app" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_crdt_app_py - 2016.11.17 at 16h 56m 37s.xml">
-      <configuration name="py.test in test_crdt_app.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_p2p - 2016.12.17 at 10h 52m 20s.xml">
+      <configuration name="py.test in test_p2p" configurationId="tests" />
     </history-entry>
-    <history-entry file="py_test_in_test_list_crdt_py - 2016.11.17 at 16h 09m 03s.xml">
-      <configuration name="py.test in test_list_crdt.py" configurationId="tests" />
+    <history-entry file="py_test_in_test_p2p - 2016.12.17 at 10h 53m 52s.xml">
+      <configuration name="py.test in test_p2p" configurationId="tests" />
     </history-entry>
   </component>
   <component name="TodoView">
@@ -701,32 +880,60 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1345" y="24" width="1855" height="1056" extended-state="6" />
+    <frame x="1985" y="48" width="2236" height="2112" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14704256" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12694064" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.502994" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32969216" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.502994" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32770607" sideWeight="0.497006" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2498618" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="WINDOWED" visible="false" show_stripe_button="true" weight="0.32672232" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="65" y="24" width="1215" height="1000" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43528184" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="65" y="24" width="1215" height="1000" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Metrics" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Tail" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.497006" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39770356" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3966597" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.502994" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32594234" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="65" y="24" width="1215" height="1000" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21727973" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Tail" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32964602" sideWeight="0.497006" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2498618" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3968958" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="processedProjectFiles" value="true" />
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -751,50 +958,21 @@
     <MESSAGE value="Fix deletion" />
     <MESSAGE value="Hold back out of order messages" />
     <MESSAGE value="Cleanup and comments added" />
-    <option name="LAST_COMMIT_MESSAGE" value="Cleanup and comments added" />
+    <MESSAGE value="Change dict contains to a constant time op" />
+    <MESSAGE value="Basic P2P implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Basic P2P implementation" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="12" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/test/test_ordered_list.py" />
-    <entry file="file://$PROJECT_DIR$/src/crdt/list_crdt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="10" column="47" selection-start-line="10" selection-start-column="47" selection-end-line="10" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt/ll_ordered_list.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
-          <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_list_crdt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_ordered_list.py" />
-    <entry file="file://$PROJECT_DIR$/src/multi_client_sim.py" />
-    <entry file="file://$PROJECT_DIR$/src/ordered_list.py" />
-    <entry file="file://$PROJECT_DIR$/test/test_ordered_list.py" />
-    <entry file="file://$PROJECT_DIR$/src/multi_client_sim.py" />
-    <entry file="file://$PROJECT_DIR$/src/ordered_list.py" />
-    <entry file="file://$PROJECT_DIR$/test/test_ordered_list.py" />
-    <entry file="file://$PROJECT_DIR$/src/multi_client_sim.py" />
-    <entry file="file://$PROJECT_DIR$/src/ordered_list.py" />
-    <entry file="file://$PROJECT_DIR$/test/test_ordered_list.py" />
     <entry file="file://$PROJECT_DIR$/test/test_ordered_list.py" />
     <entry file="file://$PROJECT_DIR$/src/multi_client_sim.py" />
     <entry file="file://$PROJECT_DIR$/src/ordered_list.py" />
@@ -802,28 +980,28 @@
     <entry file="file://$PROJECT_DIR$/src/crdt/list_crdt.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/reference_tests.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
-          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+          <caret line="13" column="1" lean-forward="false" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt/list_crdt.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/reference_tests.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
-          <caret line="13" column="1" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+          <caret line="13" column="1" lean-forward="false" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -831,14 +1009,14 @@
     <entry file="file://$PROJECT_DIR$/test/reference_tests.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file:///usr/lib/python2.7/Queue.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="186">
-          <caret line="149" column="8" selection-start-line="149" selection-start-column="8" selection-end-line="149" selection-end-column="8" />
+          <caret line="149" column="8" lean-forward="false" selection-start-line="149" selection-start-column="8" selection-end-line="149" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -848,7 +1026,7 @@
     <entry file="file://$PROJECT_DIR$/test/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -856,86 +1034,29 @@
     <entry file="file:///usr/lib/python2.7/pickle.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="205">
-          <caret line="1385" column="4" selection-start-line="1385" selection-start-column="4" selection-end-line="1385" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt/crdt_exceptions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="2" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt_network.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="1" column="8" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logging_config.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="21" column="31" selection-start-line="21" selection-start-column="31" selection-end-line="21" selection-end-column="31" />
+          <caret line="1385" column="4" lean-forward="false" selection-start-line="1385" selection-start-column="4" selection-end-line="1385" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt/arr_ordered_list.py" />
-    <entry file="file://$PROJECT_DIR$/src/crdt/base_ordered_list.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2016.2/system/python_stubs/-1247972723/_socket.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="734" column="24" selection-start-line="734" selection-start-column="24" selection-end-line="734" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/lib/python2.7/socket.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
-          <caret line="229" column="24" selection-start-line="229" selection-start-column="10" selection-end-line="229" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt_local_client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+          <caret line="229" column="24" lean-forward="false" selection-start-line="229" selection-start-column="10" selection-end-line="229" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file:///usr/lib/python2.7/threading.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="309">
-          <caret line="753" column="0" selection-start-line="753" selection-start-column="0" selection-end-line="753" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_crdt_app.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_list_crdt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="16" column="33" selection-start-line="16" selection-start-column="33" selection-end-line="16" selection-end-column="33" />
+          <caret line="753" column="0" lean-forward="false" selection-start-line="753" selection-start-column="0" selection-end-line="753" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/reference_tests.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
-          <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+          <caret line="19" column="22" lean-forward="false" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -958,53 +1079,210 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt/crdt_clock.py">
+    <entry file="file://$USER_HOME$/.PyCharm2016.2/system/python_stubs/-1247972723/_socket.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="661" column="8" lean-forward="false" selection-start-line="661" selection-start-column="8" selection-end-line="661" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python2.7/dist-packages/_pytest/vendored_packages/pluggy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="333">
+          <caret line="338" column="0" lean-forward="false" selection-start-line="338" selection-start-column="0" selection-end-line="338" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python2.7/dist-packages/_pytest/python.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="148" column="0" lean-forward="false" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt/base_ordered_list.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
-          <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
+          <caret line="7" column="8" lean-forward="false" selection-start-line="7" selection-start-column="8" selection-end-line="7" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt/ll_ordered_list.py">
+    <entry file="file://$PROJECT_DIR$/src/crdt/crdt_exceptions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
+        <state relative-caret-position="189">
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt/list_crdt.py">
+    <entry file="file://$PROJECT_DIR$/src/operation_queue.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="78" column="12" selection-start-line="78" selection-start-column="12" selection-end-line="78" selection-end-column="12" />
+        <state relative-caret-position="162">
+          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt/crdt_ops.py">
+    <entry file="file://$PROJECT_DIR$/logging_config.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="24" column="9" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
+        <state relative-caret-position="0">
+          <caret line="0" column="15" lean-forward="false" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test_operationStore.py" />
+    <entry file="file:///usr/lib/python2.7/bisect.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="66" column="4" lean-forward="false" selection-start-line="66" selection-start-column="4" selection-end-line="66" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test_operation_store.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="6" column="8" lean-forward="false" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test_list_crdt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt_ui.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="8" column="36" lean-forward="false" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test_p2p.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="6" column="28" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt_network_server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2646">
-          <caret line="98" column="31" selection-start-line="98" selection-start-column="31" selection-end-line="98" selection-end-column="31" />
+        <state relative-caret-position="348">
+          <caret line="17" column="71" lean-forward="true" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt_network_client.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+        <state relative-caret-position="1131">
+          <caret line="46" column="29" lean-forward="false" selection-start-line="46" selection-start-column="29" selection-end-line="46" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt/crdt_ops.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2117">
+          <caret line="73" column="63" lean-forward="false" selection-start-line="73" selection-start-column="63" selection-end-line="73" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test_p2p.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="13" column="11" lean-forward="true" selection-start-line="13" selection-start-column="11" selection-end-line="13" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt/ll_ordered_list.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="597">
+          <caret line="70" column="0" lean-forward="true" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt/list_crdt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2352">
+          <caret line="99" column="30" lean-forward="false" selection-start-line="99" selection-start-column="30" selection-end-line="99" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt/crdt_clock.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="725">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/operation_store.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1363">
+          <caret line="47" column="0" lean-forward="false" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt/vector_clock.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1192">
+          <caret line="89" column="42" lean-forward="false" selection-start-line="89" selection-start-column="42" selection-end-line="89" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/connected_peers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="58">
+          <caret line="3" column="10" lean-forward="false" selection-start-line="3" selection-start-column="10" selection-end-line="3" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt_app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="415">
-          <caret line="83" column="49" selection-start-line="83" selection-start-column="49" selection-end-line="83" selection-end-column="49" />
+        <state relative-caret-position="1888">
+          <caret line="135" column="54" lean-forward="true" selection-start-line="130" selection-start-column="48" selection-end-line="135" selection-end-column="54" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/test_crdt_app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="15" column="76" lean-forward="false" selection-start-line="15" selection-start-column="76" selection-end-line="15" selection-end-column="76" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="783">
+          <caret line="30" column="20" lean-forward="false" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt_p2p_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="514">
+          <caret line="38" column="32" lean-forward="false" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

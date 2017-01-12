@@ -4,9 +4,8 @@ from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
 
 
 class CRDTLocalClient(object):
-    def __init__(self, op_queue, op_queue_sem):
+    def __init__(self, op_queue):
         self.op_q = op_queue
-        self.op_q_sem = op_queue_sem
         key_listener = threading.Thread(target=self.listen_for_input)
         key_listener.daemon = True
         key_listener.start()
@@ -18,4 +17,3 @@ class CRDTLocalClient(object):
                 self.op_q.appendleft(CRDTOpDeleteLocal())
             else:
                 self.op_q.appendleft(CRDTOpAddRightLocal(char))
-            self.op_q_sem.release()

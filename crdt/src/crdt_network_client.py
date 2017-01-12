@@ -5,22 +5,22 @@ import struct
 import threading
 from logging.config import fileConfig
 
-from crdt_network import CRDTNetwork
+from crdt_client import CRDTClient
 
 fileConfig('../logging_config.ini')
 
 
-class CRDTNetworkClient(CRDTNetwork):
-    def __init__(self, host, port, op_queue, op_queue_sem, uid):
+class CRDTNetworkClient(CRDTClient):
+    def __init__(self, host, port, op_queue, puid, seen_ops_vc):
+        super(CRDTNetworkClient, self).__init__(puid)
         self.sock = socket.socket()
         self.host = host
         self.port = port
 
         # local queue of operations to add to
         self.op_q = op_queue
-        self.op_q_sem = op_queue_sem
 
-        self.uid = uid
+        self.puid = puid
 
         self.connected_sem = threading.Semaphore(0)
         self.is_connected = False
@@ -30,19 +30,7 @@ class CRDTNetworkClient(CRDTNetwork):
         t.daemon = True
         t.start()
 
-    def recvall(self, sock, length):
-        # make sure you receive `length` bytes of data
-        buf = ''
-        try:
-            while length:
-                newbuf = sock.recv(length)
-                if not newbuf:
-                    return None
-                buf += newbuf
-                length -= len(newbuf)
-            return buf
-        except socket.error as e:
-            logging.error('{} had socket error {}'.format(self.uid, e))
+    #     TODO: reconnect if unexpected disconnect
 
     def listen_for_ops(self):
         try:
@@ -63,11 +51,10 @@ class CRDTNetworkClient(CRDTNetwork):
 
             try:
                 unpickled_op = pickle.loads(op)
-                # logging.debug('{} got op {}'.format(self.uid, unpickled_op))
+                # logging.debug('{} got op {}'.format(self.puid, unpickled_op))
 
                 # add to the operation queue and signal something has been added
                 self.op_q.appendleft(unpickled_op)
-                self.op_q_sem.release()
             except pickle.UnpicklingError as e:
                 logging.error('Failed to unpickle {} {}'.format(op, e.message))
                 return
@@ -76,16 +63,13 @@ class CRDTNetworkClient(CRDTNetwork):
                 return
 
     def send_op(self, unpickled_op):
-        # logging.debug('{} sending operation'.format(self.uid))
+        # logging.debug('{} sending operation'.format(self.puid))
         # if we haven't connected up the socket yet, wait until we have
         if not self.is_connected:
             self.connected_sem.acquire()
 
-        # serialise operation and send along with its length
-        pickled_op = pickle.dumps(unpickled_op)
-        header = struct.pack('!I', len(pickled_op))
-        self.sock.sendall(header + pickled_op)
+        self.pack_and_send(unpickled_op, self.sock)
 
     def close(self):
-        logging.debug('{} closing socket'.format(self.uid))
+        logging.debug('{} closing socket'.format(self.puid))
         self.sock.close()
