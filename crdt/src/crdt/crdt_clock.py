@@ -27,7 +27,11 @@ class CRDTClock(object):
         if other_clock is None:
             return -1
         if isinstance(other_clock, CRDTClock):
-            return cmp(self.value, other_clock.value)
+            if self.timestamp == other_clock.timestamp:
+                return cmp(self.puid, other_clock.puid)
+            else:
+                return cmp(self.timestamp, other_clock.timestamp)
+
         else:
             return cmp(self.timestamp, other_clock)
 

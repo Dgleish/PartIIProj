@@ -87,7 +87,7 @@ class VectorClock(object):
             op_id = op.op_id
             other_puid = op_id.puid
             if other_puid in self.clocks:
-                result = op_id.timestamp == self.clocks[other_puid].timestamp + 1
+                result = op_id.timestamp <= self.clocks[other_puid].timestamp + 1
             else:
                 result = op_id.timestamp == 1
         except AttributeError as e:

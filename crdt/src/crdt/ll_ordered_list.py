@@ -51,7 +51,7 @@ class LLOrderedList(BaseOrderedList):
         next_node = self._lookup(clock).next_node
 
         # if reached the end, return last clock again
-        if next_node.end_node or next_node is None:
+        if next_node is None or next_node.end_node:
             return clock
 
         return next_node.clock
@@ -60,7 +60,7 @@ class LLOrderedList(BaseOrderedList):
         prev_node = self._lookup(clock).prev_node
 
         # if reached the beginning, return clock for start of list (= None)
-        if prev_node.start_node or prev_node is None:
+        if prev_node is None or prev_node.start_node:
             return None
 
         return prev_node.clock
@@ -91,14 +91,19 @@ class LLOrderedList(BaseOrderedList):
         return node.clock
 
     # for pretty printing
-    def get_repr(self):
+    def get_repr(self, cursor):
         list_repr = []
+        cursor_pos = 0
+        cursor_counter = 0
         curr = self.head.next_node
         while curr is not None:
             if (not curr.deleted) and curr.contents is not None:
                 list_repr.append(curr.contents[0])
+                cursor_counter += 1
+                if curr.clock == cursor:
+                    cursor_pos = cursor_counter
             curr = curr.next_node
-        return ''.join(list_repr)
+        return (''.join(list_repr), cursor_pos)
 
     # for debug purposes
     def get_detailed_repr(self):

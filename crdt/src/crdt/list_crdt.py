@@ -1,5 +1,6 @@
 # this relies on reliable inorder message delivery
 # -> clock values are increasing
+import logging
 from copy import copy
 from logging.config import fileConfig
 
@@ -76,9 +77,10 @@ class ListCRDT(object):
     def _add_right(self, left_clock, (a, new_cl)):
         l_cl = left_clock
         r_cl = self.olist.successor(left_clock)
-
+        logging.debug('inserting between {} and {}'.format(l_cl, r_cl))
         # Determine where to insert after specified vertex (gives total ordering)
         while r_cl != l_cl and new_cl < r_cl:
+            logging.debug('shift shift shift')
             l_cl, r_cl = r_cl, self.olist.successor(r_cl)
 
         # Is this vertex new to the list?
@@ -111,7 +113,7 @@ class ListCRDT(object):
         return CRDTOpDeleteRemote(t, clock), True
 
     def pretty_print(self):
-        return self.olist.get_repr()
+        return self.olist.get_repr(self.cursor)
 
     def pretty_cursor(self):
         if self.cursor is None:
@@ -121,6 +123,13 @@ class ListCRDT(object):
 
     def detail_print(self):
         return self.olist.get_detailed_repr() + ', cursor:' + str(self.cursor)
+
+    def move_cursor(self, lr):
+        if lr == 'Left':
+            self.shift_cursor_left()
+        elif lr == 'Right':
+            self.shift_cursor_right()
+        logging.debug('moved cursor {} to {}'.format(lr, self.cursor))
 
     def shift_cursor_right(self):
         # Need a way to stop at end of the list

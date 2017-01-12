@@ -47,7 +47,7 @@ class CRDTApp(object):
         # peers to connect to
         self.known_peers = known_peers
 
-        self.local_client = CRDTLocalClient(self.op_queue)
+        self.local_client = CRDTLocalClient(self.op_queue, self.crdt.move_cursor)
 
         self.simulate_user_input(ops_to_do)
 
@@ -98,12 +98,12 @@ class CRDTApp(object):
             op = self.op_queue.pop()
 
             # if too high in sequence need to wait for next message
-            if not self.can_perform_op(op):
-                self.held_back_ops[op.op_id].append(op)
-                logging.debug('{} holding back op {}'.format(self.puid, op))
-                continue
-            else:
-                logging.debug('{} about to do op {} in state {}'.format(self.puid, op, self.crdt.detail_print()))
+            # if not self.can_perform_op(op):
+            #     self.held_back_ops[op.op_id].append(op)
+            #     logging.debug('{} holding back op {}'.format(self.puid, op))
+            #     continue
+            # else:
+            #     logging.debug('{} about to do op {} in state {}'.format(self.puid, op, self.crdt.detail_print()))
 
             # do the operation on the local CRDT
 
@@ -115,7 +115,7 @@ class CRDTApp(object):
 
             self.op_store.add_op(op_to_store)
             logging.debug('{} stored op {} giving {}'.format(self.puid, op_to_store, self.crdt.detail_print()))
-            self.local_client.update(self.crdt.pretty_print(), self.crdt.pretty_cursor())
+            self.local_client.update(self.crdt.pretty_print())
             # if we've got something to send to others, send to others
             if should_send:
                 if self.connected_peers.is_empty():
@@ -126,11 +126,11 @@ class CRDTApp(object):
                 # increment corresponding component of vector clock
                 # TODO: move this earlier so that we don't ask everyone for the same ops
                 # TODO: but still need to be able to check if we are about to do the next operation in sequence
-                logging.debug('about to update vector clock {}'.format(self.seen_ops_vc))
+                logging.debug('about to update vector clock {}'.format(self.done_ops_vc))
                 self.seen_ops_vc.update(op_to_store)
                 self.done_ops_vc.update(op_to_store)
 
-            logging.debug('vector clock is now {}'.format(self.seen_ops_vc))
+            logging.debug('vector clock is now {}'.format(self.done_ops_vc))
 
             # for all operations held back that reference nodes with
             # clocks one greater than the op just done,
