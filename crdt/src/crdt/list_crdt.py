@@ -91,8 +91,10 @@ class ListCRDT(object):
 
     def delete_remote(self, op):
         # which element are we deleting?
-        clock = op.clock
+        clock = copy(op.clock)
         self.olist.delete(clock)
+
+        self.clock.update(clock)
 
         return op, False
 
@@ -133,7 +135,7 @@ class ListCRDT(object):
 
     def shift_cursor_right(self):
         # Need a way to stop at end of the list
-        self.cursor = self.olist.successor(self.cursor)
+        self.cursor = self.olist.successor_active(self.cursor)
 
     def shift_cursor_left(self):
-        self.cursor = self.olist.predecessor(self.cursor)
+        self.cursor = self.olist.predecessor_active(self.cursor)

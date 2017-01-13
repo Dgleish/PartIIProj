@@ -38,7 +38,7 @@ class VectorClock(object):
         other_puid = op_id.puid
         if not other_puid in self.clocks:
             self.clocks[other_puid] = CRDTClock(other_puid)
-        self.clocks[other_puid].increment()
+        self.clocks[other_puid].update(op.op_id)
         self.vc_lock.release()
 
     def merge(self, vc):

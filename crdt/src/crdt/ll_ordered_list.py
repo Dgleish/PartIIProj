@@ -48,22 +48,46 @@ class LLOrderedList(BaseOrderedList):
             raise VertexNotFound(clock)
 
     def successor(self, clock):
-        next_node = self._lookup(clock).next_node
+        succ = self._lookup(clock).next_node
 
         # if reached the end, return last clock again
-        if next_node is None or next_node.end_node:
+        if succ is None or succ.end_node:
             return clock
 
-        return next_node.clock
+        return succ.clock
+
+    def successor_active(self, clock):
+        succ = self._lookup(clock).next_node
+
+        while succ is not None and succ.deleted:
+            succ = succ.next_node
+
+        # if reached the end, return last clock again
+        if succ is None or succ.end_node:
+            return clock
+
+        return succ.clock
 
     def predecessor(self, clock):
-        prev_node = self._lookup(clock).prev_node
+        pred = self._lookup(clock).prev_node
 
         # if reached the beginning, return clock for start of list (= None)
-        if prev_node is None or prev_node.start_node:
+        if pred is None or pred.start_node:
             return None
 
-        return prev_node.clock
+        return pred.clock
+
+    def predecessor_active(self, clock):
+        pred = self._lookup(clock).prev_node
+
+        while pred is not None and pred.deleted:
+            pred = pred.prev_node
+
+        # if reached the beginning, return clock for start of list (= None)
+        if pred is None or pred.start_node:
+            return None
+
+        return pred.clock
 
     def insert(self, left_clock, new_vertex):
 

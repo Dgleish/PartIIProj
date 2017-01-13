@@ -15,7 +15,7 @@ class CRDTClock(object):
     def update(self, other_clock):
         if other_clock is not None:
             old_timestamp = self._timestamp
-            new_timestamp = max(old_timestamp, other_clock.timestamp)
+            new_timestamp = max(old_timestamp, other_clock.timestamp + 1)
             self._timestamp = new_timestamp
             self.value = '{}:{}'.format(new_timestamp, self._puid)
 
