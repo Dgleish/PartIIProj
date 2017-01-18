@@ -48,7 +48,7 @@ class CRDTLocalClient(object):
             return
         elif event.char == '\x08':
             self.op_q.appendleft(CRDTOpDeleteLocal())
-        else:
+        elif len(event.char) > 0 and ord(event.char) >= 32 and ord(event.char) <= 126:
             self.op_q.appendleft(CRDTOpAddRightLocal(event.char))
         # self.move_cursor('Right')
         return "break"
@@ -59,7 +59,3 @@ class CRDTLocalClient(object):
         self.t.insert(1.0, text)
         self.t.mark_set("insert", '1.{}'.format(cursor))
 
-
-
-if __name__ == '__main__':
-    CRDTLocalClient([]).display()
