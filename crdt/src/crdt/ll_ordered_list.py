@@ -124,9 +124,11 @@ class LLOrderedList(BaseOrderedList):
             if (not curr.deleted) and curr.contents is not None:
                 list_repr.append(curr.contents[0])
                 cursor_counter += 1
-                if curr.clock == cursor:
-                    cursor_pos = cursor_counter
+            if curr.clock == cursor:
+                cursor_pos = cursor_counter
             curr = curr.next_node
+        if cursor is None:
+            cursor_pos = 0
         return (''.join(list_repr), cursor_pos)
 
     # for debug purposes

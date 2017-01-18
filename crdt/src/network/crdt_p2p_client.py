@@ -45,12 +45,18 @@ class CRDTP2PClient(CRDTClient):
                 logging.debug('connected to {}'.format(peer_ip))
                 self.connected_peers.add_peer(peer_ip, sock)
 
+                # sync up operations with this peer
+                logging.debug('sync_ops_req')
+                self.sync_ops_req(sock)
+                logging.debug('sync_ops')
+
+                self.sync_ops(sock)
+
                 op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock))
                 op_thread.daemon = True
                 op_thread.start()
 
-                # sync up operations with this peer
-                self.sync_ops_req(sock)
+
 
             except socket.error as e:
                 logging.warn('couldn\'t connect to {}, {}'.format(peer_ip, e))
@@ -87,8 +93,11 @@ class CRDTP2PClient(CRDTClient):
         while True:
             sock, address = recvsock.accept()
             logging.info('peer connected from {}'.format(address))
+            logging.debug('sync_ops_req')
+            self.sync_ops_req(sock)
+            logging.debug('sync_ops')
             self.sync_ops(sock)
-            logging.info('syncing ops with new peer')
+            logging.info('synced ops with new peer')
             self.connected_peers.add_peer(address, sock)
             op_thread = threading.Thread(target=self.listen_for_ops, args=(address, sock))
             op_thread.daemon = True
