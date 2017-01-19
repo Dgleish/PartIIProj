@@ -15,6 +15,11 @@ class ConnectedPeers(object):
         del self.peers[peer]
         self.lock.release()
 
+    def remove_all(self):
+        self.lock.acquire()
+        self.peers = {}
+        self.lock.release()
+
     def add_peer(self, peer, val):
         self.lock.acquire()
         self.peers[peer] = val

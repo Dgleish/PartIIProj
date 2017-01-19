@@ -5,7 +5,6 @@ from collections import defaultdict
 from random import randint
 from time import sleep
 
-from connected_peers import ConnectedPeers
 from crdt.crdt_exceptions import VertexNotFound
 from crdt.crdt_ops import RemoteCRDTOp
 from crdt.list_crdt import ListCRDT
@@ -13,12 +12,16 @@ from crdt.ll_ordered_list import LLOrderedList
 from crdt.vector_clock import VectorClock
 from network.crdt_local_client import CRDTLocalClient
 from network.crdt_p2p_client import CRDTP2PClient
-from operation_queue import OperationQueue
-from operation_store import OperationStore
+from tools.connected_peers import ConnectedPeers
+from tools.operation_queue import OperationQueue
+from tools.operation_store import OperationStore
 
 
 class CRDTApp(object):
     def __init__(self, puid, host, port, ops_to_do, known_peers):
+
+        # listening and/or connected to other peers?
+        self.is_connected = False
 
         # create the ListCRDT structure
         self.puid = puid
@@ -41,13 +44,18 @@ class CRDTApp(object):
         # dict of operations that have arrived out of order
         self.held_back_ops = defaultdict(list)
 
-        # list of ops done when nobody else listening
-        self.offline_ops = []
-
         # peers to connect to
         self.known_peers = known_peers
 
-        self.local_client = CRDTLocalClient(self.op_queue, self.crdt.move_cursor)
+        # be nice to pass this in as argument then have CRDTNetwork as an interface to
+        # either cl-sv or P2P
+        self.network_client = CRDTP2PClient(
+            host, port, self.op_queue, self.puid, self.seen_ops_vc,
+            self.op_store, self.known_peers, self.connected_peers
+        )
+
+        # local UI input
+        self.local_client = CRDTLocalClient(self.op_queue, self.crdt.move_cursor, self.toggle_connect)
 
         self.simulate_user_input(ops_to_do)
 
@@ -57,25 +65,26 @@ class CRDTApp(object):
         op_queue_consumer.daemon = True
         op_queue_consumer.start()
 
-        network_thread = threading.Thread(target=self.connect, args=(host, port))
-        network_thread.daemon = True
-        network_thread.start()
+        self.connect()
 
         self.local_client.display()
 
-    def connect(self, host, port):
-        # be nice to pass this in as argument then have CRDTNetwork as an interface to
-        # either cl-sv or P2P
-        self.network_client = CRDTP2PClient(
-            host, port, self.op_queue, self.puid, self.seen_ops_vc,
-            self.op_store, self.known_peers, self.connected_peers
-        )
+    def connect(self):
         # go go go
-        self.network_client.connect(self.offline_ops)
-        self.offline_ops = []
+        network_thread = threading.Thread(target=self.network_client.connect)
+        network_thread.daemon = True
+        network_thread.start()
+        self.is_connected = True
 
     def disconnect(self):
-        pass
+        self.network_client.disconnect()
+        self.is_connected = False
+
+    def toggle_connect(self):
+        if self.is_connected:
+            self.disconnect()
+        else:
+            self.connect()
 
     def simulate_user_input(self, ops_to_do):
         while len(ops_to_do) > 0:
@@ -118,15 +127,12 @@ class CRDTApp(object):
             self.local_client.update(self.crdt.pretty_print())
             # if we've got something to send to others, send to others
             if should_send:
-                if self.connected_peers.is_empty():
-                    self.offline_ops.append(op_to_store)
-                else:
-                    self.network_client.send_op(op_to_store)
+                self.network_client.send_op(op_to_store)
             else:
                 # increment corresponding component of vector clock
                 # TODO: move this earlier so that we don't ask everyone for the same ops
                 # TODO: but still need to be able to check if we are about to do the next operation in sequence
-                logging.debug('about to update vector clock {}'.format(self.done_ops_vc))
+                # logging.debug('about to update vector clock {}'.format(self.done_ops_vc))
                 self.seen_ops_vc.update(op_to_store)
                 self.done_ops_vc.update(op_to_store)
 

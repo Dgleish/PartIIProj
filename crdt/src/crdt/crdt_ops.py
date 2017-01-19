@@ -1,6 +1,7 @@
 class CRDTOp(object):
     pass
 
+
 class RemoteCRDTOp(CRDTOp):
     def __init__(self, op_id):
         self.clock = None
@@ -24,6 +25,9 @@ class CRDTOpAddRightLocal(CRDTOp):
     def __str__(self):
         return '(AddRightLocal {})'.format(self.atom)
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class CRDTOpAddRightRemote(RemoteCRDTOp):
     def __init__(self, clock, vertex_to_add, op_id):
@@ -46,6 +50,8 @@ class CRDTOpAddRightRemote(RemoteCRDTOp):
     def __str__(self):
         return '(AddRightRemote {} {} {})'.format(self.clock, self.vertex_to_add, self._op_id)
 
+    def __repr__(self):
+        return self.__str__()
 
 class CRDTOpDeleteLocal(CRDTOp):
     def __init__(self):
@@ -53,6 +59,9 @@ class CRDTOpDeleteLocal(CRDTOp):
 
     def __str__(self):
         return '(DeleteLocal)'
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class CRDTOpDeleteRemote(RemoteCRDTOp):
@@ -72,3 +81,6 @@ class CRDTOpDeleteRemote(RemoteCRDTOp):
 
     def __str__(self):
         return '(DeleteRemote {} {})'.format(self.clock, self._op_id)
+
+    def __repr__(self):
+        return self.__str__()

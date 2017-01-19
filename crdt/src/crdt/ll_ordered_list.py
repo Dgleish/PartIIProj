@@ -129,7 +129,7 @@ class LLOrderedList(BaseOrderedList):
             curr = curr.next_node
         if cursor is None:
             cursor_pos = 0
-        return (''.join(list_repr), cursor_pos)
+        return ''.join(list_repr), cursor_pos
 
     # for debug purposes
     def get_detailed_repr(self):

@@ -36,7 +36,7 @@ class VectorClock(object):
         self.vc_lock.acquire()
         op_id = op.op_id
         other_puid = op_id.puid
-        if not other_puid in self.clocks:
+        if other_puid not in self.clocks:
             self.clocks[other_puid] = CRDTClock(other_puid)
         self.clocks[other_puid].update(op.op_id)
         self.vc_lock.release()
