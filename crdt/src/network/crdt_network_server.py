@@ -1,5 +1,4 @@
 import logging
-import pickle
 import socket
 import struct
 import threading
@@ -82,7 +81,7 @@ class CRDTServer(object):
                 length, = struct.unpack('!I', lengthbuf)
 
                 op = self.recvall(client, length)
-                logger.debug('received operation {}'.format(pickle.loads(op)))
+                logger.debug('received operation {}'.format(op))
 
                 # add this to the list of operations performed
                 self.stored_ops_lock.acquire()

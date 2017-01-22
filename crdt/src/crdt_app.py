@@ -6,7 +6,6 @@ from random import randint
 from time import sleep
 
 from crdt.crdt_exceptions import VertexNotFound
-from crdt.crdt_ops import RemoteCRDTOp
 from crdt.list_crdt import ListCRDT
 from crdt.ll_ordered_list import LLOrderedList
 from crdt.vector_clock import VectorClock
@@ -23,13 +22,18 @@ class CRDTApp(object):
         # listening and/or connected to other peers?
         self.is_connected = False
 
-        # create the ListCRDT structure
+        # ID to identify this instance of the application
         self.puid = puid
+
+        # create the ListCRDT structure
         self.crdt = ListCRDT(puid, LLOrderedList())
 
         crdt_clock = self.crdt.get_clock()
+
+        # Keep track of the operations we've received
         self.seen_ops_vc = VectorClock(crdt_clock)
 
+        # Keep track of the operations we've performed
         self.done_ops_vc = VectorClock(crdt_clock)
 
         # queue of operations consumed continuously in another thread
@@ -47,7 +51,7 @@ class CRDTApp(object):
         # peers to connect to
         self.known_peers = known_peers
 
-        # be nice to pass this in as argument then have CRDTNetwork as an interface to
+        # TODO: be nice to pass this in as argument then have CRDTNetwork as an interface to
         # either cl-sv or P2P
         self.network_client = CRDTP2PClient(
             host, port, self.op_queue, self.puid, self.seen_ops_vc,
@@ -59,6 +63,7 @@ class CRDTApp(object):
 
         self.simulate_user_input(ops_to_do)
 
+        # Start performing operations
         op_queue_consumer = threading.Thread(
             target=self.consume_op_queue
         )
@@ -67,83 +72,82 @@ class CRDTApp(object):
 
         self.connect()
 
+        # Show GUI
         self.local_client.display()
 
     def connect(self):
         # go go go
+        """
+        Starts the peer discovery process and then starts listening for incoming connections
+        """
         network_thread = threading.Thread(target=self.network_client.connect)
         network_thread.daemon = True
         network_thread.start()
         self.is_connected = True
 
     def disconnect(self):
+        """
+        Drop all connections and stop listening for incoming connections
+        """
         self.network_client.disconnect()
         self.is_connected = False
 
     def toggle_connect(self):
+        """
+        Toggle between a connected and disconnected state
+        """
         if self.is_connected:
             self.disconnect()
         else:
             self.connect()
 
     def simulate_user_input(self, ops_to_do):
+        """
+        Apply operations to the CRDT automatically
+        :param ops_to_do: the operations to apply
+        """
         while len(ops_to_do) > 0:
             sleep(randint(0, 1))
             self.op_queue.appendleft(ops_to_do.pop())
 
-    def can_perform_op(self, op):
-        # Check if the incoming operation's clock is no more than one ahead of ours
-        # Otherwise its out of order and gets held back
-        if isinstance(op, RemoteCRDTOp):
-            # return self.clock.can_do(op.clock)
-            return self.done_ops_vc.is_next_op(op)
-        else:
-            return True
-
     def consume_op_queue(self):
+        """
+        Continually take operations from the central queue and do them
+        """
         while True:
 
             # get item from the queue
             op = self.op_queue.pop()
 
-            # if too high in sequence need to wait for next message
-            # if not self.can_perform_op(op):
-            #     self.held_back_ops[op.op_id].append(op)
-            #     logging.debug('{} holding back op {}'.format(self.puid, op))
-            #     continue
-            # else:
-            #     logging.debug('{} about to do op {} in state {}'.format(self.puid, op, self.crdt.detail_print()))
-
-            # do the operation on the local CRDT
-
             try:
+                # do the operation on the local CRDT
                 op_to_store, should_send = copy.deepcopy(self.crdt.perform_op(op))
             except VertexNotFound as e:
                 logging.warn('{} Failed to do op {}, {}'.format(self.puid, op, e))
+                # add op indexed by the (missing) operation it was referencing
+                self.held_back_ops[op.clock].append(op)
                 continue
 
+            # Store operation
             self.op_store.add_op(op_to_store)
+
             logging.debug('{} stored op {} giving {}'.format(self.puid, op_to_store, self.crdt.detail_print()))
+
+            # Update UI
             self.local_client.update(self.crdt.pretty_print())
+
             # if we've got something to send to others, send to others
             if should_send:
                 self.network_client.send_op(op_to_store)
             else:
                 # increment corresponding component of vector clock
-                # TODO: move this earlier so that we don't ask everyone for the same ops
-                # TODO: but still need to be able to check if we are about to do the next operation in sequence
-                # logging.debug('about to update vector clock {}'.format(self.done_ops_vc))
                 self.seen_ops_vc.update(op_to_store)
                 self.done_ops_vc.update(op_to_store)
 
-            logging.debug('vector clock is now {}'.format(self.done_ops_vc))
-
             # for all operations held back that reference nodes with
-            # clocks one greater than the op just done,
+            # clocks equal to the op just done,
             # add them to the front of the queue
-
-            recovery_clock = copy.copy(op_to_store.op_id)
-            recovery_clock.increment()
+            recovery_clock = op_to_store.op_id
             if recovery_clock in self.held_back_ops:
                 for new_op in self.held_back_ops[recovery_clock]:
                     self.op_queue.append(new_op)

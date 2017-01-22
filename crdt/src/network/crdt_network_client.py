@@ -46,11 +46,9 @@ class CRDTNetworkClient(CRDTClient):
             if lengthbuf is None:
                 return
             length, = struct.unpack('!I', lengthbuf)
-
-            op = self.recvall(self.sock, length)
-
             try:
-                unpickled_op = pickle.loads(op)
+                unpickled_op = self.recvall(self.sock, length)
+
                 # logging.debug('{} got op {}'.format(self.puid, unpickled_op))
 
                 # add to the operation queue and signal something has been added

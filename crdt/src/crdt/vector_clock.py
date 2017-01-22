@@ -1,16 +1,34 @@
 import logging
-from threading import Lock
+from threading import RLock
 
-from crdt.crdt_ops import RemoteCRDTOp
+from wrapt import decorator
+
 from crdt_clock import CRDTClock
 
 
+@decorator
+def synchronized(wrapped, instance, args, kwargs):
+    if instance is None:
+        context = vars(wrapped)
+    else:
+        context = vars(instance)
+
+    lock = context.get('_synchronized_lock', None)
+
+    if lock is None:
+        lock = context.setdefault('_synchronized_lock', RLock())
+
+    with lock:
+        return wrapped(*args, **kwargs)
+
+
+# contains most recently seen op from each peer
+# noinspection PyArgumentList
 class VectorClock(object):
     def __init__(self, owner_clock):
         assert isinstance(owner_clock, CRDTClock)
         self.owner_puid = owner_clock.puid
         self.clocks = {self.owner_puid: owner_clock}
-        self.vc_lock = Lock()
 
     def __getstate__(self):
         return {
@@ -22,27 +40,34 @@ class VectorClock(object):
         self.owner_puid = state['owner_puid']
         self.clocks = state['clocks']
         # recreate lock, don't copy it from other place
-        self.vc_lock = Lock()
 
+    @synchronized
     def get_clock(self, puid):
+        """
+        :param puid: The ID of the peer
+        :return: Clock associated with this peer
+        """
         val = None
-        self.vc_lock.acquire()
         if puid in self.clocks:
             val = self.clocks[puid]
-        self.vc_lock.release()
         return val
 
+    @synchronized
     def update(self, op):
-        self.vc_lock.acquire()
+        """
+        Increment the corresponding clock for this operation
+        """
         op_id = op.op_id
         other_puid = op_id.puid
         if other_puid not in self.clocks:
             self.clocks[other_puid] = CRDTClock(other_puid)
         self.clocks[other_puid].update(op.op_id)
-        self.vc_lock.release()
 
+    @synchronized
     def merge(self, vc):
-        self.vc_lock.acquire()
+        """
+        Merge incoming vector clock with this one
+        """
         for puid, clock in vc.iteritems():
             if puid in self.clocks:
                 self.clocks[puid].update(clock)
@@ -50,50 +75,31 @@ class VectorClock(object):
                 # we aren't aware of this peer
                 logging.warn('wasn\'t aware of peer {}'.format(puid))
                 pass
-        self.vc_lock.release()
 
+    @synchronized
     def add_peer(self, puid):
-        self.vc_lock.acquire()
+        """
+        Add a clock entry for the peer
+        """
         if puid in self.clocks:
             logging.warn('already had peer {}'.format(puid))
         self.clocks[puid] = CRDTClock(puid)
-        self.vc_lock.release()
 
+    @synchronized
     def remove_peer(self, puid):
-        self.vc_lock.acquire()
+        """
+        Remove the clock entry for the peer
+        """
         if puid in self.clocks:
             del self.clocks[puid]
         else:
             # peer not found?
             logging.error('peer not found {}'.format(puid))
-        self.vc_lock.release()
 
+    @synchronized
     def iterate(self):
-        self.vc_lock.acquire()
         for puid, timestamp in self.clocks.iteritems():
             yield (puid, timestamp)
-        self.vc_lock.release()
-
-    def is_next_op(self, op):
-        self.vc_lock.acquire()
-        result = False
-        """
-
-        :type op: RemoteCRDTOp
-        """
-        # op id is a CRDTClock
-        assert isinstance(op, RemoteCRDTOp)
-        try:
-            op_id = op.op_id
-            other_puid = op_id.puid
-            if other_puid in self.clocks:
-                result = op_id.timestamp <= self.clocks[other_puid].timestamp + 1
-            else:
-                result = op_id.timestamp == 1
-        except AttributeError as e:
-            logging.error('AE: {} {}'.format(dir(op), e))
-        self.vc_lock.release()
-        return result
 
     def __cmp__(self, other):
         if isinstance(other, CRDTClock):
