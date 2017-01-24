@@ -122,7 +122,7 @@ class DiffieHellman(object):
         Check the other party's public key to make sure it's valid.
         Since a safe prime is used, verify that the Legendre symbol == 1
         """
-        if (otherKey > 2 and otherKey < self.prime - 1):
+        if (2 < otherKey < self.prime - 1):
             if (pow(otherKey, (self.prime - 1) // 2, self.prime) == 1):
                 return True
         return False
@@ -132,7 +132,7 @@ class DiffieHellman(object):
         Check to make sure the public key is valid, then combine it with the
         private key to generate a shared secret.
         """
-        if (self.checkPublicKey(otherKey) == True):
+        if (self.checkPublicKey(otherKey)):
             sharedSecret = pow(otherKey, privateKey, self.prime)
             return sharedSecret
         else:

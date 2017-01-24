@@ -58,8 +58,8 @@ class CRDTP2PClient(CRDTClient):
     def sync_ops_req(self, sock, cipher):
         """
         send clock of which ops I have
+        :param cipher: the crypto object
         :param sock: socket to send to
-        :param enc_cipher: the encryption object
         """
         self.pack_and_send(self.seen_ops_vc, sock, cipher)
 
@@ -67,8 +67,7 @@ class CRDTP2PClient(CRDTClient):
         """
         receive clock of which ops they have
         :param sock: socket object to receive from
-        :param enc_cipher: the encryption object
-        :param dec_cipher: the decryption object
+        :param cipher: the crypto object
         """
         their_vc = self.recvall(sock, cipher)
         # determine which ops to send
@@ -224,7 +223,7 @@ class CRDTP2PClient(CRDTClient):
         Start receiving operations
         :param peer_ip: the address to receive from
         :param sock: the socket to receive on
-        :param dec_cipher: the decryption object
+        :param cipher: the crypto object
         """
         while True:
             try:

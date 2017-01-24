@@ -54,10 +54,10 @@ class CRDTNetworkClient(CRDTClient):
                 # add to the operation queue and signal something has been added
                 self.op_q.appendleft(unpickled_op)
             except pickle.UnpicklingError as e:
-                logging.error('Failed to unpickle {} {}'.format(op, e.message))
+                logging.error('Failed to unpickle {}'.format(e.message))
                 return
             except IndexError as e:
-                logging.error('weird index error unpickling {} {}'.format(op, e.message))
+                logging.error('weird index error unpickling {}'.format(e.message))
                 return
 
     def send_op(self, unpickled_op):

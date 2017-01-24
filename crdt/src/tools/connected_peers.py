@@ -27,7 +27,7 @@ class ConnectedPeers(object):
 
     @synchronized
     def contains(self, peer):
-        return (peer in self.peers)
+        return peer in self.peers
 
     @synchronized
     def is_empty(self):
