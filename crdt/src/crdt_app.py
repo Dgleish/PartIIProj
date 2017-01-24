@@ -2,8 +2,6 @@ import copy
 import logging
 import threading
 from collections import defaultdict
-from random import randint
-from time import sleep
 
 from crdt.crdt_exceptions import VertexNotFound
 from crdt.list_crdt import ListCRDT
@@ -11,13 +9,14 @@ from crdt.ll_ordered_list import LLOrderedList
 from crdt.vector_clock import VectorClock
 from network.crdt_local_client import CRDTLocalClient
 from network.crdt_p2p_client import CRDTP2PClient
-from tools.connected_peers import ConnectedPeers
 from tools.operation_queue import OperationQueue
 from tools.operation_store import OperationStore
 
 
 class CRDTApp(object):
     def __init__(self, puid, host, port, ops_to_do, known_peers):
+
+        # logging.disable('DEBUG')
 
         # listening and/or connected to other peers?
         self.is_connected = False
@@ -42,9 +41,6 @@ class CRDTApp(object):
         # store of operations by peer
         self.op_store = OperationStore()
 
-        # store of connected peers
-        self.connected_peers = ConnectedPeers()
-
         # dict of operations that have arrived out of order
         self.held_back_ops = defaultdict(list)
 
@@ -55,17 +51,18 @@ class CRDTApp(object):
         # either cl-sv or P2P
         self.network_client = CRDTP2PClient(
             host, port, self.op_queue, self.puid, self.seen_ops_vc,
-            self.op_store, self.known_peers, self.connected_peers
+            self.op_store, self.known_peers
         )
 
         # local UI input
         self.local_client = CRDTLocalClient(self.op_queue, self.crdt.move_cursor, self.toggle_connect)
 
         self.simulate_user_input(ops_to_do)
+        self.can_consume_sem = threading.Semaphore(1)
 
         # Start performing operations
         op_queue_consumer = threading.Thread(
-            target=self.consume_op_queue
+            target=self.consume_op_queue,
         )
         op_queue_consumer.daemon = True
         op_queue_consumer.start()
@@ -80,7 +77,7 @@ class CRDTApp(object):
         """
         Starts the peer discovery process and then starts listening for incoming connections
         """
-        network_thread = threading.Thread(target=self.network_client.connect)
+        network_thread = threading.Thread(target=self.network_client.connect, args=(self.can_consume_sem,))
         network_thread.daemon = True
         network_thread.start()
         self.is_connected = True
@@ -89,7 +86,7 @@ class CRDTApp(object):
         """
         Drop all connections and stop listening for incoming connections
         """
-        self.network_client.disconnect()
+        self.network_client.disconnect(self.can_consume_sem)
         self.is_connected = False
 
     def toggle_connect(self):
@@ -107,7 +104,6 @@ class CRDTApp(object):
         :param ops_to_do: the operations to apply
         """
         while len(ops_to_do) > 0:
-            sleep(randint(0, 1))
             self.op_queue.appendleft(ops_to_do.pop())
 
     def consume_op_queue(self):
@@ -118,7 +114,7 @@ class CRDTApp(object):
 
             # get item from the queue
             op = self.op_queue.pop()
-
+            self.can_consume_sem.acquire()
             try:
                 # do the operation on the local CRDT
                 op_to_store, should_send = copy.deepcopy(self.crdt.perform_op(op))
@@ -126,12 +122,15 @@ class CRDTApp(object):
                 logging.warn('{} Failed to do op {}, {}'.format(self.puid, op, e))
                 # add op indexed by the (missing) operation it was referencing
                 self.held_back_ops[op.clock].append(op)
+                # logging.debug('releasing sem')
+                self.can_consume_sem.release()
+                # logging.debug('released sem')
                 continue
 
             # Store operation
             self.op_store.add_op(op_to_store)
 
-            logging.debug('{} stored op {} giving {}'.format(self.puid, op_to_store, self.crdt.detail_print()))
+            logging.debug('{} performed op {}'.format(self.puid, op_to_store))
 
             # Update UI
             self.local_client.update(self.crdt.pretty_print())
@@ -152,5 +151,5 @@ class CRDTApp(object):
                 for new_op in self.held_back_ops[recovery_clock]:
                     self.op_queue.append(new_op)
                 del self.held_back_ops[recovery_clock]
-        self.network_client.close()
-        return
+
+            self.can_consume_sem.release()

@@ -1,4 +1,5 @@
 import logging
+import pickle
 from threading import RLock
 
 from wrapt import decorator
@@ -22,20 +23,23 @@ def synchronized(wrapped, instance, args, kwargs):
         return wrapped(*args, **kwargs)
 
 
-# contains most recently seen op from each peer
 # noinspection PyArgumentList
 class VectorClock(object):
+    """ contains most recently seen op from each peer """
+
     def __init__(self, owner_clock):
         assert isinstance(owner_clock, CRDTClock)
         self.owner_puid = owner_clock.puid
         self.clocks = {self.owner_puid: owner_clock}
 
+    @synchronized
     def __getstate__(self):
         return {
             'owner_puid': self.owner_puid,
             'clocks': self.clocks,
         }
 
+    @synchronized
     def __setstate__(self, state):
         self.owner_puid = state['owner_puid']
         self.clocks = state['clocks']
@@ -98,14 +102,18 @@ class VectorClock(object):
 
     @synchronized
     def iterate(self):
-        for puid, timestamp in self.clocks.iteritems():
-            yield (puid, timestamp)
+        return self.clocks.items()
 
+    @synchronized
     def __cmp__(self, other):
         if isinstance(other, CRDTClock):
             other_puid = other.puid
             my_version = self.clocks[other_puid]
             return cmp(my_version, other)
+
+    @synchronized
+    def pickle(self):
+        return pickle.dumps(self)
 
     def __str__(self):
         return self.__repr__()

@@ -1,4 +1,3 @@
-import logging
 import pickle
 import socket
 import struct
@@ -11,43 +10,37 @@ class CRDTClient(object):
     def recvall(self, sock, cipher=None):
         # make sure you receive `length` bytes of data
         length_struct = sock.recv(4)
-        if length_struct is None:
+        if not length_struct:
             raise socket.error
         length, = struct.unpack('!I', length_struct)
 
         buf = ''
-        try:
-            while length:
-                newbuf = sock.recv(length)
-                if not newbuf:
-                    return None
-                buf += newbuf
-                length -= len(newbuf)
-            if cipher is not None:
-                buf = cipher.decrypt(buf)
-                buf = buf[:-ord(buf[-1])]
+        while length:
+            newbuf = sock.recv(length)
+            if not newbuf:
+                return None
+            buf += newbuf
+            length -= len(newbuf)
+        if buf == '':
+            raise socket.error('No data received')
+        if cipher is not None:
+            buf = cipher.decrypt2(buf)
 
-            return pickle.loads(buf)
-        except socket.error as e:
-            logging.error('{} had socket error {}'.format(self.puid, e))
-        except pickle.UnpicklingError as e:
-            logging.error('Failed to unpickle {}'.format(e.message))
-            raise socket.error()
-        except IndexError as e:
-            logging.error('weird index error unpickling {}'.format(e.message))
-            raise socket.error()
+        return pickle.loads(buf)
 
     def pack_and_send(self, unpickled_data, sock, cipher=None):
         # serialise data and send along with its length
-        pickled_data = pickle.dumps(unpickled_data)
+        pickle_func = getattr(unpickled_data, "pickle", None)
+        if pickle_func is None:
+            pickled_data = pickle.dumps(unpickled_data)
+        else:
+            pickled_data = unpickled_data.pickle()
         if cipher is not None:
-            length = 16 - (len(pickled_data) % 16)
-            pickled_data += chr(length) * length
-            pickled_data = cipher.encrypt(pickled_data)
+            pickled_data = cipher.encrypt2(pickled_data)
         header = struct.pack('!I', len(pickled_data))
         sock.sendall(header + pickled_data)
 
-    def connect(self):
+    def connect(self, can_consume_sem):
         pass
 
     def send_op(self, op):

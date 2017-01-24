@@ -1,0 +1,41 @@
+#!/bin/bash
+others(){
+    
+    
+    o=' '
+    prefix='172.18.0.'
+    nopeers=$2
+    for j in $(seq 2 $((nopeers+1))); do
+        if [ "${1}" != "${j}" ]; then
+            
+            o+="${prefix}${j}"
+            o+=" "
+        fi
+    done
+    eval "$3='${o}'"
+}
+if [ -z "$1" ]; then 
+  echo usage: $0 numPeers
+  exit
+fi
+numPeers=$1
+xhost +local:root
+docker build . -t p2p
+docker ps -aq | xargs docker rm
+
+for i in $(seq 2 $numPeers); do
+    ip="172.18.0.${i}"
+    return_var=''
+    others $i $numPeers return_var
+    otherPeers="${return_var}"
+    addr=$ip$otherPeers
+
+    gnome-terminal -x sh -c "docker run --net=net1 --ip ${ip} --name p2p${i} -e addr='${addr}' -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it p2p; bash"
+     #sleep $((10+(numPeers-3)*2))
+
+done
+numPeers=$((numPeers+1))
+last_ip=172.18.0.$numPeers
+return_var=''
+others $numPeers $((numPeers-1)) return_var
+docker run --net=net1 --ip $last_ip --name p2p${numPeers} -e addr="${last_ip} ${return_var}" -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it p2p

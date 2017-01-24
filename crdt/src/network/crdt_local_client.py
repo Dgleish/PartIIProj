@@ -3,6 +3,7 @@ import logging
 
 from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
 
+
 class CRDTLocalClient(object):
     def __init__(self, op_queue, move_cursor, toggle_connect):
         self.op_q = op_queue
@@ -66,4 +67,3 @@ class CRDTLocalClient(object):
         self.t.insert(1.0, text)
         self.cursor_pos = cursor
         self.t.mark_set("insert", '1.{}'.format(cursor))
-

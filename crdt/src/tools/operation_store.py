@@ -1,12 +1,33 @@
 import logging
 from bisect import bisect_left
 from collections import defaultdict
+from threading import RLock
+
+from wrapt import decorator
 
 
+@decorator
+def synchronized(wrapped, instance, args, kwargs):
+    if instance is None:
+        context = vars(wrapped)
+    else:
+        context = vars(instance)
+
+    lock = context.get('_synchronized_lock', None)
+
+    if lock is None:
+        lock = context.setdefault('_synchronized_lock', RLock())
+
+    with lock:
+        return wrapped(*args, **kwargs)
+
+
+# noinspection PyArgumentList
 class OperationStore(object):
     def __init__(self):
         self.ops = defaultdict(list)
 
+    @synchronized
     def add_op(self, op):
         puid = op.op_id.puid
         self.ops[puid].append(op)
@@ -38,6 +59,7 @@ class OperationStore(object):
         else:
             return self.ops[puid][index:]
 
+    @synchronized
     def determine_ops(self, vector_clock):
         ops_to_send = []
         logging.debug("determining ops to send for vc {}".format(vector_clock))

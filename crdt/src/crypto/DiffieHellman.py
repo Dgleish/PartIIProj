@@ -142,19 +142,19 @@ class DiffieHellman(object):
         """
         Derive the shared secret, then hash it to obtain the shared key.
         """
-        self.sharedSecret = self.genSecret(self.privateKey, otherKey)
+        sharedSecret = self.genSecret(self.privateKey, otherKey)
 
         # Convert the shared secret (int) to an array of bytes in network order
         # Otherwise hashlib can't hash it.
         try:
-            _sharedSecretBytes = self.sharedSecret.to_bytes(
-                self.sharedSecret.bit_length() // 8 + 1, byteorder="big")
+            _sharedSecretBytes = sharedSecret.to_bytes(
+                sharedSecret.bit_length() // 8 + 1, byteorder="big")
         except AttributeError:
-            _sharedSecretBytes = str(self.sharedSecret)
+            _sharedSecretBytes = str(sharedSecret)
 
         s = hashlib.sha256()
         s.update(bytes(_sharedSecretBytes))
-        self.key = s.digest()
+        return (s.digest())
 
     def getKey(self):
         """

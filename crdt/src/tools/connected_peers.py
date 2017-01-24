@@ -18,48 +18,55 @@ def synchronized(wrapped, instance, args, kwargs):
     with lock:
         return wrapped(*args, **kwargs)
 
+
 # Testable
 # noinspection PyArgumentList
 class ConnectedPeers(object):
     def __init__(self):
         self.peers = {}
 
+    @synchronized
+    def contains(self, peer):
+        return (peer in self.peers)
+
+    @synchronized
     def is_empty(self):
         return len(self.peers) == 0
 
     @synchronized
     def remove_peer(self, peer):
-        del self.peers[peer]
+        if peer in self.peers:
+            del self.peers[peer]
 
     @synchronized
     def remove_all(self):
         self.peers = {}
 
     @synchronized
-    def add_peer(self, peer, sock, enc_cipher=None, dec_cipher=None):
+    def add_peer(self, peer, sock, cipher=None):
         self.peers[peer] = {
             'sock': sock,
-            'enc_cipher': enc_cipher,
-            'dec_cipher': dec_cipher
+            'cipher': cipher,
         }
 
     @synchronized
     def get_sock_for_peer(self, peer):
-        sock = self.peers[peer]
+        sock = self.peers[peer]['sock']
         return sock
 
     @synchronized
-    def get_ciphers_for_peer(self, peer):
-        enc_cipher = self.peers[peer]['enc_cipher']
-        dec_cipher = self.peers[peer]['dec_cipher']
-        return enc_cipher, dec_cipher
+    def get_cipher_for_peer(self, peer):
+        cipher = self.peers[peer]['cipher']
+        return cipher
 
     @synchronized
     def iterate_sockets(self):
-        for peer, val in self.peers.iteritems():
-            yield (peer, val['sock'])
+        return {(peer, val['sock']) for peer, val in self.peers.items()}
 
     @synchronized
     def iterate(self):
-        for peer, val in self.peers.iteritems():
-            yield (peer, val)
+        return self.peers.items()
+
+    @synchronized
+    def __repr__(self):
+        return 'ConnectedPeers({})'.format(self.peers)

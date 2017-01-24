@@ -6,9 +6,9 @@ from crdt_app import CRDTApp
 
 def run_p2p(puid, peer_list):
     no_peers = len(peer_list)
-    app = CRDTApp(chr(ord('A') + int(puid[-1])), 'localhost', 8889, [
-        CRDTOpAddRightLocal(chr(ord('a') + int(puid[-1]))), CRDTOpDeleteLocal(),
-        CRDTOpAddRightLocal(chr(ord('A') + int(puid[-1])))
+    app = CRDTApp(chr(ord('A') + int(puid.split('.')[-1])), puid, 8889, [
+        CRDTOpAddRightLocal(chr(ord('a') + int(puid.split('.')[-1]))), CRDTOpDeleteLocal(),
+        CRDTOpAddRightLocal(chr(ord('A') + int(puid.split('.')[-1])))
     ], peer_list)
 
 
