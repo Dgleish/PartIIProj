@@ -1,0 +1,47 @@
+#!/bin/bash
+others(){
+    file="./keys"
+    onions=''
+    private_key=''
+    for j in $(seq 2 $(($2+1))); do
+        read -r priv 
+        read -r onion
+        if [ "$1" != "$j" ]
+        then            
+            onions+="${onion}:"
+        else
+            private_key=$priv
+            my_onion=$onion
+        fi
+    done<"$file"
+    eval "$3='${my_onion}'"
+    eval "$4='${onions}'"
+    eval "$5='${private_key}'"
+}
+
+# NUMBER OF INSTANCES TO SPAWN
+numPeers=$1
+
+# ENCRYPT COMMUNICATIONS OR NOT
+encrypt=$2
+
+# ALLOW CONTAINERS TO LOG TO GET X
+xhost +local:root
+
+# BUILD DOCKER IMAGE
+docker build . -t p2p
+
+# REMOVE EXISTING DOCKER IMAGES
+docker ps -aq | xargs docker rm -f
+
+# DOCKER RUN WITH APPROPRIATE ARGUMENTS
+for i in $(seq 2 $((numPeers+1))); do
+    ip="172.18.0.${i}"
+    other_onions=''
+    priv=''
+    my_onion=''
+    others $i $numPeers my_onion other_onions priv
+    args="${ip} ${my_onion} ${other_onions} ${priv} ${encrypt}"
+    gnome-terminal -x sh -c "docker run --net=net1 --ip ${ip} --name p2p${i} -e args='${args}' -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it p2p; bash"
+
+done

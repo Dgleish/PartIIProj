@@ -8,23 +8,12 @@ RUN apt-get update -y
 RUN apt-get install deb.torproject.org-keyring -y
 RUN apt-get install tor runit -y
 
-#
-# Adds a custom non root user with home directory
-RUN adduser --disabled-password --home=/home/tor --gecos "" tor
-
 #########################################
-# custom config 
+# Tor config 
 ADD  tor/torrc /etc/tor/torrc
 ADD  tor/torsocks.conf /etc/tor/torsocks.conf
 #########################################
 
-#########################################
-# User env
-#USER tor
-#WORKDIR /home/tor
-# Fix empty $HOME
-#ENV HOME /home/tor
-#########################################
 ADD ./requirements.txt /
 RUN pip3 install -r requirements.txt
 

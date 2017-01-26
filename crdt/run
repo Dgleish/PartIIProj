@@ -1,0 +1,44 @@
+#!/bin/bash
+
+usage(){
+    printf 'Usage: %s [-e|--encrypt] [-t|--tor] <num_peers>\n' "$0"
+    printf "\t%s\n" "<num_peers>: number of instances of the app to run"
+    printf "\t%s\n" "-e,--encrypt: boolean flag for encrypting communication (default off)"
+    printf "\t%s\n" "-t,--tor: boolean flag to run over tor (default off)"
+
+}
+OPTIND=1
+encrypt=0
+tor=0
+while getopts et opt; do
+    case $opt in 
+        e | --encrypt )
+            encrypt=1
+            ;;
+        t | --tor )
+            tor=1
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac    
+done
+
+shift $((OPTIND-1))
+
+numPeers=$@
+if [ -z "$numPeers" ]
+then
+   usage
+   exit
+fi
+
+if [ $tor == 1 ]
+then
+    echo "running tor with $numPeers $encrypt"
+    . ./oniongo $numPeers $encrypt
+else
+    echo "running non-tor with $numPeers $encrypt"
+    . ./dockergo $numPeers $encrypt
+fi

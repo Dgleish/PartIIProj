@@ -9,13 +9,20 @@ from stem.control import Controller
 def createHS(port, key):
     with Controller.from_port() as controller:
         controller.authenticate('password')
-    basic_auth = {}
-    print('Starting Tor hidden service')
-    response = controller.create_ephemeral_hidden_service(
-        {port: port}, key_type='RSA1024', key_content=key, await_publication=True
-    )
-    onion_addr = response.service_id
-    print('Tor hidden service running at {}.onion'.format(onion_addr))
+        basic_auth = {}
+        print('Starting Tor hidden service')
+        response = controller.create_ephemeral_hidden_service(
+            {port: port}, key_type='RSA1024', key_content=key, await_publication=True, detached=True
+        )
+        onion_addr = response.service_id
+        print('Tor hidden service running at {}.onion'.format(onion_addr))
+        return onion_addr
+
+
+def destroyHS(service_id):
+    with Controller.from_port() as controller:
+        controller.authenticate('password')
+        controller.remove_ephemeral_hidden_service(service_id)
 
 
 def client(onion, port):
@@ -45,5 +52,6 @@ if __name__ == '__main__':
     sv.daemon = True
     sv.start()
     print('creating hidden service')
-    createHS(port, key)
+    service_id = createHS(port, key)
     client(onion, port)
+    destroyHS(service_id)

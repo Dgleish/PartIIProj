@@ -7,11 +7,11 @@ from crdt.crdt_exceptions import VertexNotFound
 from crdt.list_crdt import ListCRDT
 from crdt.ll_ordered_list import LLOrderedList
 from crdt.vector_clock import VectorClock
-from network.crdt_local_client import CRDTLocalClient
 from network.crdt_p2p_client import CRDTP2PClient
 from tools.operation_queue import OperationQueue
 from tools.operation_store import OperationStore
 from tor.tor_controller import TorController
+from ui.crdt_local_client import CRDTLocalClient
 
 
 class CRDTApp(object):
@@ -67,7 +67,7 @@ class CRDTApp(object):
         )
 
         # local UI input
-        self.local_client = CRDTLocalClient(self.op_queue, self.crdt.move_cursor, self.toggle_connect)
+        self.local_client = CRDTLocalClient(my_addr, self.op_queue, self.crdt.move_cursor, self.toggle_connect)
 
         self.simulate_user_input(ops_to_do)
         self.can_consume_sem = threading.Semaphore(1)

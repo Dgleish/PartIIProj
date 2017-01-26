@@ -1,0 +1,3 @@
+#!/bin/bash
+cd /src
+python3 run_p2p.py $args 2>&1

@@ -1,19 +1,20 @@
-import logging
+import threading
 import tkinter as Tk
 
 from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
 
 
 class CRDTLocalClient(object):
-    def __init__(self, op_queue, move_cursor, toggle_connect):
+    def __init__(self, title, op_queue, move_cursor, toggle_connect):
         self.op_q = op_queue
         self.move_cursor = move_cursor
         self.toggle_connect = toggle_connect
         self.connected = False
-        self.create_ui()
+        self.create_ui(title)
 
-    def create_ui(self):
+    def create_ui(self, title):
         self.root = Tk.Tk()
+        self.root.wm_title(title)
         text_frame = Tk.Frame(self.root)
         text_frame.pack(side=Tk.LEFT)
         self.t = Tk.Text(text_frame)
@@ -30,9 +31,12 @@ class CRDTLocalClient(object):
         self.connect_btn.bind("<ButtonRelease-1>", self.onclick_btn)
         self.connect_btn.pack()
 
-    def onclick_btn(self, event):
-        logging.debug('button clicked')
+    def ui_toggle_connect(self):
         self.connect_btn['state'] = Tk.DISABLED
+        if self.connected:
+            self.connect_btn['text'] = 'disconnecting'
+        else:
+            self.connect_btn['text'] = 'connecting'
         self.toggle_connect()
         self.connected = not self.connected
         if self.connected:
@@ -40,6 +44,11 @@ class CRDTLocalClient(object):
         else:
             self.connect_btn['text'] = 'connect'
         self.connect_btn['state'] = Tk.NORMAL
+
+    def onclick_btn(self, event):
+        t = threading.Thread(target=self.ui_toggle_connect)
+        t.daemon = True
+        t.start()
         return "break"
 
     def onclick_text(self, event):

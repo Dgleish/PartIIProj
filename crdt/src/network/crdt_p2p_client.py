@@ -46,6 +46,7 @@ class CRDTP2PClient(CRDTClient):
         try:
             # TODO: !! needed this shutdown method to ensure the connection was closed properly
             # sock.shutdown(socket.SHUT_RDWR)
+            self.pack_and_send('\x00', sock)
             sock.close()
         except:
             pass
@@ -218,13 +219,11 @@ class CRDTP2PClient(CRDTClient):
         while self.running:
             try:
                 sock, _ = self.recvsock.accept()
+                peer_addr = self.recvall(sock)
 
             except (socket.error, struct.error) as e:
                 logging.warning('couldn\'t connect to peer, {}'.format(e))
                 continue
-
-            peer_addr = self.recvall(sock)
-
             logging.info('peer connected from {}'.format(peer_addr))
 
             self.add_peer_lock.acquire()
@@ -264,7 +263,7 @@ class CRDTP2PClient(CRDTClient):
                 # add to the operation queue and signal something has been added
                 self.op_q.appendleft(unpickled_op)
 
-            except (socket.error, pickle.UnpicklingError, IndexError) as e:
+            except (socket.error, pickle.UnpicklingError, IndexError, ValueError) as e:
                 logging.warning('Failed to receive op from {} {}'.format(peer_ip, e))
                 self.remove_peer(peer_ip, sock)
                 return

@@ -7,7 +7,7 @@ with Controller.from_port() as controller:
     with open('../../keys', 'w') as f:
         for i in range(num_keys):
             key = RSA.generate(1024)
-            key_to_write = key.exportKey('PEM').split('-----')[2].replace('\n', '')
+            key_to_write = str(key.exportKey('PEM')).split('-----')[2].replace('\\n', '')
             service = controller.create_ephemeral_hidden_service({80: 5000}, key_type='RSA1024',
                                                                  key_content=key_to_write,
                                                                  await_publication=True)

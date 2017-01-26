@@ -10,23 +10,29 @@ others(){
     done
     eval "$3='${o}'"
 }
-if [ -z "$1" ]; then 
-  echo usage: $0 numPeers
-  exit
-fi
+
+# NUMBER OF INSTANCES TO SPAWN
 numPeers=$1
+
+# ENCRYPT COMMUNICATIONS OR NOT
+encrypt=$2
+
+# ALLOW CONTAINERS TO LOG TO GET X
 xhost +local:root
+
+# BUILD DOCKER IMAGE
 docker build . -t p2p
+
+# REMOVE EXISTING DOCKER IMAGES
 docker ps -aq | xargs docker rm -f
 
+# DOCKER RUN WITH APPROPRIATE ARGUMENTS
 for i in $(seq 2 $((numPeers+1))); do
     ip="172.18.0.${i}"
     return_var=''
     others $i $numPeers return_var
     otherPeers="${return_var}"
-    addr="$ip $otherPeers"
+    addr="$ip $otherPeers $encrypt"
 
     gnome-terminal -x sh -c "docker run --net=net1 --ip ${ip} --name p2p${i} -e args='${addr}' -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it p2p; bash"
-     #sleep $((10+(numPeers-3)*2))
-
 done
