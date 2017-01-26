@@ -1,6 +1,6 @@
 from binascii import hexlify
 
-from DiffieHellman import DiffieHellman
+from crypto.DiffieHellman import DiffieHellman
 
 if __name__ == '__main__':
     a = DiffieHellman(keyLength=180)
@@ -9,5 +9,5 @@ if __name__ == '__main__':
     b.genKey(a.publicKey)
 
     if (a.getKey() == b.getKey()):
-        print "Shared keys match."
-        print "Key:", hexlify(a.key)
+        print("Shared keys match.")
+        print("Key:", hexlify(a.getKey()))

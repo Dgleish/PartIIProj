@@ -5,7 +5,7 @@ import struct
 import threading
 from logging.config import fileConfig
 
-from crdt_client import CRDTClient
+from network.crdt_client import CRDTClient
 
 fileConfig('../logging_config.ini')
 
@@ -54,10 +54,10 @@ class CRDTNetworkClient(CRDTClient):
                 # add to the operation queue and signal something has been added
                 self.op_q.appendleft(unpickled_op)
             except pickle.UnpicklingError as e:
-                logging.error('Failed to unpickle {}'.format(e.message))
+                logging.error('Failed to unpickle {}'.format(e))
                 return
             except IndexError as e:
-                logging.error('weird index error unpickling {}'.format(e.message))
+                logging.error('weird index error unpickling {}'.format(e))
                 return
 
     def send_op(self, unpickled_op):

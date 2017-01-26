@@ -23,17 +23,20 @@ class CRDTClock(object):
         self._timestamp += 1
         self.value = '{}:{}'.format(self._timestamp, self._puid)
 
-    def __cmp__(self, other_clock):
+    def __eq__(self, other_clock):
         if other_clock is None:
-            return -1
+            return False
+        if isinstance(other_clock, CRDTClock):
+            return (self.timestamp == other_clock.timestamp) and (self.puid == other_clock.puid)
+
+    def __lt__(self, other_clock):
+        if other_clock is None:
+            return True
         if isinstance(other_clock, CRDTClock):
             if self.timestamp == other_clock.timestamp:
-                return cmp(self.puid, other_clock.puid)
+                return self.puid < other_clock.puid
             else:
-                return cmp(self.timestamp, other_clock.timestamp)
-
-        else:
-            return cmp(self.timestamp, other_clock)
+                return self.timestamp < other_clock.timestamp
 
     def __hash__(self):
         return hash(self.value)

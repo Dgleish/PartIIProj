@@ -90,7 +90,7 @@ class CRDTServer(object):
 
                 # for all other connected clients, send this operation
                 self.clients_lock.acquire()
-                for ad, cl in self.clients.iteritems():
+                for ad, cl in self.clients.items():
                     if ad != addr:
                         self.send_op(cl, op)
                 self.clients_lock.release()

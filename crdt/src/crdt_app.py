@@ -11,12 +11,24 @@ from network.crdt_local_client import CRDTLocalClient
 from network.crdt_p2p_client import CRDTP2PClient
 from tools.operation_queue import OperationQueue
 from tools.operation_store import OperationStore
+from tor.tor_controller import TorController
 
 
 class CRDTApp(object):
-    def __init__(self, puid, host, port, ops_to_do, known_peers):
+    def __init__(self, puid, host, port, ops_to_do, known_peers, my_addr, encrypt, priv_key):
 
         # logging.disable('DEBUG')
+
+        # negotiate session key on connect and encrypt all operations sent
+        self.encrypt = encrypt
+
+        # connect through Tor
+        if priv_key is not None:
+            # Make Tor controller
+            self.tor = TorController(port, priv_key)
+            self.use_tor = True
+        else:
+            self.use_tor = False
 
         # listening and/or connected to other peers?
         self.is_connected = False
@@ -51,7 +63,7 @@ class CRDTApp(object):
         # either cl-sv or P2P
         self.network_client = CRDTP2PClient(
             host, port, self.op_queue, self.puid, self.seen_ops_vc,
-            self.op_store, self.known_peers
+            self.op_store, self.encrypt, self.known_peers, my_addr, priv_key is not None
         )
 
         # local UI input
@@ -67,7 +79,7 @@ class CRDTApp(object):
         op_queue_consumer.daemon = True
         op_queue_consumer.start()
 
-        self.connect()
+        # self.connect()
 
         # Show GUI
         self.local_client.display()
@@ -77,6 +89,8 @@ class CRDTApp(object):
         """
         Starts the peer discovery process and then starts listening for incoming connections
         """
+        if self.use_tor:
+            self.tor.connect()
         network_thread = threading.Thread(target=self.network_client.connect, args=(self.can_consume_sem,))
         network_thread.daemon = True
         network_thread.start()
@@ -87,6 +101,8 @@ class CRDTApp(object):
         Drop all connections and stop listening for incoming connections
         """
         self.network_client.disconnect(self.can_consume_sem)
+        if self.use_tor:
+            self.tor.disconnect()
         self.is_connected = False
 
     def toggle_connect(self):
@@ -119,7 +135,7 @@ class CRDTApp(object):
                 # do the operation on the local CRDT
                 op_to_store, should_send = copy.deepcopy(self.crdt.perform_op(op))
             except VertexNotFound as e:
-                logging.warn('{} Failed to do op {}, {}'.format(self.puid, op, e))
+                logging.warning('{} Failed to do op {}, {}'.format(self.puid, op, e))
                 # add op indexed by the (missing) operation it was referencing
                 self.held_back_ops[op.clock].append(op)
                 # logging.debug('releasing sem')

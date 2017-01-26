@@ -1,5 +1,5 @@
-from base_ordered_list import BaseOrderedList
-from crdt_exceptions import VertexNotFound
+from crdt.base_ordered_list import BaseOrderedList
+from crdt.crdt_exceptions import VertexNotFound
 
 
 class Node(object):

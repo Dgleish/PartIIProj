@@ -1,5 +1,5 @@
-import Tkinter as Tk
 import logging
+import tkinter as Tk
 
 from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
 
@@ -9,6 +9,7 @@ class CRDTLocalClient(object):
         self.op_q = op_queue
         self.move_cursor = move_cursor
         self.toggle_connect = toggle_connect
+        self.connected = False
         self.create_ui()
 
     def create_ui(self):
@@ -25,13 +26,20 @@ class CRDTLocalClient(object):
 
         side_frame = Tk.Frame(self.root)
         side_frame.pack(padx=10, side=Tk.LEFT)
-        btn = Tk.Button(side_frame, text="connect/disconnect")
-        btn.bind("<ButtonRelease-1>", self.onclick_btn)
-        btn.pack()
+        self.connect_btn = Tk.Button(side_frame, text="connect")
+        self.connect_btn.bind("<ButtonRelease-1>", self.onclick_btn)
+        self.connect_btn.pack()
 
     def onclick_btn(self, event):
         logging.debug('button clicked')
+        self.connect_btn['state'] = Tk.DISABLED
         self.toggle_connect()
+        self.connected = not self.connected
+        if self.connected:
+            self.connect_btn['text'] = 'disconnect'
+        else:
+            self.connect_btn['text'] = 'connect'
+        self.connect_btn['state'] = Tk.NORMAL
         return "break"
 
     def onclick_text(self, event):
@@ -62,7 +70,8 @@ class CRDTLocalClient(object):
         # self.move_cursor('Right')
         return "break"
 
-    def update(self, (text, cursor)):
+    def update(self, crdt_state):
+        text, cursor = crdt_state
         self.t.delete(1.0, Tk.END)
         self.t.insert(1.0, text)
         self.cursor_pos = cursor

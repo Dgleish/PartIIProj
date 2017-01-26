@@ -4,7 +4,7 @@ from threading import RLock
 
 from wrapt import decorator
 
-from crdt_clock import CRDTClock
+from crdt.crdt_clock import CRDTClock
 
 
 @decorator
@@ -77,7 +77,7 @@ class VectorClock(object):
                 self.clocks[puid].update(clock)
             else:
                 # we aren't aware of this peer
-                logging.warn('wasn\'t aware of peer {}'.format(puid))
+                logging.warning('wasn\'t aware of peer {}'.format(puid))
                 pass
 
     @synchronized
@@ -86,7 +86,7 @@ class VectorClock(object):
         Add a clock entry for the peer
         """
         if puid in self.clocks:
-            logging.warn('already had peer {}'.format(puid))
+            logging.warning('already had peer {}'.format(puid))
         self.clocks[puid] = CRDTClock(puid)
 
     @synchronized
@@ -105,11 +105,20 @@ class VectorClock(object):
         return self.clocks.items()
 
     @synchronized
-    def __cmp__(self, other):
+    def __eq__(self, other):
         if isinstance(other, CRDTClock):
             other_puid = other.puid
-            my_version = self.clocks[other_puid]
-            return cmp(my_version, other)
+            if other_puid in self.clocks:
+                return other_puid in self.clocks and (self.clocks[other_puid] == other_puid)
+
+    @synchronized
+    def __lt__(self, other):
+        if isinstance(other, CRDTClock):
+            other_puid = other.puid
+            if other_puid in self.clocks:
+                return self.clocks[other_puid] < other
+            else:
+                return False
 
     @synchronized
     def pickle(self):
@@ -119,4 +128,4 @@ class VectorClock(object):
         return self.__repr__()
 
     def __repr__(self):
-        return '|'.join(str(cl) for cl in self.clocks.itervalues())
+        return '|'.join(str(cl) for cl in self.clocks.values())

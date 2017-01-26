@@ -14,15 +14,17 @@ class CRDTClient(object):
             raise socket.error
         length, = struct.unpack('!I', length_struct)
 
-        buf = ''
+        buf = []
         while length:
             newbuf = sock.recv(length)
             if not newbuf:
                 return None
-            buf += newbuf
+            buf.append(newbuf)
             length -= len(newbuf)
-        if buf == '':
+        if len(buf) == 0:
             raise socket.error('No data received')
+        else:
+            buf = b''.join(buf)
         if cipher is not None:
             buf = cipher.decrypt2(buf)
 

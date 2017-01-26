@@ -35,29 +35,21 @@ class SyncClass(object):
 
     @synchronized
     def __getstate__(self):
-        print 'pickling'
+        print('pickling')
         val = {
             'a': self.a
         }
         sleep(5)
-        print 'done pickling'
+        print('done pickling')
         return val
 
     @synchronized
-    def sync_meth(self):
-        print 'entered function'
-        self.d['e'] = 0
-        self.d['d'] = 0
-        self.d['c'] = 0
-        self.d['b'] = 0
-        sleep(5)
-        print 'leaving function'
+    def sync_meth(self, arr):
+        arr += ['sync_meth'] * 100
 
     @synchronized
-    def sync_meth2(self):
-        print 'entered func2'
-        sleep(5)
-        print 'leaving func2'
+    def sync_meth2(self, arr):
+        arr.append('sync_meth2')
 
     @synchronized
     def pickle(self):
@@ -68,17 +60,17 @@ class SyncClass(object):
         return self.d
 
     def iterate(self):
-        for k, v in self.iter().iteritems():
-            print k, v
+        for k, v in self.iter().items():
+            print(k, v)
 
 
 def test_sync():
     s = SyncClass()
-    t1 = threading.Thread(target=s.iterate)
-    t2 = threading.Thread(target=s.sync_meth)
-    t3 = threading.Thread(target=s.sync_meth2)
-    t2.start()
+    arr = []
+    t1 = threading.Thread(target=s.sync_meth, args=(arr,))
+    t2 = threading.Thread(target=s.sync_meth2, args=(arr,))
     t1.start()
-
-    t3.start()
-    sleep(10)
+    t2.start()
+    t1.join()
+    t2.join()
+    assert arr[-1] == 'sync_meth2' and arr[-2] == 'sync_meth'

@@ -1,12 +1,34 @@
-FROM python:2
+FROM python:3
 
-#COPY wheelhouse /tmp/wheelhouse
-#RUN apt-get update
+# Adds Tor debian repository
+RUN echo "deb http://deb.torproject.org/torproject.org wheezy main" >> /etc/apt/sources.list
+RUN gpg --keyserver keys.gnupg.net --recv 886DDD89
+RUN gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+RUN apt-get update -y
+RUN apt-get install deb.torproject.org-keyring -y
+RUN apt-get install tor runit -y
+
+#
+# Adds a custom non root user with home directory
+RUN adduser --disabled-password --home=/home/tor --gecos "" tor
+
+#########################################
+# custom config 
+ADD  tor/torrc /etc/tor/torrc
+ADD  tor/torsocks.conf /etc/tor/torsocks.conf
+#########################################
+
+#########################################
+# User env
+#USER tor
+#WORKDIR /home/tor
+# Fix empty $HOME
+#ENV HOME /home/tor
+#########################################
 ADD ./requirements.txt /
-#RUN pip install --use-wheel --find-links=/tmp/wheelhouse pyOpenSSL
-#RUN pip install --use-wheel --find-links=/tmp/wheelhouse pycrypto
-RUN pip install -r requirements.txt
-ADD . /
-WORKDIR /src
+RUN pip3 install -r requirements.txt
 
-CMD python run_p2p.py $addr
+ADD runit /etc/service
+ADD . /
+
+CMD runsvdir /etc/service

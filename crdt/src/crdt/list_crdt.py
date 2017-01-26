@@ -3,9 +3,9 @@
 from copy import copy
 from logging.config import fileConfig
 
-from crdt_clock import CRDTClock
-from crdt_exceptions import MalformedOp, UnknownOp
-from crdt_ops import (CRDTOp, CRDTOpAddRightLocal,
+from crdt.crdt_clock import CRDTClock
+from crdt.crdt_exceptions import MalformedOp, UnknownOp
+from crdt.crdt_ops import (CRDTOp, CRDTOpAddRightLocal,
                       CRDTOpAddRightRemote, CRDTOpDeleteLocal, CRDTOpDeleteRemote)
 
 fileConfig('../logging_config.ini')
@@ -52,7 +52,6 @@ class ListCRDT(object):
 
         # Insert the specified vertex to the right of the current cursor with the current clock value
         left_clock, vertex_added = self._add_right(self.cursor, (atom, clock))
-
         # Cursor points at vertex we just inserted
         self.cursor = copy(clock)
 
@@ -72,7 +71,8 @@ class ListCRDT(object):
 
         return op, False
 
-    def _add_right(self, left_clock, (a, new_cl)):
+    def _add_right(self, left_clock, vertex_to_add):
+        a, new_cl = vertex_to_add
         l_cl = left_clock
         r_cl = self.olist.successor(left_clock)
         # logging.debug('inserting between {} and {}'.format(l_cl, r_cl))

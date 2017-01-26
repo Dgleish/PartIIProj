@@ -4,15 +4,18 @@ import socket
 import struct
 import threading
 
+import socks
+
 from crdt.crdt_ops import CRDTOp
-from crdt_client import CRDTClient
 from crypto.DiffieHellman import DiffieHellman
-from tools.cipher import Cipher
+from crypto.cipher import Cipher
+from network.crdt_client import CRDTClient
 from tools.connected_peers import ConnectedPeers
 
 
 class CRDTP2PClient(CRDTClient):
-    def __init__(self, host, port, op_q, puid, seen_ops_vc, stored_ops, known_peers):
+    def __init__(
+            self, host, port, op_q, puid, seen_ops_vc, stored_ops, encrypt, known_peers, my_addr, use_tor):
         super(CRDTP2PClient, self).__init__(puid)
         self.connected_peers = ConnectedPeers()
         self.connecting_peers = ConnectedPeers()
@@ -23,7 +26,17 @@ class CRDTP2PClient(CRDTClient):
         self.seen_ops_vc = seen_ops_vc
         self.stored_ops = stored_ops
         self.running = False
-        self.my_DH = DiffieHellman()
+        if encrypt:
+            self.my_DH = DiffieHellman()
+
+        self.encrypt = encrypt
+
+        self.my_addr = my_addr
+
+        if use_tor:
+            socks.set_default_proxy(socks.SOCKS5, "localhost", port=9050)
+        self.use_tor = use_tor
+
         self.add_peer_lock = threading.RLock()
 
     def remove_peer(self, ip, sock):
@@ -31,7 +44,8 @@ class CRDTP2PClient(CRDTClient):
         Close connection to peer and note that no longer connected
         """
         try:
-            sock.shutdown(socket.SHUT_RDWR)
+            # TODO: !! needed this shutdown method to ensure the connection was closed properly
+            # sock.shutdown(socket.SHUT_RDWR)
             sock.close()
         except:
             pass
@@ -145,46 +159,55 @@ class CRDTP2PClient(CRDTClient):
         """
         Connect to all known addresses
         """
-        # Force the app to stop applying operations until done connecting
+
         logging.debug('connecting')
+        # Force the app to stop applying operations until done connecting
         can_consume_sem.acquire()
         self.running = True
+        encrypt = self.encrypt
+        use_tor = self.use_tor
 
         # start listening for other peers connecting
-        listen_thread = threading.Thread(target=self.listen_for_peers, args=(self.port,))
+        listen_thread = threading.Thread(target=self.listen_for_peers, args=(self.port, encrypt))
         listen_thread.daemon = True
         listen_thread.start()
 
         for peer_ip in self.known_peers:
-            # logging.debug('trying to connect to {} out of {}'.format(peer_ip, self.known_peers))
             try:
+                logging.debug('trying to connect to {} out of {}'.format(peer_ip, self.known_peers))
                 self.add_peer_lock.acquire()
-                # logging.debug('got add_peer_lock')
                 if self.connected_peers.contains(peer_ip) or (
                         self.connecting_peers.contains(peer_ip)):
                     logging.debug('already connected to {}'.format(peer_ip))
                     continue
-                sock = socket.socket()
-                sock.connect((peer_ip, self.port))
+                if use_tor:
+                    sock = socks.socksocket()
+                    logging.debug('connecting to {} over Tor'.format(peer_ip + '.onion'))
+                    sock.connect((peer_ip + '.onion', self.port))
+                else:
+                    sock = socket.socket()
+                    sock.connect((peer_ip, self.port))
                 logging.debug('connected to {}'.format(peer_ip))
+                self.pack_and_send(self.my_addr, sock)
                 self.connecting_peers.add_peer(peer_ip, sock)
 
-            except (socket.error, struct.error) as e:
-                logging.warn('couldn\'t connect to {}, {}'.format(peer_ip, e))
+            except (socket.error, struct.error, socks.SOCKS5Error) as e:
+                logging.warning('couldn\'t connect to {}, {}'.format(peer_ip, e))
                 continue
             finally:
                 self.add_peer_lock.release()
                 # logging.debug('released add peer lock')
 
-            self.do_p2p_protocol(sock, peer_ip, True)
+            self.do_p2p_protocol(sock, peer_ip, encrypt)
             logging.debug('finished connecting to {}'.format(peer_ip))
 
         can_consume_sem.release()
 
-    def listen_for_peers(self, port):
+    def listen_for_peers(self, port, encrypt):
         """
         Start listening for incoming peer connections
         :param port: the port to listen on
+        :param encrypt: Boolean whether or not to encrypt communication
         """
         self.recvsock = socket.socket()
         self.recvsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -194,29 +217,29 @@ class CRDTP2PClient(CRDTClient):
 
         while self.running:
             try:
-                sock, (peer_ip, po) = self.recvsock.accept()
-                logging.info('peer connected from {}'.format(peer_ip))
+                sock, _ = self.recvsock.accept()
 
             except (socket.error, struct.error) as e:
-                logging.warn('couldn\'t connect to peer, {}'.format(e))
+                logging.warning('couldn\'t connect to peer, {}'.format(e))
                 continue
+
+            peer_addr = self.recvall(sock)
+
+            logging.info('peer connected from {}'.format(peer_addr))
 
             self.add_peer_lock.acquire()
-            # logging.debug('got add_peer_lock')
-            if (self.connected_peers.contains(peer_ip) or (
-                    self.connecting_peers.contains(peer_ip))) and (
-                        peer_ip > self.hostname
+            if (self.connected_peers.contains(peer_addr) or (
+                    self.connecting_peers.contains(peer_addr))) and (
+                        peer_addr > self.my_addr
             ):
-                logging.debug('already conn. {} {}'.format(peer_ip, self.hostname))
+                logging.debug('already connected to {}, dropping'.format(peer_addr, self.hostname))
                 self.add_peer_lock.release()
-                # logging.debug('released add peer lock')
                 sock.close()
                 continue
-            self.connecting_peers.add_peer(peer_ip, sock)
+            self.connecting_peers.add_peer(peer_addr, sock)
             self.add_peer_lock.release()
-            # logging.debug('released add peer lock')
 
-            self.do_p2p_protocol(sock, peer_ip, True)
+            self.do_p2p_protocol(sock, peer_addr, encrypt)
 
     def listen_for_ops(self, peer_ip, sock, cipher):
         """
@@ -229,7 +252,7 @@ class CRDTP2PClient(CRDTClient):
             try:
                 unpickled_op = self.recvall(sock, cipher)
                 if not isinstance(unpickled_op, CRDTOp):
-                    logging.warn('op {} was garbled, disconnecting from {}'.format(
+                    logging.warning('op {} was garbled, disconnecting from {}'.format(
                         unpickled_op, peer_ip
                     ))
                     raise socket.error('Garbled operation')
@@ -242,6 +265,6 @@ class CRDTP2PClient(CRDTClient):
                 self.op_q.appendleft(unpickled_op)
 
             except (socket.error, pickle.UnpicklingError, IndexError) as e:
-                logging.warn('Failed to receive op {} from {}'.format(e.message, peer_ip))
+                logging.warning('Failed to receive op from {} {}'.format(peer_ip, e))
                 self.remove_peer(peer_ip, sock)
                 return
