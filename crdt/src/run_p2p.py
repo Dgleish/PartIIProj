@@ -10,7 +10,6 @@ def run_p2p(my_addr, known_peers, encrypt=False, priv_key=None):
         CRDTOpAddRightLocal(my_addr[0])
     ], known_peers, my_addr, encrypt, priv_key)
 
-
 if __name__ == '__main__':
     args = sys.argv
     print('got args {}'.format(args))

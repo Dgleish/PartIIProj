@@ -1,17 +1,17 @@
 #!/bin/bash
 
 usage(){
-    printf 'Usage: %s [-e|--encrypt] [-t|--tor] [-f|--file <key_file>]\n' "$0"
-    printf "\t%s\n\t%s\n\t%s\n\t%s\n" "-f,--file: the file to read your private key and onion addresses from. " "The lines of the file should be either: '\n'.join([<YOUR_IP_ADDRESS>, <PEER_IP_ADDRESSES>*]" "or for Tor: '\n'.join([<YOUR_PRIVATE_KEY>, <SERVICE_ID_ASSOC_WITH_PRIVATE_KEY>, <PEER_SERVICE_IDS>*])" "I'm not doing checking"
-    printf "\t%s\n" "-e,--encrypt: boolean flag for encrypting communication (default off)"
-    printf "\t%s\n" "-t,--tor: boolean flag to run over tor (default off)"
+    printf 'Usage: %s [-e] [-t] [-f <key_file>]\n' "$0"
+    printf "\t%s\n\t%s\n\t%s\n\t%s\n" "-f: the file to read your private key and onion addresses from. " "The lines of the file should be either: '\n'.join([<YOUR_IP_ADDRESS>, <PEER_IP_ADDRESSES>*]" "or for Tor: '\n'.join([<YOUR_PRIVATE_KEY>, <SERVICE_ID_ASSOC_WITH_PRIVATE_KEY>, <PEER_SERVICE_IDS>*])" "I'm not doing checking"
+    printf "\t%s\n" "-e: boolean flag for encrypting communication (default off)"
+    printf "\t%s\n" "-t: boolean flag to run over tor (default off)"
 
 }
 
 OPTIND=1
 encrypt=0
 tor=0
-while getopts etf: opt; do
+while getopts etf:h opt; do
     case $opt in 
         e | --encrypt )
             encrypt=1
@@ -21,6 +21,10 @@ while getopts etf: opt; do
             ;;
         f | --file )
             key_file=$OPTARG
+            ;;
+        h | --help )
+            usage
+            exit
             ;;
         *)
             usage
