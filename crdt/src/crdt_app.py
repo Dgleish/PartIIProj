@@ -1,9 +1,9 @@
 import copy
 import logging
 import threading
-from collections import defaultdict
 
 from crdt.crdt_exceptions import VertexNotFound
+from crdt.crdt_ops import RemoteCRDTOp
 from crdt.list_crdt import ListCRDT
 from crdt.ll_ordered_list import LLOrderedList
 from crdt.vector_clock import VectorClock
@@ -15,7 +15,7 @@ from ui.crdt_local_client import CRDTLocalClient
 
 
 class CRDTApp(object):
-    def __init__(self, puid, host, port, ops_to_do, known_peers, my_addr, encrypt, priv_key):
+    def __init__(self, puid, port, ops_to_do, known_peers, my_addr, encrypt, priv_key):
 
         # logging.disable('DEBUG')
 
@@ -51,10 +51,10 @@ class CRDTApp(object):
         self.op_queue = OperationQueue()
 
         # store of operations by peer
-        self.op_store = OperationStore()
+        self.op_store = OperationStore(list)
 
         # dict of operations that have arrived out of order
-        self.held_back_ops = defaultdict(list)
+        self.held_back_ops = OperationStore(set)
 
         # peers to connect to
         self.known_peers = known_peers
@@ -62,7 +62,7 @@ class CRDTApp(object):
         # TODO: be nice to pass this in as argument then have CRDTNetwork as an interface to
         # either cl-sv or P2P
         self.network_client = CRDTP2PClient(
-            host, port, self.op_queue, self.puid, self.seen_ops_vc,
+            port, self.op_queue, self.puid, self.seen_ops_vc,
             self.op_store, self.encrypt, self.known_peers, my_addr, priv_key is not None
         )
 
@@ -134,19 +134,20 @@ class CRDTApp(object):
             try:
                 # do the operation on the local CRDT
                 op_to_store, should_send = copy.deepcopy(self.crdt.perform_op(op))
+                assert isinstance(op_to_store, RemoteCRDTOp)
             except VertexNotFound as e:
                 logging.warning('{} Failed to do op {}, {}'.format(self.puid, op, e))
                 # add op indexed by the (missing) operation it was referencing
-                self.held_back_ops[op.clock].append(op)
+                self.held_back_ops.add_op(op.clock, op)
                 # logging.debug('releasing sem')
                 self.can_consume_sem.release()
                 # logging.debug('released sem')
                 continue
 
             # Store operation
-            self.op_store.add_op(op_to_store)
+            self.op_store.add_op(op_to_store.op_id.puid, op_to_store)
 
-            logging.debug('{} performed op {}'.format(self.puid, op_to_store))
+            logging.debug('{} did and stored op {}'.format(self.puid, op_to_store))
 
             # Update UI
             self.local_client.update(self.crdt.pretty_print())
@@ -163,9 +164,9 @@ class CRDTApp(object):
             # clocks equal to the op just done,
             # add them to the front of the queue
             recovery_clock = op_to_store.op_id
-            if recovery_clock in self.held_back_ops:
-                for new_op in self.held_back_ops[recovery_clock]:
+            if recovery_clock in self.held_back_ops.ops:
+                for new_op in self.held_back_ops.get_ops_for_key(recovery_clock):
                     self.op_queue.append(new_op)
-                del self.held_back_ops[recovery_clock]
+                self.held_back_ops.remove_ops_for_key(recovery_clock)
 
             self.can_consume_sem.release()

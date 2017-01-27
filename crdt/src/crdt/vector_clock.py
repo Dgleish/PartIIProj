@@ -1,26 +1,8 @@
 import logging
 import pickle
-from threading import RLock
-
-from wrapt import decorator
 
 from crdt.crdt_clock import CRDTClock
-
-
-@decorator
-def synchronized(wrapped, instance, args, kwargs):
-    if instance is None:
-        context = vars(wrapped)
-    else:
-        context = vars(instance)
-
-    lock = context.get('_synchronized_lock', None)
-
-    if lock is None:
-        lock = context.setdefault('_synchronized_lock', RLock())
-
-    with lock:
-        return wrapped(*args, **kwargs)
+from tools.decorators import synchronized
 
 
 # noinspection PyArgumentList
@@ -107,18 +89,28 @@ class VectorClock(object):
     @synchronized
     def __eq__(self, other):
         if isinstance(other, CRDTClock):
+            # Essentially compares our corresponding clock component to
+            # the given clock for equality
             other_puid = other.puid
             if other_puid in self.clocks:
                 return other_puid in self.clocks and (self.clocks[other_puid] == other_puid)
+            else:
+                return False
 
     @synchronized
     def __lt__(self, other):
+        if other is None:
+            return False
         if isinstance(other, CRDTClock):
+            # This is comparison is used to see if our vector clock
+            # is behind a specific single clock
+            # If we don't have an entry for it, it would default to 0
+            # so we are definitely behind it
             other_puid = other.puid
             if other_puid in self.clocks:
                 return self.clocks[other_puid] < other
             else:
-                return False
+                return True
 
     @synchronized
     def pickle(self):

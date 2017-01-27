@@ -30,8 +30,7 @@ shift $((OPTIND-1))
 numPeers=$@
 if [ -z "$numPeers" ]
 then
-   usage
-   exit
+   numPeers=1
 fi
 
 if [ $tor == 1 ]

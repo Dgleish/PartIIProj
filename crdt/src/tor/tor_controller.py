@@ -4,12 +4,16 @@ from time import sleep
 from stem import SocketError
 from stem.control import Controller
 
+
 class TorController(object):
     def __init__(self, port, key):
         self.port = port
         self.key = key
 
     def connect(self):
+        """
+        Start a Tor hidden service using the provided port and key
+        """
         while True:
             try:
                 with Controller.from_port() as controller:
@@ -28,6 +32,9 @@ class TorController(object):
                 sleep(5)
 
     def disconnect(self):
+        """
+        Destroy the Tor hidden service. If this isn't done, the next create call will fail!
+        """
         with Controller.from_port() as controller:
             controller.authenticate()
             controller.remove_ephemeral_hidden_service(self.onion_addr)

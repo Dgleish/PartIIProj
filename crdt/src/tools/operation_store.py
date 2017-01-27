@@ -1,38 +1,24 @@
 import logging
 from bisect import bisect_left
 from collections import defaultdict
-from threading import RLock
 
-from wrapt import decorator
-
-
-@decorator
-def synchronized(wrapped, instance, args, kwargs):
-    if instance is None:
-        context = vars(wrapped)
-    else:
-        context = vars(instance)
-
-    lock = context.get('_synchronized_lock', None)
-
-    if lock is None:
-        lock = context.setdefault('_synchronized_lock', RLock())
-
-    with lock:
-        return wrapped(*args, **kwargs)
+from tools.decorators import synchronized
 
 
 # noinspection PyArgumentList
 class OperationStore(object):
-    def __init__(self):
-        self.ops = defaultdict(list)
+    def __init__(self, value_store):
+        self.ops = defaultdict(value_store)
+        if value_store == set:
+            self.add = lambda store, x: store.add(x)
+        else:
+            self.add = lambda store, x: store.append(x)
 
     @synchronized
-    def add_op(self, op):
-        puid = op.op_id.puid
-        self.ops[puid].append(op)
+    def add_op(self, key, op):
+        self.add(self.ops[key], op)
 
-    def find_next_biggest(self, ops, t):
+    def _find_next_biggest(self, ops, t):
         # binary search variant
         # returns index of first element with timestamp > t or
         # -1 if no such element exists
@@ -43,28 +29,36 @@ class OperationStore(object):
             return -1
         return i
 
-    # TODO: very testable
-    def get_ops_after(self, puid, timestamp=None):
+    def _get_ops_for_key_after(self, key, timestamp=None):
 
         if timestamp is None:
             # give all ops if they don't know about a peer yet
-            return self.ops[puid]
+            return self.ops[key]
         # for a peer's operations and a timestamp,
         # find first the next operation after the given timestamp
         # then return all elements in that list after and including the found one
         # if no such operation exists, return empty list
-        index = self.find_next_biggest(self.ops[puid], timestamp)
+        index = self._find_next_biggest(self.ops[key], timestamp)
         if index == -1:
             return []
         else:
-            return self.ops[puid][index:]
+            return self.ops[key][index:]
 
     @synchronized
-    def determine_ops(self, vector_clock):
+    def determine_ops_after_vc(self, vector_clock):
         ops_to_send = []
         logging.debug("determining ops to send for vc {}".format(vector_clock))
 
-        for puid in self.ops:
-            ops_to_send += self.get_ops_after(puid, vector_clock.get_clock(puid))
+        for key in self.ops:
+            ops_to_send += self._get_ops_for_key_after(key, vector_clock.get_clock(key))
 
         return ops_to_send
+
+    @synchronized
+    def remove_ops_for_key(self, key):
+        if key in self.ops:
+            del self.ops[key]
+
+    @synchronized
+    def get_ops_for_key(self, key):
+        return list(self.ops[key])

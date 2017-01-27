@@ -6,20 +6,24 @@ import threading
 
 import socks
 
-from crdt.crdt_ops import CRDTOp
+from crdt.crdt_ops import RemoteCRDTOp
+from crdt.vector_clock import VectorClock
 from crypto.DiffieHellman import DiffieHellman
 from crypto.cipher import Cipher
 from network.crdt_client import CRDTClient
 from tools.connected_peers import ConnectedPeers
+from tools.operation_queue import OperationQueue
+from tools.operation_store import OperationStore
 
 
 class CRDTP2PClient(CRDTClient):
     def __init__(
-            self, host, port, op_q, puid, seen_ops_vc, stored_ops, encrypt, known_peers, my_addr, use_tor):
+            self, port, op_q: OperationQueue,
+            puid, seen_ops_vc: VectorClock, stored_ops: OperationStore,
+            encrypt, known_peers, my_addr, use_tor):
         super(CRDTP2PClient, self).__init__(puid)
         self.connected_peers = ConnectedPeers()
         self.connecting_peers = ConnectedPeers()
-        self.hostname = host
         self.port = port
         self.op_q = op_q
         self.known_peers = known_peers
@@ -44,8 +48,7 @@ class CRDTP2PClient(CRDTClient):
         Close connection to peer and note that no longer connected
         """
         try:
-            # TODO: !! needed this shutdown method to ensure the connection was closed properly
-            # sock.shutdown(socket.SHUT_RDWR)
+            # Send something so that the listening thread gets woken up and can close
             self.pack_and_send('\x00', sock)
             sock.close()
         except:
@@ -85,8 +88,9 @@ class CRDTP2PClient(CRDTClient):
         :param cipher: the crypto object
         """
         their_vc = self.recvall(sock, cipher)
+        assert isinstance(their_vc, VectorClock)
         # determine which ops to send
-        ops_to_send = self.stored_ops.determine_ops(their_vc)
+        ops_to_send = self.stored_ops.determine_ops_after_vc(their_vc)
         # logging.debug('sync ops sending over {}'.format(ops_to_send))
         for op in ops_to_send:
             self.pack_and_send(op, sock, cipher)
@@ -150,7 +154,7 @@ class CRDTP2PClient(CRDTClient):
 
         s = socket.socket(socket.AF_INET,
                           socket.SOCK_STREAM)
-        s.connect((self.hostname, self.port))
+        s.connect(("localhost", self.port))
         self.running = False
         s.close()
         self.recvsock.close()
@@ -231,7 +235,7 @@ class CRDTP2PClient(CRDTClient):
                     self.connecting_peers.contains(peer_addr))) and (
                         peer_addr > self.my_addr
             ):
-                logging.debug('already connected to {}, dropping'.format(peer_addr, self.hostname))
+                logging.debug('already connected to {}, dropping'.format(peer_addr))
                 self.add_peer_lock.release()
                 sock.close()
                 continue
@@ -249,19 +253,21 @@ class CRDTP2PClient(CRDTClient):
         """
         while True:
             try:
-                unpickled_op = self.recvall(sock, cipher)
-                if not isinstance(unpickled_op, CRDTOp):
+                op = self.recvall(sock, cipher)
+                if not isinstance(op, RemoteCRDTOp):
                     logging.warning('op {} was garbled, disconnecting from {}'.format(
-                        unpickled_op, peer_ip
+                        op, peer_ip
                     ))
                     raise socket.error('Garbled operation')
-                logging.debug('{} got op {}'.format(self.puid, unpickled_op))
+                logging.debug('{} got op {}'.format(self.puid, op))
 
                 # Note that we've received this
-                self.seen_ops_vc.update(unpickled_op)
+                if not (self.seen_ops_vc < op.clock):
+                    # We have seen the vertex this operation references
+                    self.seen_ops_vc.update(op)
 
                 # add to the operation queue and signal something has been added
-                self.op_q.appendleft(unpickled_op)
+                self.op_q.appendleft(op)
 
             except (socket.error, pickle.UnpicklingError, IndexError, ValueError) as e:
                 logging.warning('Failed to receive op from {} {}'.format(peer_ip, e))

@@ -1,3 +1,5 @@
+from crdt.crdt_clock import CRDTClock
+
 class CRDTOp(object):
     pass
 
@@ -8,7 +10,7 @@ class RemoteCRDTOp(CRDTOp):
         self._op_id = op_id
 
     @property
-    def op_id(self):
+    def op_id(self) -> CRDTClock:
         return self._op_id
 
 

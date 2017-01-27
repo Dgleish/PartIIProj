@@ -1,0 +1,92 @@
+#!/bin/bash
+
+usage(){
+    printf 'Usage: %s [-e|--encrypt] [-t|--tor] [-f|--file <key_file>]\n' "$0"
+    printf "\t%s\n\t%s\n\t%s\n\t%s\n" "-f,--file: the file to read your private key and onion addresses from. " "The lines of the file should be either: '\n'.join([<YOUR_IP_ADDRESS>, <PEER_IP_ADDRESSES>*]" "or for Tor: '\n'.join([<YOUR_PRIVATE_KEY>, <SERVICE_ID_ASSOC_WITH_PRIVATE_KEY>, <PEER_SERVICE_IDS>*])" "I'm not doing checking"
+    printf "\t%s\n" "-e,--encrypt: boolean flag for encrypting communication (default off)"
+    printf "\t%s\n" "-t,--tor: boolean flag to run over tor (default off)"
+
+}
+
+OPTIND=1
+encrypt=0
+tor=0
+while getopts etf: opt; do
+    case $opt in 
+        e | --encrypt )
+            encrypt=1
+            ;;
+        t | --tor )
+            tor=1
+            ;;
+        f | --file )
+            key_file=$OPTARG
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac    
+done
+
+if [ -z "$key_file" ]
+then
+    usage
+    exit
+fi
+
+if [ $tor == 1 ]
+then
+
+    other_onions=':'
+    cnt=0
+    while read line
+    do
+        if [ "$cnt" == 0 ]; then
+            priv=$line
+        elif [ "$cnt" == 1 ]; then
+            onion=$line
+        else
+            other_onions+="$line:"        
+        fi
+        cnt=$((cnt+1))
+    done <"$key_file"
+    if [ -z "$priv" ]; then
+        echo "File formatted incorrectly (make sure it ends with a newline as per C standard)"
+        usage
+        exit
+    fi
+    if [[ $priv == *[.]*[.]*[.]* ]]; then
+        echo " File formatted incorrectly. Did you mean to use the -t option?"
+        usage
+        exit
+    fi
+    # move into the source directory to run
+    cd src
+    python3 run_p2p.py $onion $other_onions $encrypt $priv  
+else
+    other_ips=':'
+    cnt=0
+    while read line
+    do
+        if [ "$cnt" == 0 ]; then
+            ip=$line
+        else
+            other_ips+="$line:"            
+        fi
+        cnt=$((cnt+1))
+    done <"$key_file"
+    if [ -z "$ip" ]; then
+        echo "File formatted incorrectly (make sure it ends with a newline as per C standard)"
+        usage
+        exit
+    fi
+    if [[ $ip == *[a-zA-Z]* ]]; then
+        echo " File formatted like one for Tor. Perhaps you didn't use the -t option"
+        usage
+        exit
+    fi
+    # move into the source directory to run
+    cd src
+    python3 run_p2p.py $ip $other_ips $encrypt
+fi

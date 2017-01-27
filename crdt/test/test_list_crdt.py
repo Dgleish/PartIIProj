@@ -78,7 +78,6 @@ def test_remote_insert3(list_crdt):
     assert list_crdt.pretty_print()[0] == '2ba'
 
 
-
 def test_add_local(list_crdt):
     assert isinstance(list_crdt, ListCRDT)
     list_crdt.add_right_local(CRDTOpAddRightLocal('a'))

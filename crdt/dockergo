@@ -1,6 +1,6 @@
 #!/bin/bash
 others(){
-    o=''
+    o=':'
     prefix='172.18.0.'
     nopeers=$2
     for j in $(seq 2 $((nopeers+1))); do

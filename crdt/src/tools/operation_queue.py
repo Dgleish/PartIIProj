@@ -2,6 +2,7 @@ import threading
 from collections import deque
 
 
+# noinspection PyArgumentList
 class OperationQueue(object):
     # wrapper around a deque with signalling semaphore
 
