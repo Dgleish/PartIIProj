@@ -10,7 +10,6 @@ def run_cl_sv(my_addr, server_address, port, encrypt=True):
         CRDTOpAddRightLocal(my_addr[0])
     ], server_address=server_address, encrypt=encrypt)
 
-
 if __name__ == '__main__':
     args = sys.argv
     print('got args {}'.format(args))

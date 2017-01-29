@@ -88,8 +88,11 @@ class CRDTServer(CRDTNetworkClient):
                             self.pack_and_send(op, cl_dict['sock'], cl_dict['cipher'])
                         except socket.error as e:
                             logging.debug('closing connection to {} {}'.format(addr, e))
-                            self.disconnect_from_client(addr, sock, cipher)
+                            peers_to_remove.append((ad, sock, cipher))
                             continue
+
+                for (a, s, c) in peers_to_remove:
+                    self.disconnect_from_client(a, s, c)
 
         except socket.error as e:
             logging.debug('closing connection to {} {}'.format(addr, e))

@@ -1,7 +1,7 @@
-import copy
 import logging
 import threading
 from logging.config import fileConfig
+from time import process_time
 
 from crdt.crdt_exceptions import VertexNotFound
 from crdt.crdt_ops import RemoteCRDTOp
@@ -17,11 +17,12 @@ from ui.crdt_local_client import CRDTLocalClient
 
 fileConfig('../logging_config.ini')
 
+
 class CRDTApp(object):
     def __init__(self, puid, port, my_addr, ops_to_do=None, server_address=None, known_peers=None, encrypt=False,
-                 priv_key=None):
+                 priv_key=None, list_repr=LLOrderedList):
 
-        # logging.disable('DEBUG')
+        logging.disable(logging.DEBUG)
 
         if known_peers is None:
             known_peers = []
@@ -47,7 +48,7 @@ class CRDTApp(object):
         self.puid = puid
 
         # create the ListCRDT structure
-        self.crdt = ListCRDT(puid, LLOrderedList())
+        self.crdt = ListCRDT(puid, list_repr())
 
         crdt_clock = self.crdt.get_clock()
 
@@ -90,16 +91,22 @@ class CRDTApp(object):
         self.simulate_user_input(ops_to_do)
 
         # Start performing operations
-        op_queue_consumer = threading.Thread(
-            target=self.consume_op_queue,
-        )
-        op_queue_consumer.daemon = True
-        op_queue_consumer.start()
+        # op_queue_consumer = threading.Thread(
+        #     target=self.consume_op_queue,
+        # )
+        # op_queue_consumer.daemon = True
+        # op_queue_consumer.start()
 
         # self.connect()
 
         # Show GUI
-        self.local_client.display()
+        timings = []
+        self.res = self.consume_op_queue(timings)
+        # self.local_client.display()
+
+    def time(self):
+        self.local_client.destroy()
+        return self.res
 
     def connect(self):
         # go go go
@@ -139,18 +146,21 @@ class CRDTApp(object):
         while len(ops_to_do) > 0:
             self.op_queue.appendleft(ops_to_do.pop())
 
-    def consume_op_queue(self):
+    def consume_op_queue(self, timings):
         """
         Continually take operations from the central queue and do them
         """
         while True:
-
+            curr_timing = []
             # get item from the queue
             op = self.op_queue.pop()
             self.can_consume_sem.acquire()
             try:
                 # do the operation on the local CRDT
-                op_to_store, should_send = copy.deepcopy(self.crdt.perform_op(op))
+                t = process_time()
+                op_to_store, should_send = self.crdt.perform_op(op)
+                curr_timing.append(process_time() - t)
+                t1 = process_time()
                 assert isinstance(op_to_store, RemoteCRDTOp)
             except VertexNotFound as e:
                 logging.warning('{} Failed to do op {}, {}'.format(self.puid, op, e))
@@ -163,12 +173,14 @@ class CRDTApp(object):
 
             # Store operation
             self.op_store.add_op(op_to_store.op_id.puid, op_to_store)
-
-            logging.debug('{} did and stored op {}'.format(self.puid, op_to_store))
+            curr_timing.append(process_time() - t1)
+            t2 = process_time()
+            # logging.debug('{} did and stored op {}'.format(self.puid, op_to_store))
 
             # Update UI
             self.local_client.update(self.crdt.pretty_print())
-
+            curr_timing.append(process_time() - t2)
+            t3 = process_time()
             # if we've got something to send to others, send to others
             if should_send:
                 self.network_client.send_op(op_to_store)
@@ -176,7 +188,8 @@ class CRDTApp(object):
                 # increment corresponding component of vector clock
                 self.seen_ops_vc.update(op_to_store)
                 self.done_ops_vc.update(op_to_store)
-
+            curr_timing.append(process_time() - t3)
+            t4 = process_time()
             # for all operations held back that reference nodes with
             # clocks equal to the op just done,
             # add them to the front of the queue
@@ -186,4 +199,9 @@ class CRDTApp(object):
                     self.op_queue.append(new_op)
                 self.held_back_ops.remove_ops_for_key(recovery_clock)
 
+            curr_timing.append(process_time() - t4)
+
             self.can_consume_sem.release()
+            timings.append(curr_timing)
+            if len(timings) == 1000:
+                return timings

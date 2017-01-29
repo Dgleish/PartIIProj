@@ -2,6 +2,7 @@
 # -> clock values are increasing
 from copy import copy
 
+from crdt.base_ordered_list import BaseOrderedList
 from crdt.crdt_clock import CRDTClock
 from crdt.crdt_exceptions import MalformedOp, UnknownOp
 from crdt.crdt_ops import (CRDTOp, CRDTOpAddRightLocal,
@@ -9,7 +10,7 @@ from crdt.crdt_ops import (CRDTOp, CRDTOpAddRightLocal,
 
 
 class ListCRDT(object):
-    def __init__(self, puid, olist):
+    def __init__(self, puid, olist: BaseOrderedList):
         self.olist = olist
         # The clock of the next thing to be inserted locally
         self.clock = CRDTClock(puid)
@@ -32,7 +33,8 @@ class ListCRDT(object):
             return self.delete_remote(op)
 
         elif isinstance(op, CRDTOpDeleteLocal):
-            return self.delete_local(op)
+            # doesn't need any information
+            return self.delete_local()
 
         elif isinstance(op, CRDTOp):
             raise UnknownOp
@@ -53,7 +55,7 @@ class ListCRDT(object):
         self.cursor = copy(clock)
 
         # return corresponding remote operation for others to apply
-        return CRDTOpAddRightRemote(left_clock, vertex_added, copy(clock)), True
+        return CRDTOpAddRightRemote(left_clock, vertex_added, clock), True
 
     def add_right_remote(self, op):
         # Clock of vertex to insert on the right of (ie clock to the left)
@@ -92,8 +94,7 @@ class ListCRDT(object):
 
         return op, False
 
-    # noinspection PyUnusedLocal
-    def delete_local(self, op):
+    def delete_local(self):
 
         self.clock.increment()
 
@@ -128,7 +129,7 @@ class ListCRDT(object):
 
     def shift_cursor_right(self):
         # Need a way to stop at end of the list
-        self.cursor = self.olist.successor_active(self.cursor)
+        self.cursor = self.olist.successor(self.cursor, True)
 
     def shift_cursor_left(self):
-        self.cursor = self.olist.predecessor_active(self.cursor)
+        self.cursor = self.olist.predecessor(self.cursor, True)

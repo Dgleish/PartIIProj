@@ -1,4 +1,3 @@
-import logging
 import pickle
 import socket
 import struct
@@ -67,7 +66,7 @@ class CRDTNetworkClient(object):
         :param cipher: the crypto object
         :param sock: socket to send to
         """
-        logging.debug('sending {}'.format(self.seen_ops_vc))
+        # logging.debug('sending {}'.format(self.seen_ops_vc))
         self.pack_and_send(self.seen_ops_vc, sock, cipher)
 
     def sync_ops(self, sock, cipher):
@@ -77,11 +76,11 @@ class CRDTNetworkClient(object):
         :param cipher: the crypto object
         """
         their_vc = self.recvall(sock, cipher)
-        logging.debug('got vector clock {}'.format(their_vc))
+        # logging.debug('got vector clock {}'.format(their_vc))
         assert isinstance(their_vc, VectorClock)
         # determine which ops to send
         ops_to_send = self.stored_ops.determine_ops_after_vc(their_vc)
-        logging.debug('sync ops sending over {}'.format(ops_to_send))
+        # logging.debug('sync ops sending over {}'.format(ops_to_send))
         for op in ops_to_send:
             self.pack_and_send(op, sock, cipher)
 

@@ -87,6 +87,25 @@ def test_add_local(list_crdt):
     assert res[0] == 'abc'
 
 
+def test_pretty_print(list_crdt):
+    assert isinstance(list_crdt, ListCRDT)
+    list_crdt.add_right_local(CRDTOpAddRightLocal('a'))
+    list_crdt.add_right_local(CRDTOpAddRightLocal('b'))
+    list_crdt.add_right_local(CRDTOpAddRightLocal('c'))
+    res = list_crdt.pretty_print()
+    assert res == ('abc', 3)
+
+
+def test_pretty_print2(list_crdt):
+    assert isinstance(list_crdt, ListCRDT)
+    list_crdt.add_right_local(CRDTOpAddRightLocal('a'))
+    list_crdt.add_right_local(CRDTOpAddRightLocal('b'))
+    list_crdt.add_right_local(CRDTOpAddRightLocal('c'))
+    list_crdt.delete_local()
+    res = list_crdt.pretty_print()
+    assert res == ('ab', 2)
+
+
 def test_vertex_not_found(list_crdt):
     list_crdt.add_right_local(CRDTOpAddRightLocal('a'))
     with pytest.raises(VertexNotFound):

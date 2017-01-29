@@ -1,35 +1,11 @@
-from crdt.base_ordered_list import BaseOrderedList
+from crdt.base_ordered_list import BaseOrderedList, Node
 from crdt.crdt_exceptions import VertexNotFound
-
-
-class Node(object):
-    def __init__(self, contents, special=False):
-        self.contents = None
-        self.atom = None
-        self.clock = None
-        self.start_node = False
-        self.end_node = False
-
-        # To identify the beginning and end of the list
-        if special:
-            if contents == 'START':
-                self.start_node = True
-            elif contents == 'END':
-                self.end_node = True
-        else:
-            self.contents = contents
-            (self.atom, self.clock) = contents
-
-        self.next_node = None
-        self.prev_node = None
-        # has this vertex been deleted?
-        self.deleted = False
 
 
 class LLOrderedList(BaseOrderedList):
     def __init__(self):
-        self.head = Node('START', True)
-        self.head.next_node = Node('END', True)
+        self.head = Node('START')
+        self.head.next_node = Node('END')
         self.nodes = {}
 
     def get_head(self):
@@ -47,8 +23,12 @@ class LLOrderedList(BaseOrderedList):
         except KeyError:
             raise VertexNotFound(clock)
 
-    def successor(self, clock):
+    def successor(self, clock, only_active=False):
         succ = self._lookup(clock).next_node
+
+        if only_active:
+            while succ is not None and succ.deleted:
+                succ = succ.next_node
 
         # if reached the end, return last clock again
         if succ is None or succ.end_node:
@@ -56,32 +36,12 @@ class LLOrderedList(BaseOrderedList):
 
         return succ.clock
 
-    def successor_active(self, clock):
-        succ = self._lookup(clock).next_node
-
-        while succ is not None and succ.deleted:
-            succ = succ.next_node
-
-        # if reached the end, return last clock again
-        if succ is None or succ.end_node:
-            return clock
-
-        return succ.clock
-
-    def predecessor(self, clock):
+    def predecessor(self, clock, only_active=False):
         pred = self._lookup(clock).prev_node
 
-        # if reached the beginning, return clock for start of list (= None)
-        if pred is None or pred.start_node:
-            return None
-
-        return pred.clock
-
-    def predecessor_active(self, clock):
-        pred = self._lookup(clock).prev_node
-
-        while pred is not None and pred.deleted:
-            pred = pred.prev_node
+        if only_active:
+            while pred is not None and pred.deleted:
+                pred = pred.prev_node
 
         # if reached the beginning, return clock for start of list (= None)
         if pred is None or pred.start_node:
@@ -112,7 +72,7 @@ class LLOrderedList(BaseOrderedList):
         # mark deleted
         node = self._lookup(clock)
         node.deleted = True
-        return node.clock
+        return clock
 
     # for pretty printing
     def get_repr(self, cursor):

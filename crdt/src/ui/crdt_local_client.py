@@ -11,6 +11,12 @@ class CRDTLocalClient(object):
         self.toggle_connect = toggle_connect
         self.connected = False
         self.create_ui(title)
+        # Auto connect on startup
+        # self.onclick_btn(None)
+
+    def destroy(self):
+        if hasattr(self, 'root'):
+            self.root.destroy()
 
     def create_ui(self, title):
         self.root = Tk.Tk()
