@@ -1,5 +1,6 @@
 from tools.decorators import synchronized
 
+
 # noinspection PyArgumentList
 class ConnectedPeers(object):
     def __init__(self):

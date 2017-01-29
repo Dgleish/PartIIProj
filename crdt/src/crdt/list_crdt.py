@@ -1,14 +1,11 @@
 # this relies on reliable inorder message delivery
 # -> clock values are increasing
 from copy import copy
-from logging.config import fileConfig
 
 from crdt.crdt_clock import CRDTClock
 from crdt.crdt_exceptions import MalformedOp, UnknownOp
 from crdt.crdt_ops import (CRDTOp, CRDTOpAddRightLocal,
-                      CRDTOpAddRightRemote, CRDTOpDeleteLocal, CRDTOpDeleteRemote)
-
-fileConfig('../logging_config.ini')
+                           CRDTOpAddRightRemote, CRDTOpDeleteLocal, CRDTOpDeleteRemote)
 
 
 class ListCRDT(object):

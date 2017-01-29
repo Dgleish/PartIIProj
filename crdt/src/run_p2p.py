@@ -5,10 +5,11 @@ from crdt_app import CRDTApp
 
 
 def run_p2p(my_addr, known_peers, encrypt=False, priv_key=None):
-    app = CRDTApp(my_addr.replace('.', '')[-6:], 8889, [
+    app = CRDTApp(my_addr.replace('.', '')[-6:], 8889, my_addr, ops_to_do=[
         CRDTOpAddRightLocal(my_addr[0]), CRDTOpDeleteLocal(),
         CRDTOpAddRightLocal(my_addr[0])
-    ], known_peers, my_addr, encrypt, priv_key)
+    ], known_peers=known_peers, encrypt=encrypt, priv_key=priv_key)
+
 
 if __name__ == '__main__':
     args = sys.argv

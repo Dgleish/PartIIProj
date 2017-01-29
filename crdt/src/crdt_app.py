@@ -1,6 +1,7 @@
 import copy
 import logging
 import threading
+from logging.config import fileConfig
 
 from crdt.crdt_exceptions import VertexNotFound
 from crdt.crdt_ops import RemoteCRDTOp
@@ -8,16 +9,25 @@ from crdt.list_crdt import ListCRDT
 from crdt.ll_ordered_list import LLOrderedList
 from crdt.vector_clock import VectorClock
 from network.crdt_p2p_client import CRDTP2PClient
+from network.crdt_server_client import CRDTServerClient
 from tools.operation_queue import OperationQueue
 from tools.operation_store import OperationStore
 from tor.tor_controller import TorController
 from ui.crdt_local_client import CRDTLocalClient
 
+fileConfig('../logging_config.ini')
 
 class CRDTApp(object):
-    def __init__(self, puid, port, ops_to_do, known_peers, my_addr, encrypt, priv_key):
+    def __init__(self, puid, port, my_addr, ops_to_do=None, server_address=None, known_peers=None, encrypt=False,
+                 priv_key=None):
 
         # logging.disable('DEBUG')
+
+        if known_peers is None:
+            known_peers = []
+
+        if ops_to_do is None:
+            ops_to_do = []
 
         # negotiate session key on connect and encrypt all operations sent
         self.encrypt = encrypt
@@ -59,18 +69,25 @@ class CRDTApp(object):
         # peers to connect to
         self.known_peers = known_peers
 
-        # TODO: be nice to pass this in as argument then have CRDTNetwork as an interface to
-        # either cl-sv or P2P
-        self.network_client = CRDTP2PClient(
-            port, self.op_queue, self.puid, self.seen_ops_vc,
-            self.op_store, self.encrypt, self.known_peers, my_addr, priv_key is not None
-        )
+        # Semaphore to signal when allowed to perform operations
+        # (Not when in the middle of connecting/disconnecting)
+        self.can_consume_sem = threading.Semaphore(1)
+
+        if server_address is None:
+            # P2P
+            self.network_client = CRDTP2PClient(
+                port, self.op_queue, self.can_consume_sem, puid, self.seen_ops_vc,
+                self.op_store, self.encrypt, self.known_peers, my_addr, priv_key is not None
+            )
+        else:
+            self.network_client = CRDTServerClient(
+                port, self.op_queue, self.can_consume_sem, puid, self.seen_ops_vc,
+                self.op_store, self.encrypt, server_address)
 
         # local UI input
         self.local_client = CRDTLocalClient(my_addr, self.op_queue, self.crdt.move_cursor, self.toggle_connect)
 
         self.simulate_user_input(ops_to_do)
-        self.can_consume_sem = threading.Semaphore(1)
 
         # Start performing operations
         op_queue_consumer = threading.Thread(
@@ -91,7 +108,7 @@ class CRDTApp(object):
         """
         if self.use_tor:
             self.tor.connect()
-        network_thread = threading.Thread(target=self.network_client.connect, args=(self.can_consume_sem,))
+        network_thread = threading.Thread(target=self.network_client.connect)
         network_thread.daemon = True
         network_thread.start()
         self.is_connected = True
@@ -100,7 +117,7 @@ class CRDTApp(object):
         """
         Drop all connections and stop listening for incoming connections
         """
-        self.network_client.disconnect(self.can_consume_sem)
+        self.network_client.disconnect()
         if self.use_tor:
             self.tor.disconnect()
         self.is_connected = False

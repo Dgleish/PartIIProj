@@ -32,7 +32,7 @@ for i in $(seq 2 $((numPeers+1))); do
     return_var=''
     others $i $numPeers return_var
     otherPeers="${return_var}"
-    addr="$ip $otherPeers $encrypt"
+    args="$ip $otherPeers $encrypt"
 
-    gnome-terminal -x sh -c "docker run --net=net1 --ip ${ip} --name p2p${i} -e args='${addr}' -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it p2p; bash"
+    gnome-terminal -x sh -c "docker run --net=net1 --ip ${ip} --name p2p${i} -e args='${args}' -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it p2p; bash"
 done

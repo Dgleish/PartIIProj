@@ -38,6 +38,7 @@ def test_get_ops_for_key(op_store: OperationStore):
     assert len(op_store.get_ops_for_key('key1')) == 1 and (
         len(op_store.get_ops_for_key('key2')) == 1)
 
+
 def test_get_ops_after1():
     op_store = OperationStore(list)
     ops = [CRDTOpDeleteRemote(None, CRDTClock('A', 5)), CRDTOpDeleteRemote(None, CRDTClock('A', 6))]

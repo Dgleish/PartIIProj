@@ -1,5 +1,6 @@
 from crdt.crdt_clock import CRDTClock
 
+
 class CRDTOp(object):
     pass
 

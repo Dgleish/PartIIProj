@@ -1,4 +1,3 @@
-import logging
 from bisect import bisect_left
 from collections import defaultdict
 
@@ -47,8 +46,6 @@ class OperationStore(object):
     @synchronized
     def determine_ops_after_vc(self, vector_clock):
         ops_to_send = []
-        logging.debug("determining ops to send for vc {}".format(vector_clock))
-
         for key in self.ops:
             ops_to_send += self._get_ops_for_key_after(key, vector_clock.get_clock(key))
 

@@ -8,32 +8,27 @@ import socks
 
 from crdt.crdt_ops import RemoteCRDTOp
 from crdt.vector_clock import VectorClock
-from crypto.DiffieHellman import DiffieHellman
-from crypto.cipher import Cipher
-from network.crdt_client import CRDTClient
+from network.crdt_network_client import CRDTNetworkClient
 from tools.connected_peers import ConnectedPeers
 from tools.operation_queue import OperationQueue
 from tools.operation_store import OperationStore
 
 
-class CRDTP2PClient(CRDTClient):
+class CRDTP2PClient(CRDTNetworkClient):
     def __init__(
-            self, port, op_q: OperationQueue,
+            self, port, op_q: OperationQueue, can_consume_sem,
             puid, seen_ops_vc: VectorClock, stored_ops: OperationStore,
             encrypt, known_peers, my_addr, use_tor):
-        super(CRDTP2PClient, self).__init__(puid)
+        super(CRDTP2PClient, self).__init__(seen_ops_vc, stored_ops, puid, encrypt)
         self.connected_peers = ConnectedPeers()
         self.connecting_peers = ConnectedPeers()
         self.port = port
         self.op_q = op_q
+        self.can_consume_sem = can_consume_sem
         self.known_peers = known_peers
         self.seen_ops_vc = seen_ops_vc
         self.stored_ops = stored_ops
         self.running = False
-        if encrypt:
-            self.my_DH = DiffieHellman()
-
-        self.encrypt = encrypt
 
         self.my_addr = my_addr
 
@@ -73,29 +68,7 @@ class CRDTP2PClient(CRDTClient):
         for ip, sock in peers_to_remove:
             self.remove_peer(ip, sock)
 
-    def sync_ops_req(self, sock, cipher):
-        """
-        send clock of which ops I have
-        :param cipher: the crypto object
-        :param sock: socket to send to
-        """
-        self.pack_and_send(self.seen_ops_vc, sock, cipher)
-
-    def sync_ops(self, sock, cipher):
-        """
-        receive clock of which ops they have
-        :param sock: socket object to receive from
-        :param cipher: the crypto object
-        """
-        their_vc = self.recvall(sock, cipher)
-        assert isinstance(their_vc, VectorClock)
-        # determine which ops to send
-        ops_to_send = self.stored_ops.determine_ops_after_vc(their_vc)
-        # logging.debug('sync ops sending over {}'.format(ops_to_send))
-        for op in ops_to_send:
-            self.pack_and_send(op, sock, cipher)
-
-    def do_p2p_protocol(self, sock, peer_ip, encrypt=True):
+    def do_p2p_protocol(self, sock, peer_ip, encrypt):
         """
         Generate key and synchronise operations with the peer
         """
@@ -104,16 +77,7 @@ class CRDTP2PClient(CRDTClient):
         try:
             if encrypt:
                 logging.debug('Doing DH with {}'.format(peer_ip))
-                # send public key
-                self.pack_and_send(self.my_DH.publicKey, sock)
-
-                # receive other public key
-                other_key = self.recvall(sock)
-
-                # generate shared secret
-                key = self.my_DH.genKey(other_key)
-
-                cipher = Cipher(key)
+                cipher = self.do_DH(sock)
                 logging.debug('cipher ready for {}'.format(peer_ip))
 
             # synchronise operations
@@ -138,13 +102,13 @@ class CRDTP2PClient(CRDTClient):
         op_thread.daemon = True
         op_thread.start()
 
-    def disconnect(self, can_consume_sem):
+    def disconnect(self):
         """
         Close connections to all peers.
         Then make quick connection to self to stop listening for incoming connections
         """
         logging.debug('disconnecting')
-        can_consume_sem.acquire()
+        self.can_consume_sem.acquire()
         peers_to_remove = []
         for ip, sock in self.connected_peers.iterate_sockets():
             peers_to_remove.append((ip, sock))
@@ -158,16 +122,16 @@ class CRDTP2PClient(CRDTClient):
         self.running = False
         s.close()
         self.recvsock.close()
-        can_consume_sem.release()
+        self.can_consume_sem.release()
 
-    def connect(self, can_consume_sem):
+    def connect(self):
         """
         Connect to all known addresses
         """
 
         logging.debug('connecting')
         # Force the app to stop applying operations until done connecting
-        can_consume_sem.acquire()
+        self.can_consume_sem.acquire()
         self.running = True
         encrypt = self.encrypt
         use_tor = self.use_tor
@@ -206,7 +170,7 @@ class CRDTP2PClient(CRDTClient):
             self.do_p2p_protocol(sock, peer_ip, encrypt)
             logging.debug('finished connecting to {}'.format(peer_ip))
 
-        can_consume_sem.release()
+        self.can_consume_sem.release()
 
     def listen_for_peers(self, port, encrypt):
         """
