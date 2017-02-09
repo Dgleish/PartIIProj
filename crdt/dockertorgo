@@ -41,6 +41,8 @@ docker build . -t p2p
 # REMOVE EXISTING DOCKER IMAGES
 docker ps -aq | xargs docker rm -f
 
+currdir=`pwd`
+
 # DOCKER RUN WITH APPROPRIATE ARGUMENTS
 for i in $(seq 2 $((numPeers+1))); do
     ip="172.18.0.${i}"
@@ -52,5 +54,4 @@ for i in $(seq 2 $((numPeers+1))); do
     others $i $numPeers my_onion other_onions priv my_cookie cookies
     args="${my_onion} ${other_onions} ${encrypt} ${priv} ${my_cookie} ${cookies}"
     gnome-terminal -x sh -c "docker run --net=net1 --ip ${ip} --name p2p${i} -e args='${args}' -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it p2p; bash"
-
 done

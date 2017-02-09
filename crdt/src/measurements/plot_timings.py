@@ -176,4 +176,4 @@ def plotly_stacked(aggr_results, labels, title, filename):
 
 
 if __name__ == '__main__':
-    add_time(10)
+    detail_remove_olist_time(10)

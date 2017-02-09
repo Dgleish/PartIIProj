@@ -3,6 +3,7 @@ import pickle
 import socket
 import struct
 import threading
+from time import perf_counter
 
 import socks
 
@@ -32,11 +33,15 @@ class CRDTP2PClient(CRDTNetworkClient):
 
         self.my_addr = my_addr
 
+        self.filename = puid
+
         if use_tor:
             socks.set_default_proxy(socks.SOCKS5, "localhost", port=9050)
         self.use_tor = use_tor
 
         self.add_peer_lock = threading.RLock()
+
+        self.time_file = '{}recv'.format(puid)
 
     def remove_peer(self, ip, sock):
         """
@@ -60,6 +65,7 @@ class CRDTP2PClient(CRDTNetworkClient):
         for peer_ip, peer_info in self.connected_peers.iterate():
             try:
                 self.pack_and_send(unpickled_op, peer_info['sock'], peer_info['cipher'])
+
             except socket.error:
                 # If fail to send, assume disconnected
                 logging.debug('error sending to {}, going to remove'.format(peer_ip))
@@ -98,9 +104,9 @@ class CRDTP2PClient(CRDTNetworkClient):
 
         logging.debug('starting op thread for {}'.format(peer_ip))
         # start listening for other operations from this peer
-        op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, cipher))
-        op_thread.daemon = True
-        op_thread.start()
+        # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, cipher))
+        # op_thread.daemon = True
+        # op_thread.start()
 
     def disconnect(self):
         """
@@ -108,7 +114,7 @@ class CRDTP2PClient(CRDTNetworkClient):
         Then make quick connection to self to stop listening for incoming connections
         """
         logging.debug('disconnecting')
-        self.can_consume_sem.acquire()
+        # self.can_consume_sem.acquire()
         peers_to_remove = []
         for ip, sock in self.connected_peers.iterate_sockets():
             peers_to_remove.append((ip, sock))
@@ -168,6 +174,11 @@ class CRDTP2PClient(CRDTNetworkClient):
                 # logging.debug('released add peer lock')
 
             self.do_p2p_protocol(sock, peer_ip, encrypt)
+            # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, None))
+            # op_thread.daemon = True
+            # op_thread.start()
+            self.listen_for_ops(peer_ip, sock, None)
+            listen_thread.join()
             logging.debug('finished connecting to {}'.format(peer_ip))
 
         self.can_consume_sem.release()
@@ -215,25 +226,35 @@ class CRDTP2PClient(CRDTNetworkClient):
         :param sock: the socket to receive on
         :param cipher: the crypto object
         """
-        while True:
-            try:
-                op = self.recvall(sock, cipher)
-                if not isinstance(op, RemoteCRDTOp):
-                    logging.warning('op {} was garbled, disconnecting from {}'.format(
-                        op, peer_ip
-                    ))
-                    raise socket.error('Garbled operation')
-                logging.debug('{} got op {}'.format(self.puid, op))
+        ops_done = 0
+        with open(self.time_file, 'a+') as f:
+            while True:
+                try:
+                    op = self.recvall(sock, cipher)
+                    f.write('{}\n'.format(perf_counter()))
+                    ops_done += 1
+                    if not isinstance(op, RemoteCRDTOp):
+                        logging.warning('op {} was garbled, disconnecting from {}'.format(
+                            op, peer_ip
+                        ))
+                        raise socket.error('Garbled operation')
+                    # logging.debug('{} got op {}'.format(self.puid, op))
 
-                # Note that we've received this
-                if not (self.seen_ops_vc < op.vertex_id):
-                    # We have seen the vertex this operation references
-                    self.seen_ops_vc.update(op)
+                    # Note that we've received this
+                    if not (self.seen_ops_vc < op.vertex_id):
+                        # We have seen the vertex this operation references
+                        self.seen_ops_vc.update(op)
 
-                # add to the operation queue and signal something has been added
-                self.op_q.appendleft(op)
+                    # add to the operation queue and signal something has been added
+                    # self.op_q.appendleft(op)
 
-            except (socket.error, pickle.UnpicklingError, IndexError, ValueError) as e:
-                logging.warning('Failed to receive op from {} {}'.format(peer_ip, e))
-                self.remove_peer(peer_ip, sock)
-                return
+                    if ops_done >= 1000:
+                        print('finished')
+                        f.flush()
+                        self.disconnect()
+                        return
+
+                except (socket.error, pickle.UnpicklingError, IndexError, ValueError) as e:
+                    logging.warning('Failed to receive op from {} {}'.format(peer_ip, e))
+                    self.remove_peer(peer_ip, sock)
+                    return

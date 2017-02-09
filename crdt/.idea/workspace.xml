@@ -5,21 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="81b371f9-6977-4ed6-a966-2f167b395852" name="Default" comment="Added easy-run script for client-server">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/add_local_ll_long.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/add_right_local cost.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/add_right_local detail cost.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/add_right_local dual cost.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/circuits.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/delete_local detail cost.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/add_local_ll_long.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/add_right_local_cost.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/TorRelays.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/ipcurl.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/plot_timings.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/relays" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/tor_measure.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/newplot.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/delete_local detail cost.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/time_multiple.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/timings/anaylse_timings.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/timings/tortiming.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/timings/zgniuh" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/timings/zgniuhrecv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dockertorgo" afterPath="$PROJECT_DIR$/dockertorgo" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt_app.py" afterPath="$PROJECT_DIR$/src/crdt_app.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/TorRelays.html" afterPath="$PROJECT_DIR$/src/measurements/TorRelays.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/plot_timings.py" afterPath="$PROJECT_DIR$/src/measurements/plot_timings.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/relays" afterPath="$PROJECT_DIR$/src/measurements/relays" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/tor_measure.py" afterPath="$PROJECT_DIR$/src/measurements/tor_measure.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/network/crdt_network_client.py" afterPath="$PROJECT_DIR$/src/network/crdt_network_client.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/network/crdt_p2p_client.py" afterPath="$PROJECT_DIR$/src/network/crdt_p2p_client.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/run_p2p.py" afterPath="$PROJECT_DIR$/src/run_p2p.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tools/operation_store.py" afterPath="$PROJECT_DIR$/src/tools/operation_store.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ui/crdt_local_client.py" afterPath="$PROJECT_DIR$/src/ui/crdt_local_client.py" />
     </list>
     <ignored path="crdt.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -89,7 +93,7 @@
       <file leaf-file-name="lseq_ordered_list.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/crdt/lseq_ordered_list.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="621">
+            <state relative-caret-position="783">
               <caret line="29" column="32" lean-forward="false" selection-start-line="29" selection-start-column="32" selection-end-line="29" selection-end-column="32" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
@@ -98,11 +102,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="crdt_app.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="crdt_p2p_client.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/network/crdt_p2p_client.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1961">
+              <caret line="105" column="61" lean-forward="false" selection-start-line="105" selection-start-column="61" selection-end-line="105" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="crdt_app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/crdt_app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4104">
-              <caret line="152" column="33" lean-forward="false" selection-start-line="152" selection-start-column="33" selection-end-line="152" selection-end-column="33" />
+            <state relative-caret-position="379">
+              <caret line="162" column="33" lean-forward="false" selection-start-line="162" selection-start-column="33" selection-end-line="162" selection-end-column="33" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -110,23 +124,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="path_id.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/crdt/path_id.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1242">
-              <caret line="48" column="36" lean-forward="false" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="list_crdt.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="list_crdt.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/crdt/list_crdt.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="109" column="0" lean-forward="true" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
+            <state relative-caret-position="10">
+              <caret line="96" column="15" lean-forward="true" selection-start-line="96" selection-start-column="15" selection-end-line="96" selection-end-column="15" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dockertorgo" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dockertorgo">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="6" column="16" lean-forward="true" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="run_p2p.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/run_p2p.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="27">
+              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tor_controller.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/tor/tor_controller.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="891">
+              <caret line="37" column="45" lean-forward="false" selection-start-line="37" selection-start-column="45" selection-end-line="37" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -145,7 +179,7 @@
       <file leaf-file-name="test_lseq.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/test_lseq.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1485">
+            <state relative-caret-position="1593">
               <caret line="59" column="33" lean-forward="false" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
@@ -235,7 +269,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/tools/cipher.py" />
         <option value="$PROJECT_DIR$/logging_config.ini" />
         <option value="$PROJECT_DIR$/src/crypto/DiffieHellman.py" />
         <option value="$PROJECT_DIR$/src/network/tor_controller.py" />
@@ -251,7 +284,6 @@
         <option value="$PROJECT_DIR$/src/tor/gen_keys.py" />
         <option value="$PROJECT_DIR$/src/tools/synchronized.py" />
         <option value="$PROJECT_DIR$/src/test_CRDTApp.py" />
-        <option value="$PROJECT_DIR$/src/tor/tor_controller.py" />
         <option value="$PROJECT_DIR$/test/test_operation_store.py" />
         <option value="$PROJECT_DIR$/src/tools/operation_queue.py" />
         <option value="$PROJECT_DIR$/src/tools/decorators.py" />
@@ -270,7 +302,6 @@
         <option value="$PROJECT_DIR$/src/network/crdt_server_client.py" />
         <option value="$PROJECT_DIR$/src/crdt/crdt_clock.py" />
         <option value="$PROJECT_DIR$/src/crdt/identifier.py" />
-        <option value="$PROJECT_DIR$/src/run_p2p.py" />
         <option value="$PROJECT_DIR$/src/crdt/arr_ordered_list.py" />
         <option value="$PROJECT_DIR$/src/crdt/path_identifier.py" />
         <option value="$PROJECT_DIR$/src/crdt/PathId.py" />
@@ -281,11 +312,14 @@
         <option value="$PROJECT_DIR$/test/test_lseq.py" />
         <option value="$PROJECT_DIR$/src/crdt/vector_clock.py" />
         <option value="$PROJECT_DIR$/src/crdt/path_id.py" />
-        <option value="$PROJECT_DIR$/src/crdt_app.py" />
         <option value="$PROJECT_DIR$/src/crdt/lseq_ordered_list.py" />
         <option value="$PROJECT_DIR$/src/crdt/list_crdt.py" />
         <option value="$PROJECT_DIR$/tor/torrc" />
         <option value="$PROJECT_DIR$/Dockerfile" />
+        <option value="$PROJECT_DIR$/dockertorgo" />
+        <option value="$PROJECT_DIR$/src/run_p2p.py" />
+        <option value="$PROJECT_DIR$/src/tor/tor_controller.py" />
+        <option value="$PROJECT_DIR$/src/crdt_app.py" />
       </list>
     </option>
   </component>
@@ -1134,13 +1168,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="2625" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14925373" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14925373" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44258872" sideWeight="0.50359315" order="15" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31941545" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31941545" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19071311" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
@@ -1274,13 +1308,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/tor/torsocks.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="8" column="69" lean-forward="false" selection-start-line="8" selection-start-column="68" selection-end-line="8" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.local/lib/python3.5/site-packages/stem/response/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="344">
@@ -1314,13 +1341,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="725">
           <caret line="154" column="24" lean-forward="false" selection-start-line="154" selection-start-column="24" selection-end-line="154" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tor/tor_controller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-348">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1427,20 +1447,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/network/crdt_p2p_client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="228" column="43" lean-forward="false" selection-start-line="228" selection-start-column="43" selection-end-line="228" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/run_p2p.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="864">
-          <caret line="36" column="22" lean-forward="false" selection-start-line="36" selection-start-column="18" selection-end-line="36" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/lib/python3.5/threading.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
@@ -1474,6 +1480,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="972">
           <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1500,7 +1507,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt/path_id.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1242">
+        <state relative-caret-position="1296">
           <caret line="48" column="36" lean-forward="false" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
@@ -1533,7 +1540,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/test_lseq.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1485">
+        <state relative-caret-position="1593">
           <caret line="59" column="33" lean-forward="false" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
@@ -1541,19 +1548,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt_app.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4104">
-          <caret line="152" column="33" lean-forward="false" selection-start-line="152" selection-start-column="33" selection-end-line="152" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt/lseq_ordered_list.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="621">
+        <state relative-caret-position="783">
           <caret line="29" column="32" lean-forward="false" selection-start-line="29" selection-start-column="32" selection-end-line="29" selection-end-column="32" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
@@ -1580,9 +1577,53 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt/list_crdt.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="109" column="0" lean-forward="true" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
+        <state relative-caret-position="10">
+          <caret line="96" column="15" lean-forward="true" selection-start-line="96" selection-start-column="15" selection-end-line="96" selection-end-column="15" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dockertorgo">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="6" column="16" lean-forward="true" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/run_p2p.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tor/tor_controller.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="891">
+          <caret line="37" column="45" lean-forward="false" selection-start-line="37" selection-start-column="45" selection-end-line="37" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/network/crdt_p2p_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1961">
+          <caret line="105" column="61" lean-forward="false" selection-start-line="105" selection-start-column="61" selection-end-line="105" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/crdt_app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="162" column="33" lean-forward="false" selection-start-line="162" selection-start-column="33" selection-end-line="162" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

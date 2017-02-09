@@ -1,6 +1,7 @@
 import pickle
 import socket
 import struct
+from time import perf_counter, sleep
 
 from crdt.vector_clock import VectorClock
 from crypto.DiffieHellman import DiffieHellman
@@ -13,6 +14,7 @@ class CRDTNetworkClient(object):
         self.stored_ops = stored_ops
         self.puid = puid
         self.encrypt = encrypt
+        self.can_send = True
         if encrypt:
             self.my_DH = DiffieHellman()
 
@@ -75,14 +77,22 @@ class CRDTNetworkClient(object):
         :param sock: socket object to receive from
         :param cipher: the crypto object
         """
+
         their_vc = self.recvall(sock, cipher)
         # logging.debug('got vector clock {}'.format(their_vc))
         assert isinstance(their_vc, VectorClock)
         # determine which ops to send
         ops_to_send = self.stored_ops.determine_ops_after_vc(their_vc)
         # logging.debug('sync ops sending over {}'.format(ops_to_send))
-        for op in ops_to_send:
-            self.pack_and_send(op, sock, cipher)
+        if self.can_send:
+            self.can_send = False
+            for op in ops_to_send:
+                sleep(0.1)
+                self.pack_and_send(op, sock, cipher)
+                t = perf_counter()
+                with open(self.puid, 'a') as f:
+                    f.write('{}\n'.format(t))
+
 
     def do_DH(self, sock):
         # send public key

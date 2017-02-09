@@ -12,6 +12,7 @@ def run_p2p(my_addr, known_peers, encrypt=False, priv_key=None, my_cookie=None, 
                   ops_to_do=[CRDTOpAddRightLocal(my_addr[-1])] * 1, known_peers=known_peers,
                   encrypt=encrypt, priv_key=priv_key, auth_cookies=auth_cookies, my_cookie=my_cookie)
 
+
 if __name__ == '__main__':
     args = sys.argv
     print('got args {}'.format(args))

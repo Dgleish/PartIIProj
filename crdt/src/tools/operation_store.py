@@ -47,8 +47,8 @@ class OperationStore(object):
     def determine_ops_after_vc(self, vector_clock):
         ops_to_send = []
         for key in self.ops:
-            ops_to_send += self._get_ops_for_key_after(key, vector_clock.get_clock(key))
-
+            # ops_to_send += self._get_ops_for_key_after(key, vector_clock.get_clock(key))
+            ops_to_send += self.ops[key]
         return ops_to_send
 
     @synchronized
