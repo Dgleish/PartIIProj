@@ -25,7 +25,7 @@ class TorController(object):
                         detached=True
                     )
                     self.onion_addr = response.service_id
-                    logging.debug('Tor hidden service running at {}.onion'.format(self.onion_addr))
+                    logging.info('Tor hidden service running at {}.onion'.format(self.onion_addr))
                     return
             except SocketError as e:
                 logging.error('Couldn\'t connect to tor control retrying in 5s: {}'.format(e))

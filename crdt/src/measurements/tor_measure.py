@@ -18,7 +18,7 @@ def print_circuits():
             for circ in controller.get_circuits():
                 if circ.status != CircStatus.BUILT:
                     continue
-
+                f.write('{}|{}|{}|{}'.format(circ.id, circ.hs_state, circ.rend_query, circ.build_flags))
                 print("CIRCUIT %s" % circ.id)
                 print("Hidden service: %s\n"
                       "Rendez-vous point: %s\n"
@@ -28,7 +28,7 @@ def print_circuits():
                     desc = controller.get_network_status(fp, None)
                     address = desc.address if desc else 'unknown'
                     results = requests.get(url + address)
-                    f.write(json.dumps(results.json()) + ':::')
+                    f.write(nickname + json.dumps(results.json()) + ':::')
                     print("Relay %d: %s" % (i, fp))
                     print("  nickname: %s" % nickname)
                     print("  address: %s" % address)
