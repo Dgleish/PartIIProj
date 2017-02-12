@@ -1,0 +1,74 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage[a4paper, portrait, left=2cm,right=2cm,top=4cm,bottom=2.5cm]{geometry}
+\usepackage{titling}
+
+\setlength{\droptitle}{-10em}
+\author{Alex Dalgleish amd96 Robinson}
+\begin{document}
+ \begin{titlepage}
+%%% Based on the title page for the Part II dissertation of Daniel Chatfield %%%
+        \large
+        \begin{center}
+        \textit{Alex Dalgleish} 
+        \textit{amd96} 
+        \textit{Robinson College}
+        \end{center}
+    	\vfill
+
+    \begin{center}
+      {\scshape\Large Part II Project Progress Report}
+		\vspace{1cm}\\
+      {\huge \textbf{Peer-to-peer collaborative editing}\par}
+      \vspace{1cm}
+      {\large \today}
+      \vfill
+		
+      \begin{minipage}{0.32\textwidth}
+        \begin{center}
+    	    Supervised by\par
+    	    Stephan Kollmann \\
+        \end{center}
+      \end{minipage}\hfill\noindent
+      \begin{minipage}{0.32\textwidth}
+      	\begin{center}
+  	      Overseen by\par
+  	      Prof.~Marcelo Fiore \\
+          Prof.~Ian Leslie
+        \end{center}
+      \end{minipage}
+      \begin{minipage}{0.32\textwidth}
+        \begin{center}
+  	       DoS\par
+  	     Dr.~Alastair Beresford \\
+        \end{center}
+      \end{minipage}
+
+    \end{center}
+  \end{titlepage}\newpage
+%\title{Part II Project Progress Report}
+%\maketitle
+\vspace*{-3.5cm}
+\section*{Work Completed}
+
+Firstly, I have written a library for using operation-based CRDTs (Conflict-free Replicated Data Types) to represent an ordered list (a chain of stored symbols) for use in co-operative editing, like Google Docs supports. I have also made a library for an application that might store a CRDT-based list, perform operations on it, and distribute those operations to others on some network, such that everyone eventually will have the same list. This can be in either a client-server model (where all applications connect to one central server) or a peer-to-peer model (where all applications connect to all others). For the case where the application is a client I have written a server which stores the operations it receives and distributes them to everyone else, but does not have a CRDT stored. For the peer-to-peer model, all peers store the operations and distribute their own to everyone else in one hop. Additionally, operations can be done offline, and then synced up with others when you come back online.
+\\\\
+To facilitate testing I wrote a basic GUI for this library, such that it may be run as a complete application.
+\\\\
+I have also implemented optional encryption for the peer-to-peer mode, where a Diffie-Hellman exchange generates a shared secret between peers, then all future communication is encrypted (and authenticated) with AES-CCM and a key derived from the shared secret.
+\\\\
+Finally, I have used a library which can talk to a local Tor process to enable the peers in peer-to-peer mode to advertise Tor Hidden Services for other peers to connect to. The \textit{onion} addresses are globally addressable so can bypass NATs and firewalls. In this way, all traffic is end-to-end encrypted and clients hide their IP addresses, even from other peers.
+\section*{Difficulties faced}
+I had an unexpected difficulty writing the peer-to-peer code in resolving the case where two peers try to connect to each other at the same time. Having two connections for one `channel' is undesirable, so I limited each peer to holding no more than one socket object at the same time. Unfortunately, various interleavings of connection-initiating and connection-accepting threads often caused each end to drop their end of different connections, such that overall both connections failed. This was resolved eventually by introducing asymmetry into the code such that there is a global order on the connections and the same one can be dropped on both sides if necessary.
+\section*{Work to be completed}
+As I have mostly completed the extensions I had planned to do, I really just need to do lots of measurements with my library in order to evaluate it. For example:
+\begin{itemize}
+	\item Timing how long the operations take to perform locally vs the how many operations have been performed
+	\item Measuring how much data is flowing between all peers vs how many peers there are
+	\item Measuring the time spent in the Tor overlay network for each operation
+\end{itemize} This puts me roughly on schedule with my original plan.
+\end{document}

@@ -3,13 +3,18 @@ others(){
     file="./keys"
     other_onions=':'
     private_key=''
+    auth_cookies='|'
+    my_cookie=''
     for j in $(seq 2 $(($2+1))); do
         read -r priv 
         read -r onion
+        read -r auth_cookie
         if [ "$1" != "$j" ]
         then            
+            auth_cookies+="${auth_cookie}|"
             other_onions+="${onion}:"
         else
+            my_cookie=$auth_cookie
             private_key=$priv
             my_onion=$onion
         fi
@@ -17,6 +22,8 @@ others(){
     eval "$3='${my_onion}'"
     eval "$4='${other_onions}'"
     eval "$5='${private_key}'"
+    eval "$6='${my_cookie}'"
+    eval "$7='${auth_cookies}'"
 }
 
 # NUMBER OF INSTANCES TO SPAWN
@@ -40,8 +47,10 @@ for i in $(seq 2 $((numPeers+1))); do
     other_onions=''
     priv=''
     my_onion=''
-    others $i $numPeers my_onion other_onions priv
-    args="${my_onion} ${other_onions} ${encrypt} ${priv}"
+    cookies=''
+    my_cookie=''
+    others $i $numPeers my_onion other_onions priv my_cookie cookies
+    args="${my_onion} ${other_onions} ${encrypt} ${priv} ${my_cookie} ${cookies}"
     gnome-terminal -x sh -c "docker run --net=net1 --ip ${ip} --name p2p${i} -e args='${args}' -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -it p2p; bash"
 
 done

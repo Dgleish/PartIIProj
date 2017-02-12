@@ -226,7 +226,7 @@ class CRDTP2PClient(CRDTNetworkClient):
                 logging.debug('{} got op {}'.format(self.puid, op))
 
                 # Note that we've received this
-                if not (self.seen_ops_vc < op.clock):
+                if not (self.seen_ops_vc < op.vertex_id):
                     # We have seen the vertex this operation references
                     self.seen_ops_vc.update(op)
 

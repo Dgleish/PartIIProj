@@ -2,6 +2,7 @@ import logging
 import pickle
 
 from crdt.crdt_clock import CRDTClock
+from crdt.path_id import PathId
 from tools.decorators import synchronized
 
 
@@ -111,6 +112,8 @@ class VectorClock(object):
                 return self.clocks[other_puid] < other
             else:
                 return True
+        elif isinstance(other, PathId):
+            return False
 
     @synchronized
     def pickle(self):

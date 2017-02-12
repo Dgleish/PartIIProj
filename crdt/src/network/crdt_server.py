@@ -77,7 +77,7 @@ class CRDTServer(CRDTNetworkClient):
                 # add this to the list of operations performed
                 self.stored_ops.add_op(op.op_id.puid, op)
 
-                if not (self.seen_ops_vc < op.clock):
+                if not (self.seen_ops_vc < op.vertex_id):
                     self.seen_ops_vc.update(op)
 
                 # for all other connected clients, send this operation

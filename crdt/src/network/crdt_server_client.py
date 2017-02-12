@@ -75,7 +75,7 @@ class CRDTServerClient(CRDTNetworkClient):
                     raise socket.error('Received garbled operation')
 
                 # Note that we've received this only if it references something we've seen
-                if not (self.seen_ops_vc < op.clock):
+                if not (self.seen_ops_vc < op.vertex_id):
                     self.seen_ops_vc.update(op)
 
                 logging.debug('{} got op {}'.format(self.puid, op))

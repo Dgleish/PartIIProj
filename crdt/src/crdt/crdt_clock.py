@@ -1,12 +1,11 @@
-class CRDTClock(object):
-    def __init__(self, puid, initial_timestamp=0):
-        self._timestamp = initial_timestamp
-        self._puid = puid
-        self.value = '{}:{}'.format(initial_timestamp, puid)
+from crdt.identifier import Identifier
 
-    @property
-    def puid(self):
-        return self._puid
+
+class CRDTClock(Identifier):
+    def __init__(self, puid, initial_timestamp=0):
+        super().__init__(puid)
+        self._timestamp = initial_timestamp
+        self.value = '{}:{}'.format(initial_timestamp, puid)
 
     @property
     def timestamp(self):

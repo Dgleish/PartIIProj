@@ -1,5 +1,6 @@
 # this relies on reliable inorder message delivery
 # -> clock values are increasing
+import logging
 from copy import copy
 
 from crdt.base_ordered_list import BaseOrderedList
@@ -16,7 +17,7 @@ class ListCRDT(object):
         self.clock = CRDTClock(puid)
         self.puid = puid
         # Where to insert or delete the next local operation
-        self.cursor = None
+        self.cursor = self.olist.get_initial_cursor()
 
     def get_clock(self):
         return self.clock
@@ -50,64 +51,53 @@ class ListCRDT(object):
         clock = copy(self.clock)
 
         # Insert the specified vertex to the right of the current cursor with the current clock value
-        left_clock, vertex_added = self._add_right(self.cursor, (atom, clock))
+        left_clock, vertex_added = self.olist.insert(self.cursor, (atom, clock))
         # Cursor points at vertex we just inserted
-        self.cursor = copy(clock)
+        self.cursor = copy(vertex_added[1])
 
         # return corresponding remote operation for others to apply
         return CRDTOpAddRightRemote(left_clock, vertex_added, clock), True
 
     def add_right_remote(self, op):
         # Clock of vertex to insert on the right of (ie clock to the left)
-        left_clock = op.clock
+        left_clock = op.vertex_id
         vertex_to_add = op.vertex_to_add
         _, cl = vertex_to_add
 
-        self._add_right(left_clock, vertex_to_add)
+        self.olist.insert_remote(left_clock, vertex_to_add)
 
         # Update local clock so that we are not behind anyone else's clock
-        self.clock.update(cl)
+        self.clock.update(op.op_id)
 
         return op, False
 
-    def _add_right(self, left_clock, vertex_to_add):
-        a, new_cl = vertex_to_add
-        l_cl = left_clock
-        r_cl = self.olist.successor(left_clock)
-        # logging.debug('inserting between {} and {}'.format(l_cl, r_cl))
-        # Determine where to insert after specified vertex (gives total ordering)
-        while r_cl != l_cl and new_cl < r_cl:
-            l_cl, r_cl = r_cl, self.olist.successor(r_cl)
-
-        # Is this vertex new to the list?
-        if r_cl != new_cl:
-            # If so insert it
-            self.olist.insert(l_cl, (a, new_cl))
-        return left_clock, (a, new_cl)
-
     def delete_remote(self, op):
         # which element are we deleting?
-        clock = copy(op.clock)
-        self.olist.delete(clock)
+        clock = copy(op.vertex_id)
+        prev = self.olist.delete(clock)
 
-        self.clock.update(clock)
+        if clock == self.cursor:
+            self.cursor = prev
+
+        self.clock.update(op.op_id)
 
         return op, False
 
     def delete_local(self):
+        if self.cursor is not None:
+            self.clock.increment()
 
-        self.clock.increment()
+            # where is the cursor
+            t = self.cursor
 
-        # where is the cursor
-        t = self.cursor
+            # update cursor to previous element
+            self.cursor = self.olist.delete(t)
 
-        self.olist.delete(t)
-        # move the cursor one element to the left
-        self.shift_cursor_left()
-
-        # return corresponding remote operation for others to apply
-        clock = copy(self.clock)
-        return CRDTOpDeleteRemote(t, clock), True
+            # return corresponding remote operation for others to apply
+            clock = copy(self.clock)
+            return CRDTOpDeleteRemote(t, clock), True
+        else:
+            return None, False
 
     def pretty_print(self):
         return self.olist.get_repr(self.cursor)
@@ -130,6 +120,8 @@ class ListCRDT(object):
     def shift_cursor_right(self):
         # Need a way to stop at end of the list
         self.cursor = self.olist.successor(self.cursor, True)
+        logging.debug('cursor is now {}'.format(self.cursor))
 
     def shift_cursor_left(self):
         self.cursor = self.olist.predecessor(self.cursor, True)
+        logging.debug('cursor is now {}'.format(self.cursor))

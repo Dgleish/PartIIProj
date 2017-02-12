@@ -3,76 +3,88 @@ from crdt.crdt_exceptions import VertexNotFound
 
 
 class LLOrderedList(BaseOrderedList):
-    def __init__(self):
-        self.head = Node('START')
-        self.head.next_node = Node('END')
+    def __init__(self, puid):
+        super().__init__(puid)
+        self.head = Node(None, flag='START')
+        self.head.next_node = Node(None, flag='END')
         self.nodes = {}
 
     def get_head(self):
         return self.head
 
-    def _lookup(self, clock):
+    def _lookup(self, id):
         # special condition for representation of start node
-        if clock is None:
+        if id is None:
             return self.head
 
         # will throw KeyError if not found
         try:
-            node = self.nodes[clock]
+            node = self.nodes[id]
             return node
         except KeyError:
-            raise VertexNotFound(clock)
+            raise VertexNotFound(id)
 
-    def successor(self, clock, only_active=False):
-        succ = self._lookup(clock).next_node
+    def successor(self, id, only_active=False):
+        succ = self._lookup(id).next_node
 
         if only_active:
             while succ is not None and succ.deleted:
                 succ = succ.next_node
 
-        # if reached the end, return last clock again
+        # if reached the end, return last id again
         if succ is None or succ.end_node:
-            return clock
+            return id
 
-        return succ.clock
+        return succ.id
 
-    def predecessor(self, clock, only_active=False):
-        pred = self._lookup(clock).prev_node
+    def predecessor(self, id, only_active=False):
+        pred = self._lookup(id).prev_node
 
         if only_active:
             while pred is not None and pred.deleted:
                 pred = pred.prev_node
 
-        # if reached the beginning, return clock for start of list (= None)
+        # if reached the beginning, return id for start of list (= None)
         if pred is None or pred.start_node:
             return None
 
-        return pred.clock
+        return pred.id
 
-    def insert(self, left_clock, new_vertex):
+    def insert(self, left_id, new_vertex):
 
-        left_node = self._lookup(left_clock)
+        a, new_id = new_vertex
+        l_id = left_id
+        r_id = self.successor(left_id)
+        # Determine where to insert after specified vertex (gives total ordering)
+        while r_id != l_id and new_id < r_id:
+            l_id, r_id = r_id, self.successor(r_id)
 
-        # create node with that data
-        new_node = Node(new_vertex)
+        # Is this vertex new to the list?
+        if r_id != new_id:
+            # If so insert it
+            left_node = self._lookup(l_id)
 
-        # insert after 'left_clock'
-        tmp = left_node.next_node
-        left_node.next_node = new_node
-        new_node.next_node = tmp
-        new_node.prev_node = left_node
-        if tmp is not None:
-            tmp.prev_node = new_node
+            # create node with that data
+            new_node = Node(new_vertex)
 
-        # add to nodes lookup table
-        _, cl = new_vertex
-        self.nodes[cl] = new_node
+            # insert after 'left_id'
+            tmp = left_node.next_node
+            left_node.next_node = new_node
+            new_node.next_node = tmp
+            new_node.prev_node = left_node
+            if tmp is not None:
+                tmp.prev_node = new_node
 
-    def delete(self, clock):
+            # add to nodes lookup table
+            _, cl = new_vertex
+            self.nodes[cl] = new_node
+        return left_id, (a, new_id)
+
+    def delete(self, id):
         # mark deleted
-        node = self._lookup(clock)
+        node = self._lookup(id)
         node.deleted = True
-        return clock
+        return self.predecessor(id)
 
     # for pretty printing
     def get_repr(self, cursor):
@@ -82,9 +94,9 @@ class LLOrderedList(BaseOrderedList):
         curr = self.head.next_node
         while curr is not None:
             if (not curr.deleted) and curr.contents is not None:
-                list_repr.append(curr.contents[0])
+                list_repr.append(curr.atom)
                 cursor_counter += 1
-            if curr.clock == cursor:
+            if curr.id == cursor:
                 cursor_pos = cursor_counter
             curr = curr.next_node
         if cursor is None:

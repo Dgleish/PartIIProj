@@ -37,7 +37,7 @@
 ## Send all messages of level 'notice' or higher to /var/log/tor/notices.log
 #Log notice file /var/log/tor/notices.log
 ## Send every possible message to /var/log/tor/debug.log
-#Log debug file /var/log/tor/debug.log
+Log debug file /var/log/tor/debug.log
 ## Use the system log instead of Tor's logfiles
 #Log notice syslog
 ## To send all messages to stderr:
@@ -46,7 +46,7 @@
 ## Uncomment this to start the process in the background... or use
 ## --runasdaemon 1 on the command line. This is ignored on Windows;
 ## see the FAQ entry if you want Tor to run as an NT service.
-#RunAsDaemon 1
+RunAsDaemon 1
 
 ## The directory for keeping all the keys/etc. By default, we store
 ## things in $HOME/.tor on Unix, and in Application Data\tor on Windows.
