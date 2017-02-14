@@ -23,11 +23,9 @@ class LSEQOrderedList(BaseOrderedList):
         self.head = Node((None, head_id), flag='START')
         end_node = Node((None, end_id), flag='END')
         self.head.next_node = end_node
-        self.head.r = end_node
 
         self.nodes = {self.head.id: self.head, end_id: end_node}
 
-        self.tree_root = self.head
         self.ids = SortedList([head_id, end_id])
 
         self.alloc_strategy = {1: 1, -1: 0}
@@ -84,7 +82,6 @@ class LSEQOrderedList(BaseOrderedList):
             left_node = self._lookup(left_id)
         except VertexNotFound as e:
             left_node = self._approx_lookup(left_id)
-            # left_node = Node.missing_predecessor(self.tree_root, left_id)
         return left_node
 
     def _insert(self, left_id, a, new_id, left_node, right_node):
@@ -96,12 +93,8 @@ class LSEQOrderedList(BaseOrderedList):
         if right_node is not None:
             right_node.prev_node = new_node
 
-        # Node.insert(self.tree_root, new_node)
-
-        # yay linear search
+        # yay log search
         left_loc = self.ids.index(left_node.id)
-        #
-        # self.ids.insert(left_loc + 1, new_id)
         self.ids.add(new_id)
         self.nodes[new_id] = new_node
         # MUST RETURN ID AS WE JUST GENERATED IT
