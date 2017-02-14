@@ -59,6 +59,7 @@ class ListCRDT(object):
         return CRDTOpAddRightRemote(left_clock, vertex_added, clock), True
 
     def add_right_remote(self, op):
+        logging.debug('inserting: {}'.format(op))
         # Clock of vertex to insert on the right of (ie clock to the left)
         left_clock = op.vertex_id
         vertex_to_add = op.vertex_to_add
@@ -72,6 +73,7 @@ class ListCRDT(object):
         return op, False
 
     def delete_remote(self, op):
+        logging.debug('deleting: {}'.format(op))
         # which element are we deleting?
         clock = copy(op.vertex_id)
         prev = self.olist.delete(clock)
@@ -120,8 +122,8 @@ class ListCRDT(object):
     def shift_cursor_right(self):
         # Need a way to stop at end of the list
         self.cursor = self.olist.successor(self.cursor, True)
-        logging.debug('cursor is now {}'.format(self.cursor))
+        # logging.debug('cursor is now {}'.format(self.cursor))
 
     def shift_cursor_left(self):
         self.cursor = self.olist.predecessor(self.cursor, True)
-        logging.debug('cursor is now {}'.format(self.cursor))
+        # logging.debug('cursor is now {}'.format(self.cursor))
