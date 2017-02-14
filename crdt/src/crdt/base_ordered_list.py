@@ -15,6 +15,9 @@ class Node(object):
         self.next_node = None
         self.prev_node = None
 
+        self.l = None
+        self.r = None
+
         # has this vertex been deleted?
         self.deleted = False  # type: bool
 
@@ -23,6 +26,38 @@ class Node(object):
 
     def __repr__(self):
         return self.__str__()
+
+    def __lt__(self, other):
+        return self.id < other.id
+
+    def __eq__(self, other):
+        return self.id == other.id
+
+    @staticmethod
+    def missing_predecessor(root, id, ancestor=None):
+        if root is None:
+            return ancestor
+        if root.id < id:
+            return Node.missing_predecessor(root.r, id, root)
+        else:
+            return Node.missing_predecessor(root.l, id, ancestor)
+
+    @staticmethod
+    def insert(root, val):
+        if root is None:
+            return
+        elif root.id == val.id:
+            return
+        elif val.id < root.id:
+            if root.l is None:
+                root.l = val
+            else:
+                Node.insert(root.l, val)
+        else:
+            if root.r is None:
+                root.r = val
+            else:
+                Node.insert(root.r, val)
 
 
 class BaseOrderedList(object):

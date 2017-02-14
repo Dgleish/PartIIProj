@@ -5,6 +5,7 @@ from plotly import tools
 from crdt.arr_ordered_list import ArrOrderedList
 from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
 from crdt.ll_ordered_list import LLOrderedList
+from crdt.lseq_ordered_list import LSEQOrderedList
 from crdt_app import CRDTApp
 
 
@@ -12,27 +13,36 @@ def add_time(iterations):
     results = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app = CRDTApp(127001, 8889, '127.0.0.1', ops_to_do=[CRDTOpAddRightLocal('1')] * 1000,
+        app = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[CRDTOpAddRightLocal('1')] * 10000,
                       list_repr=LLOrderedList)
         results.append(app.time())
-    aggr = [min(sum(l[i]) for l in results) for i in range(len(results[0]))]
+    aggr = [min(sum(l[i][:2] + l[i][3:]) for l in results) for i in range(len(results[0]))]
+
     results2 = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app = CRDTApp(127001, 8889, '127.0.0.1', ops_to_do=[CRDTOpAddRightLocal('1')] * 1000,
-                      list_repr=ArrOrderedList)
-        results2.append(app.time())
+        app2 = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[CRDTOpAddRightLocal('1')] * 10000,
+                       list_repr=ArrOrderedList)
+        results2.append(app2.time())
+    aggr2 = [min(sum(l[i][:2] + l[i][3:]) for l in results2) for i in range(len(results2[0]))]
 
-    aggr2 = [min(sum(l[i]) for l in results2) for i in range(len(results2[0]))]
-    double(aggr, 'LLOrderedList', aggr2, 'ArrOrderedList', 'add_right_local_cost',
-           'Timing of AddRightLocal in two implementations')
+    results3 = []
+    for i in range(iterations):
+        print('iteration {}'.format(i + 1))
+        app3 = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[CRDTOpAddRightLocal('1')] * 10000,
+                       list_repr=LSEQOrderedList)
+        results3.append(app3.time())
+    aggr3 = [min(sum(l[i][:2] + l[i][3:]) for l in results3) for i in range(len(results3[0]))]
+
+    double([aggr, aggr2, aggr3], ['LLOrderedList', 'ArrOrderedList', 'LSEQOrderedList'], 'add_right_local_cost',
+           'Timing of AddRightLocal in different implementations')
 
 
 def detail_add_olist_time(iterations):
     results = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app = CRDTApp(127001, 8889, '127.0.0.1',
+        app = CRDTApp('127001', 8889, '127.0.0.1',
                       ops_to_do=[CRDTOpAddRightLocal('1')] * 10000, list_repr=LLOrderedList)
         results.append(app.time())
     aggr = [[min(sample[i][j] for sample in results) for i in range(len(results[0]))] for j in range(5)]
@@ -40,20 +50,29 @@ def detail_add_olist_time(iterations):
     results2 = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app2 = CRDTApp(127001, 8889, '127.0.0.1',
+        app2 = CRDTApp('127001', 8889, '127.0.0.1',
                        ops_to_do=[CRDTOpAddRightLocal('1')] * 10000, list_repr=ArrOrderedList)
         results2.append(app2.time())
     aggr2 = [[min(sample[i][j] for sample in results2) for i in range(len(results2[0]))] for j in range(5)]
-    double_stacked(aggr, 'LLOrderedList', aggr2, 'ArrOrderedList',
-                   ['insertion', 'store_op', 'client_update', 'network_send', 'recovery'],
-                   'add_right_local dual cost', 'Timing of AddRightLocal in two implementations')
+
+    results3 = []
+    for i in range(iterations):
+        print('iteration {}'.format(i + 1))
+        app3 = CRDTApp('127001', 8889, '127.0.0.1',
+                       ops_to_do=[CRDTOpAddRightLocal('1')] * 10000, list_repr=LSEQOrderedList)
+        results3.append(app3.time())
+    aggr3 = [[min(sample[i][j] for sample in results3) for i in range(len(results3[0]))] for j in range(5)]
+
+    stacked([aggr, aggr2, aggr3], ['LLOrderedList', 'ArrOrderedList', 'LSEQOrderedList'],
+            ['insertion', 'store_op', 'client_update', 'network_send', 'recovery'],
+            'add_right_local_dual_cost', 'Timing of AddRightLocal in different implementations')
 
 
 def plotly_add_long():
     results = []
     for i in range(10):
         print('iteration {}'.format(i + 1))
-        app = CRDTApp(127001, 8889, '127.0.0.1',
+        app = CRDTApp('127001', 8889, '127.0.0.1',
                       ops_to_do=[CRDTOpAddRightLocal('1')] * 10000, list_repr=LLOrderedList)
         results.append(app.time())
     aggr = [[min(sample[i][j] for sample in results) for i in range(len(results[0]))] for j in range(5)]
@@ -65,7 +84,7 @@ def detail_remove_olist_time(iterations):
     results = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app = CRDTApp(127001, 8889, '127.0.0.1',
+        app = CRDTApp('127001', 8889, '127.0.0.1',
                       ops_to_do=[CRDTOpDeleteLocal()] * 10000, list_repr=LLOrderedList)
         results.append(app.time())
     aggr = [[min(sample[i][j] for sample in results) for i in range(len(results[0]))] for j in range(5)]
@@ -73,32 +92,35 @@ def detail_remove_olist_time(iterations):
     results2 = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app2 = CRDTApp(127001, 8889, '127.0.0.1',
+        app2 = CRDTApp('127001', 8889, '127.0.0.1',
                        ops_to_do=[CRDTOpDeleteLocal()] * 10000, list_repr=ArrOrderedList)
         results2.append(app2.time())
     aggr2 = [[min(sample[i][j] for sample in results2) for i in range(len(results2[0]))] for j in range(5)]
-    double_stacked(aggr, 'LLOrderedList', aggr2, 'ArrOrderedList',
-                   ['insertion', 'store_op', 'client_update', 'network_send', 'recovery'],
+
+    results3 = []
+    for i in range(iterations):
+        print('iteration {}'.format(i + 1))
+        app3 = CRDTApp('127001', 8889, '127.0.0.1',
+                       ops_to_do=[CRDTOpDeleteLocal()] * 10000, list_repr=LSEQOrderedList)
+        results3.append(app3.time())
+    aggr3 = [[min(sample[i][j] for sample in results3) for i in range(len(results3[0]))] for j in range(5)]
+
+    stacked([aggr, aggr2, aggr3], ['LLOrderedList', 'ArrOrderedList', 'LSEQOrderedList'],
+            ['insertion', 'store_op', 'client_update', 'network_send', 'recovery'],
                    'delete_local detail cost', 'Timing of DeleteLocal in two implementations')
 
 
-def double(results1, title1, results2, title2, filename, title):
-    x = range(len(results1))
-    trace1 = go.Scatter(
-        x=list(x),
-        y=results1,
-        mode='lines',
-        line=dict(width=0.5),
-        name=title1
-    )
-    trace2 = go.Scatter(
-        x=list(x),
-        y=results2,
-        mode='lines',
-        line=dict(width=0.5),
-        name=title2
-    )
-    data = [trace1, trace2]
+def double(results, titles, filename, title):
+    x = range(len(results[0]))
+    data = [
+        go.Scatter(
+            x=list(x),
+            y=results[i],
+            mode='lines',
+            line=dict(width=0.5),
+            name=titles[i]
+        ) for i in range(len(results))
+        ]
     layout = go.Layout(
         xaxis=dict(
             type='linear',
@@ -111,38 +133,34 @@ def double(results1, title1, results2, title2, filename, title):
         title=title,
     )
     fig = go.Figure(data=data, layout=layout)
-    py.offline.plot(fig, filename='images/' + filename)
+    py.offline.plot(fig, filename='../images/' + filename)
 
 
-def double_stacked(results1, title1, results2, title2, labels, filename, title):
-    data1 = gen_stacked_data(results1, labels, 1)
-    data2 = gen_stacked_data(results2, labels, 2)
+def stacked(results, titles, labels, filename, title):
+    fig = tools.make_subplots(rows=len(results), cols=1, subplot_titles=tuple(titles))
 
-    fig = tools.make_subplots(rows=2, cols=1, subplot_titles=(title1, title2))
-    for trace in data1:
-        fig.append_trace(trace, 1, 1)
+    datas = []
+    axes = {}
+    for i, result in enumerate(results):
+        new_data = gen_stacked_data(results[i], labels, i + 1)
+        print('num_lines {}'.format(len(new_data)))
+        datas.append(new_data)
+        for trace in new_data:
+            print('appending trace {}'.format(trace))
+            fig.append_trace(trace, i + 1, 1)
 
-    for trace in data2:
-        fig.append_trace(trace, 2, 1)
+        axes['xaxis{}'.format(i + 1)] = dict(
+            title='Operation no.'
+        )
+        axes['yaxis{}'.format(i + 1)] = dict(
+            title='Time taken (s)'
+        )
 
     fig['layout'].update(
         title=title,
-        xaxis1=dict(
-            title='Operation no.'
-        ),
-        yaxis1=dict(
-            title='Time taken (s)'
-        ),
-        xaxis2=dict(
-            title='Operation no.'
-        ),
-        yaxis2=dict(
-            title='Time taken (s)'
-        ),
-        legend=dict(x=0.45, y=0.55, orientation='h')
-
     )
-    py.offline.plot(fig, filename='images/' + filename)
+    fig['layout'].update(axes)
+    py.offline.plot(fig, filename='../images/' + filename)
 
 
 def gen_stacked_data(aggr_results, labels, group):
@@ -172,8 +190,8 @@ def plotly_stacked(aggr_results, labels, title, filename):
         title=title,
     )
     fig = go.Figure(data=data, layout=layout)
-    py.offline.plot(fig, filename='images/' + filename)
+    py.offline.plot(fig, filename='../images/' + filename)
 
 
 if __name__ == '__main__':
-    detail_remove_olist_time(10)
+    add_time(10)

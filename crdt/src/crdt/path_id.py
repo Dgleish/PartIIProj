@@ -44,10 +44,16 @@ class PathId(Identifier):
                     return False
             else:
                 other_len = len(other.num_list)
-                for i, x in enumerate(self.num_list):
-                    if i >= other_len or x > other.num_list[i]:
+                for i in range(min(other_len, len(self.num_list))):
+                    x = self.num_list[i]
+                    if x > other.num_list[i]:
                         return False
-                return True
+                    if x < other.num_list[i]:
+                        return True
+                return len(self.num_list) < len(other.num_list)
+
+    def __le__(self, other):
+        return self.__lt__(other) or self.__eq__(other)
 
     def __str__(self):
         return '{}:{}'.format(self.num_list, self.puid)

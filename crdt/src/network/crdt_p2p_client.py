@@ -104,6 +104,7 @@ class CRDTP2PClient(CRDTNetworkClient):
 
         logging.debug('starting op thread for {}'.format(peer_ip))
         # start listening for other operations from this peer
+        # MEASUREMENT
         # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, cipher))
         # op_thread.daemon = True
         # op_thread.start()
@@ -114,6 +115,7 @@ class CRDTP2PClient(CRDTNetworkClient):
         Then make quick connection to self to stop listening for incoming connections
         """
         logging.debug('disconnecting')
+        # MEASUREMENT
         # self.can_consume_sem.acquire()
         peers_to_remove = []
         for ip, sock in self.connected_peers.iterate_sockets():
@@ -174,6 +176,7 @@ class CRDTP2PClient(CRDTNetworkClient):
                 # logging.debug('released add peer lock')
 
             self.do_p2p_protocol(sock, peer_ip, encrypt)
+            # MEASUREMENT
             # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, None))
             # op_thread.daemon = True
             # op_thread.start()

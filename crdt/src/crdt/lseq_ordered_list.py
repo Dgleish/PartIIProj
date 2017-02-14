@@ -1,11 +1,10 @@
-import logging
-from bisect import bisect_left
 from random import randint, seed, random
+
+from sortedcontainers import SortedList
 
 from crdt.base_ordered_list import BaseOrderedList, Node
 from crdt.crdt_exceptions import VertexNotFound
 from crdt.path_id import PathId
-
 
 class LSEQOrderedList(BaseOrderedList):
     """
@@ -17,15 +16,22 @@ class LSEQOrderedList(BaseOrderedList):
     def __init__(self, puid):
         super().__init__(puid)
         self.boundary = 10
-        self.base = 32
+        self.base = 5
+
         head_id = PathId(None, 1)
         end_id = PathId(None, ((1 << self.base) - 1))
         self.head = Node((None, head_id), flag='START')
         end_node = Node((None, end_id), flag='END')
         self.head.next_node = end_node
+        self.head.r = end_node
+
         self.nodes = {self.head.id: self.head, end_id: end_node}
-        self.ids = [head_id, end_id]
+
+        self.tree_root = self.head
+        self.ids = SortedList([head_id, end_id])
+
         self.alloc_strategy = {1: 1, -1: 0}
+
 
     def alloc_hash(self, depth):
         seed(1324515 * depth)
@@ -47,10 +53,10 @@ class LSEQOrderedList(BaseOrderedList):
         if depth not in self.alloc_strategy:
             self.alloc_strategy[depth] = self.alloc_hash(depth)
         if self.alloc_strategy[depth]:
-            logging.debug('using strategy boundary {}'.format('plus'))
+            # logging.debug('using strategy boundary {}'.format('plus'))
             id = PathId(self.puid, left_id.prefix(depth) + add_val, depth)
         else:
-            logging.debug('using strategy boundary {}'.format('minus'))
+            # logging.debug('using strategy boundary {}'.format('minus'))
             id = PathId(self.puid, right_id.prefix(depth) - add_val, depth)
 
         return id
@@ -69,7 +75,7 @@ class LSEQOrderedList(BaseOrderedList):
 
     def _approx_lookup(self, id: PathId) -> Node:
         # binary search ids
-        i = bisect_left(self.ids, id)
+        i = self.ids.bisect_left(id)
         prev_id = self.ids[i - 1]
         return self._lookup(prev_id)
 
@@ -78,6 +84,7 @@ class LSEQOrderedList(BaseOrderedList):
             left_node = self._lookup(left_id)
         except VertexNotFound as e:
             left_node = self._approx_lookup(left_id)
+            # left_node = Node.missing_predecessor(self.tree_root, left_id)
         return left_node
 
     def _insert(self, left_id, a, new_id, left_node, right_node):
@@ -89,10 +96,13 @@ class LSEQOrderedList(BaseOrderedList):
         if right_node is not None:
             right_node.prev_node = new_node
 
+        # Node.insert(self.tree_root, new_node)
+
         # yay linear search
         left_loc = self.ids.index(left_node.id)
-
-        self.ids.insert(left_loc + 1, new_id)
+        #
+        # self.ids.insert(left_loc + 1, new_id)
+        self.ids.add(new_id)
         self.nodes[new_id] = new_node
         # MUST RETURN ID AS WE JUST GENERATED IT
         return left_id, (a, new_id)

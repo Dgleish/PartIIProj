@@ -1,8 +1,8 @@
-import copy
 import logging
 import os
 import threading
 from logging.config import fileConfig
+from time import process_time
 
 from crdt.crdt_exceptions import VertexNotFound
 from crdt.crdt_ops import RemoteCRDTOp
@@ -23,7 +23,7 @@ fileConfig(filename)
 
 class CRDTApp(object):
     def __init__(self, puid, port, my_addr, ops_to_do=None, server_address=None, known_peers=None,
-                 encrypt=False, priv_key=None, auth_cookies=None, my_cookie=None):
+                 encrypt=False, priv_key=None, auth_cookies=None, my_cookie=None, list_repr=LSEQOrderedList):
 
         # logging.disable('DEBUG')
 
@@ -51,7 +51,7 @@ class CRDTApp(object):
         self.puid = puid
 
         # create the ListCRDT structure
-        self.crdt = ListCRDT(puid, LSEQOrderedList(puid))
+        self.crdt = ListCRDT(puid, list_repr(puid))
 
         crdt_clock = self.crdt.get_clock()
 
@@ -95,21 +95,23 @@ class CRDTApp(object):
 
         self.simulate_user_input(ops_to_do)
 
+        timings = []
+
         # Start performing operations
         # op_queue_consumer = threading.Thread(
-        #     target=self.consume_op_queue,
+        #     target=self.consume_op_queue, args=([],)
         # )
         # op_queue_consumer.daemon = True
         # op_queue_consumer.start()
-        self.consume_op_queue()
+        # self.consume_op_queue(timings)
 
         # self.connect()
 
         # Show GUI
-        timings = []
+
         # for _ in range(10000):
         #     self.crdt.perform_op(CRDTOpAddRightLocal('a'))
-        # self.res = self.consume_op_queue(timings)
+        self.res = self.consume_op_queue(timings)
         # self.local_client.display()
 
     def time(self):
@@ -128,7 +130,8 @@ class CRDTApp(object):
         # network_thread.start()
         self.network_client.connect()
         self.is_connected = True
-        self.tor.disconnect()
+        if self.use_tor:
+            self.tor.disconnect()
 
     def do_ops(self):
         op_queue_consumer = threading.Thread(
@@ -167,7 +170,7 @@ class CRDTApp(object):
         """
         Continually take operations from the central queue and do them
         """
-        ops_done = 0
+        # ops_done = 0
         while True:
             curr_timing = []
             # get item from the queue
@@ -216,11 +219,12 @@ class CRDTApp(object):
                 for new_op in self.held_back_ops.get_ops_for_key(recovery_clock):
                     self.op_queue.append(new_op)
                 self.held_back_ops.remove_ops_for_key(recovery_clock)
-            ops_done += 1
-            if ops_done >= 1000:
-                self.can_consume_sem.release()
-                self.connect()
-                return
+            curr_timing.append(process_time() - t4)
+            # ops_done += 1
+            # if ops_done >= 1000:
+            #     self.can_consume_sem.release()
+            #     self.connect()
+            #     return
 
             self.can_consume_sem.release()
             timings.append(curr_timing)
