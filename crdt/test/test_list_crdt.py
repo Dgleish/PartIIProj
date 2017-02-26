@@ -4,14 +4,15 @@ from crdt.crdt_clock import CRDTClock
 from crdt.crdt_exceptions import VertexNotFound
 from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpAddRightRemote, CRDTOpDeleteRemote
 from crdt.list_crdt import ListCRDT
+from crdt.ordered_list.arr_ordered_list import ArrOrderedList
 from crdt.ordered_list.ll_ordered_list import LLOrderedList
 
 
 @pytest.fixture(
-    params=['A']
+    params=[LLOrderedList, ArrOrderedList]
 )
 def list_crdt(request):
-    return ListCRDT(request.param, LLOrderedList(request.param))
+    return ListCRDT('A', request.param('A'))
 
 
 def test_mixture1(list_crdt):

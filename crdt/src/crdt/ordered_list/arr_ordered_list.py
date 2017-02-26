@@ -61,16 +61,16 @@ class ArrOrderedList(BaseOrderedList):
 
     def insert(self, left_id, new_vertex):
         a, new_id = new_vertex
-        l_id = left_id
+        new_left_id = left_id
         r_id = self.successor(left_id)
         # Determine where to insert after specified vertex (gives total ordering)
-        while r_id != l_id and new_id < r_id:
-            l_id, r_id = r_id, self.successor(r_id)
+        while r_id != new_left_id and new_id < r_id:
+            new_left_id, r_id = r_id, self.successor(r_id)
 
         # Is this vertex new to the list?
         if r_id != new_id:
             # find where to insert
-            (left_node, index, _) = self._lookup(left_id)
+            (left_node, index, _) = self._lookup(new_left_id)
             # create new node
             new_node = Node(new_vertex)
             self.nodes.insert(index + 1, new_node)
