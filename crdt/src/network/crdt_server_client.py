@@ -4,7 +4,7 @@ import socket
 import threading
 
 from crdt.crdt_ops import RemoteCRDTOp
-from network.crdt_network_client import CRDTNetworkClient
+from network.crdt_network_client import CRDTNetworkClient, pack_and_send, recvall
 
 
 class CRDTServerClient(CRDTNetworkClient):
@@ -27,7 +27,7 @@ class CRDTServerClient(CRDTNetworkClient):
     def send_op(self, unpickled_op):
         if self.is_connected:
             logging.debug('sending op {}'.format(unpickled_op))
-            self.pack_and_send(unpickled_op, self.sock, self.cipher)
+            pack_and_send(unpickled_op, self.sock, self.cipher)
 
     def connect(self):
         logging.debug('connecting to server at {} {}'.format(
@@ -58,7 +58,7 @@ class CRDTServerClient(CRDTNetworkClient):
     def disconnect(self):
         self.can_consume_sem.acquire()
         try:
-            self.pack_and_send('\x00', self.sock, self.cipher)
+            pack_and_send('\x00', self.sock, self.cipher)
             self.sock.close()
             self.is_connected = False
         except socket.error as e:
@@ -70,7 +70,7 @@ class CRDTServerClient(CRDTNetworkClient):
 
         while True:
             try:
-                op = self.recvall(self.sock, self.cipher)
+                op = recvall(self.sock, self.cipher)
                 if not isinstance(op, RemoteCRDTOp):
                     raise socket.error('Received garbled operation')
 

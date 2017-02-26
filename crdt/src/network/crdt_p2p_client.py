@@ -9,7 +9,7 @@ import socks
 
 from crdt.crdt_ops import RemoteCRDTOp
 from crdt.vector_clock import VectorClock
-from network.crdt_network_client import CRDTNetworkClient
+from network.crdt_network_client import CRDTNetworkClient, pack_and_send, recvall
 from tools.connected_peers import ConnectedPeers
 from tools.operation_queue import OperationQueue
 from tools.operation_store import OperationStore
@@ -49,7 +49,7 @@ class CRDTP2PClient(CRDTNetworkClient):
         """
         try:
             # Send something so that the listening thread gets woken up and can close
-            self.pack_and_send('\x00', sock)
+            pack_and_send('\x00', sock)
             sock.close()
         except:
             pass
@@ -64,7 +64,7 @@ class CRDTP2PClient(CRDTNetworkClient):
         peers_to_remove = []
         for peer_ip, peer_info in self.connected_peers.iterate():
             try:
-                self.pack_and_send(unpickled_op, peer_info['sock'], peer_info['cipher'])
+                pack_and_send(unpickled_op, peer_info['sock'], peer_info['cipher'])
 
             except socket.error:
                 # If fail to send, assume disconnected
@@ -165,7 +165,7 @@ class CRDTP2PClient(CRDTNetworkClient):
                     sock = socket.socket()
                     sock.connect((peer_ip, self.port))
                 logging.debug('connected to {}'.format(peer_ip))
-                self.pack_and_send(self.my_addr, sock)
+                pack_and_send(self.my_addr, sock)
                 self.connecting_peers.add_peer(peer_ip, sock)
 
             except (socket.error, struct.error, socks.SOCKS5Error) as e:
@@ -201,7 +201,7 @@ class CRDTP2PClient(CRDTNetworkClient):
         while self.running:
             try:
                 sock, _ = self.recvsock.accept()
-                peer_addr = self.recvall(sock)
+                peer_addr = recvall(sock)
 
             except (socket.error, struct.error) as e:
                 logging.warning('couldn\'t connect to peer, {}'.format(e))
@@ -233,7 +233,7 @@ class CRDTP2PClient(CRDTNetworkClient):
         with open(self.time_file, 'a+') as f:
             while True:
                 try:
-                    op = self.recvall(sock, cipher)
+                    op = recvall(sock, cipher)
                     f.write('{}\n'.format(perf_counter()))
                     ops_done += 1
                     if not isinstance(op, RemoteCRDTOp):
@@ -244,7 +244,7 @@ class CRDTP2PClient(CRDTNetworkClient):
                     # logging.debug('{} got op {}'.format(self.puid, op))
 
                     # Note that we've received this
-                    if not (self.seen_ops_vc < op.op_id):
+                    if not (self.seen_ops_vc < op.vertex_id):
                         # We have seen the vertex this operation references
                         self.seen_ops_vc.update(op)
 

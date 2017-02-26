@@ -6,7 +6,7 @@ from logging.config import fileConfig
 from crdt.crdt_clock import CRDTClock
 from crdt.crdt_ops import RemoteCRDTOp
 from crdt.vector_clock import VectorClock
-from network.crdt_network_client import CRDTNetworkClient
+from network.crdt_network_client import CRDTNetworkClient, pack_and_send, recvall
 from tools.connected_peers import ConnectedPeers
 from tools.operation_store import OperationStore
 
@@ -34,7 +34,7 @@ class CRDTServer(CRDTNetworkClient):
     def disconnect_from_client(self, addr, sock, cipher):
         try:
             self.clients.remove_peer(addr)
-            self.pack_and_send('\x00', sock, cipher)
+            pack_and_send('\x00', sock, cipher)
             sock.close()
         except socket.error as e:
             pass
@@ -70,7 +70,7 @@ class CRDTServer(CRDTNetworkClient):
             self.clients.add_peer(addr, sock, cipher)
             while True:
                 # get length of next message which will be an int
-                op = self.recvall(sock, cipher)
+                op = recvall(sock, cipher)
                 logging.debug('received operation {}'.format(op))
                 if not isinstance(op, RemoteCRDTOp):
                     raise socket.error('Received garbled operation')
@@ -85,7 +85,7 @@ class CRDTServer(CRDTNetworkClient):
                 for ad, cl_dict in self.clients.iterate():
                     if ad != addr:
                         try:
-                            self.pack_and_send(op, cl_dict['sock'], cl_dict['cipher'])
+                            pack_and_send(op, cl_dict['sock'], cl_dict['cipher'])
                         except socket.error as e:
                             logging.debug('closing connection to {} {}'.format(addr, e))
                             peers_to_remove.append((ad, sock, cipher))

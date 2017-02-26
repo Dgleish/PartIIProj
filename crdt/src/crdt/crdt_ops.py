@@ -4,7 +4,6 @@ from crdt.identifier import Identifier
 class CRDTOp(object):
     pass
 
-
 class RemoteCRDTOp(CRDTOp):
     def __init__(self, op_id):
         self.vertex_id = None
@@ -14,6 +13,18 @@ class RemoteCRDTOp(CRDTOp):
     def op_id(self) -> Identifier:
         return self._op_id
 
+    def undo(self) -> CRDTOp:
+        pass
+
+
+class CRDTUndo(CRDTOp):
+    def undo(self, op: RemoteCRDTOp):
+        return None if op is None else op.undo()
+
+
+class CRDTRedo(CRDTOp):
+    def redo(self, op: RemoteCRDTOp):
+        return None if op is None else op.undo()
 
 class CRDTOpAddRightLocal(CRDTOp):
     def __init__(self, atom):
@@ -56,6 +67,9 @@ class CRDTOpAddRightRemote(RemoteCRDTOp):
     def __repr__(self):
         return self.__str__()
 
+    def undo(self):
+        return CRDTOpDeleteLocal()
+
 
 class CRDTOpDeleteLocal(CRDTOp):
     def __init__(self):
@@ -69,18 +83,24 @@ class CRDTOpDeleteLocal(CRDTOp):
 
 
 class CRDTOpDeleteRemote(RemoteCRDTOp):
-    def __init__(self, to_be_deleted_vertex_id, op_id):
+    def __init__(self, to_be_deleted_vertex, op_id):
         super(CRDTOpDeleteRemote, self).__init__(op_id)
-        self.vertex_id = to_be_deleted_vertex_id
+        if to_be_deleted_vertex is not None:
+            self.vertex_atom, self.vertex_id = to_be_deleted_vertex
+        else:
+            self.vertex_id = None
+            self.vertex_atom = None
 
     def __getstate__(self):
         return {
             'vertex_id': self.vertex_id,
+            'vertex_atom': self.vertex_atom,
             'op_id': self._op_id
         }
 
     def __setstate__(self, state):
         self.vertex_id = state['vertex_id']
+        self.vertex_atom = state['vertex_atom']
         self._op_id = state['op_id']
 
     def __str__(self):
@@ -88,3 +108,6 @@ class CRDTOpDeleteRemote(RemoteCRDTOp):
 
     def __repr__(self):
         return self.__str__()
+
+    def undo(self):
+        return CRDTOpAddRightLocal(self.vertex_atom)

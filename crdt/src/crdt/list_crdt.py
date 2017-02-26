@@ -3,11 +3,11 @@
 import logging
 from copy import copy
 
-from crdt.base_ordered_list import BaseOrderedList
 from crdt.crdt_clock import CRDTClock
 from crdt.crdt_exceptions import MalformedOp, UnknownOp
 from crdt.crdt_ops import (CRDTOp, CRDTOpAddRightLocal,
-                           CRDTOpAddRightRemote, CRDTOpDeleteLocal, CRDTOpDeleteRemote)
+                           CRDTOpAddRightRemote, CRDTOpDeleteLocal, CRDTOpDeleteRemote, RemoteCRDTOp)
+from crdt.ordered_list.base_ordered_list import BaseOrderedList
 
 
 class ListCRDT(object):
@@ -22,7 +22,7 @@ class ListCRDT(object):
     def get_clock(self):
         return self.clock
 
-    def perform_op(self, op):
+    def perform_op(self, op) -> (RemoteCRDTOp, bool):
         # Call the relevant method based on what operation it is
         if isinstance(op, CRDTOpAddRightLocal):
             return self.add_right_local(op)
@@ -86,29 +86,24 @@ class ListCRDT(object):
         return op, False
 
     def delete_local(self):
-        if self.cursor is not None:
+        # if the cursor is at the beginning, there is nothing to delete so ignore this
+        if not self.olist.start_of_list_check(self.cursor):
             self.clock.increment()
 
             # where is the cursor
             t = self.cursor
 
             # update cursor to previous element
-            self.cursor = self.olist.delete(t)
+            deleted_atom, self.cursor = self.olist.delete(t)
 
             # return corresponding remote operation for others to apply
             clock = copy(self.clock)
-            return CRDTOpDeleteRemote(t, clock), True
+            return CRDTOpDeleteRemote((deleted_atom, t), clock), True
         else:
             return None, False
 
     def pretty_print(self):
         return self.olist.get_repr(self.cursor)
-
-    def pretty_cursor(self):
-        if self.cursor is None:
-            return 0
-        else:
-            return self.cursor.timestamp
 
     def detail_print(self):
         return self.olist.get_detailed_repr() + ', cursor:' + str(self.cursor)
@@ -119,6 +114,9 @@ class ListCRDT(object):
         elif lr == 'Right':
             self.shift_cursor_right()
 
+    def move_cursor_to(self, vertex_id):
+        self.cursor = self.olist.get(vertex_id)
+
     def shift_cursor_right(self):
         # Need a way to stop at end of the list
         self.cursor = self.olist.successor(self.cursor, True)
@@ -127,3 +125,6 @@ class ListCRDT(object):
     def shift_cursor_left(self):
         self.cursor = self.olist.predecessor(self.cursor, True)
         # logging.debug('cursor is now {}'.format(self.cursor))
+
+    def __len__(self):
+        return self.olist.__len__()

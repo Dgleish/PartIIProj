@@ -9,11 +9,13 @@ class PathId(Identifier):
         self.num = num
         self.basebase = 4
         self.num_list = []
+        self.base_list = []
         d = depth
         while d > 0:
             base = self.get_base_for_depth(d)
             mask = ((1 << base) - 1)
             self.append(mask & num)
+            self.base_list.append(base)
             num >>= base
             d -= 1
         self.num_list.reverse()
@@ -31,6 +33,9 @@ class PathId(Identifier):
 
     def get_size(self) -> int:
         return len(self.num_list)
+
+    def get_num_bits(self) -> int:
+        return sum(self.base_list)
 
     def get_base_for_depth(self, depth) -> int:
         return self.basebase + depth

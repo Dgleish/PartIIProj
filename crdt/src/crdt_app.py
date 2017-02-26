@@ -2,11 +2,12 @@ import logging
 import os
 import threading
 from logging.config import fileConfig
+from time import process_time
 
 from crdt.crdt_exceptions import VertexNotFound
-from crdt.crdt_ops import RemoteCRDTOp
+from crdt.crdt_ops import RemoteCRDTOp, CRDTUndo, CRDTRedo
 from crdt.list_crdt import ListCRDT
-from crdt.lseq_ordered_list import LSEQOrderedList
+from crdt.ordered_list.lseq_ordered_list import LSEQOrderedList
 from crdt.vector_clock import VectorClock
 from network.crdt_p2p_client import CRDTP2PClient
 from network.crdt_server_client import CRDTServerClient
@@ -15,8 +16,8 @@ from tools.operation_store import OperationStore
 from tor.tor_controller import TorController
 from ui.crdt_local_client import CRDTLocalClient
 
-dir = os.path.dirname(__file__)
-filename = os.path.join(dir, '../logging_config.ini')
+curr_dir = os.path.dirname(__file__)
+filename = os.path.join(curr_dir, '../logging_config.ini')
 fileConfig(filename)
 
 
@@ -94,23 +95,20 @@ class CRDTApp(object):
 
         self.simulate_user_input(ops_to_do)
 
-        timings = []
-
         # Start performing operations
         op_queue_consumer = threading.Thread(
             target=self.consume_op_queue
         )
         op_queue_consumer.daemon = True
         op_queue_consumer.start()
-        # self.consume_op_queue(timings)
 
-        # self.connect()
-
-        # Show GUI
-
+        # for timing stuff
+        # timings = []
         # for _ in range(10000):
         #     self.crdt.perform_op(CRDTOpAddRightLocal('a'))
-        # self.res = self.consume_op_queue(timings)
+        # self.res = self.consume_op_queue_time(timings)
+
+        # Show GUI
         self.local_client.display()
 
     def time(self):
@@ -124,13 +122,13 @@ class CRDTApp(object):
         """
         if self.use_tor:
             self.tor.connect()
-        # network_thread = threading.Thread(target=self.network_client.connect)
-        # network_thread.daemon = True
-        # network_thread.start()
-        self.network_client.connect()
+        network_thread = threading.Thread(target=self.network_client.connect)
+        network_thread.daemon = True
+        network_thread.start()
+        # self.network_client.connect()
         self.is_connected = True
-        if self.use_tor:
-            self.tor.disconnect()
+        # if self.use_tor:
+        #     self.tor.disconnect()
 
     def do_ops(self):
         op_queue_consumer = threading.Thread(
@@ -165,11 +163,70 @@ class CRDTApp(object):
         while len(ops_to_do) > 0:
             self.op_queue.appendleft(ops_to_do.pop())
 
+    def recover(self, op_to_store):
+        """
+        For all operations held back that reference nodes with
+        identifiers equal to the op just done, add them to the front of the queue
+        """
+        recovery_clock = op_to_store.op_id
+        if recovery_clock in self.held_back_ops.ops:
+            for new_op in self.held_back_ops.get_ops_for_key(recovery_clock):
+                self.op_queue.append(new_op)
+            self.held_back_ops.remove_ops_for_key(recovery_clock)
+
     def consume_op_queue(self):
         """
         Continually take operations from the central queue and do them
         """
-        # ops_done = 0
+        while True:
+            # get item from the queue
+            op = self.op_queue.pop()
+            self.can_consume_sem.acquire()
+            put_in_undo_list = False
+            if isinstance(op, CRDTUndo):
+                op = op.undo(self.op_store.undo(self.puid))
+                put_in_undo_list = True
+            elif isinstance(op, CRDTRedo):
+                op = op.redo(self.op_store.redo(self.puid))
+            # if there was nothing to undo or redo, just ignore and move on
+            if op is None:
+                self.can_consume_sem.release()
+                continue
+            try:
+                # do the operation on the local CRDT
+                op_to_store, should_send = self.crdt.perform_op(op)
+                assert isinstance(op_to_store, RemoteCRDTOp)
+            except VertexNotFound as e:
+                logging.warning('{} Failed to do op {}, {}'.format(self.puid, op, e))
+                # add op indexed by the (missing) operation it was referencing
+                self.held_back_ops.add_op(op.clock, op)
+                self.can_consume_sem.release()
+                continue
+
+            # Store operation
+            self.op_store.add_op(op_to_store.op_id.puid, op_to_store, put_in_undo_list)
+            # logging.debug('{} did and stored op {}'.format(self.puid, op_to_store))
+
+            # Update UI
+            self.local_client.update(self.crdt.pretty_print())
+
+            # if we've got something to send to others, send to others
+            if should_send:
+                self.network_client.send_op(op_to_store)
+            else:
+                # increment corresponding component of vector clock
+                self.seen_ops_vc.update(op_to_store)
+                self.done_ops_vc.update(op_to_store)
+
+            self.recover(op_to_store)
+
+            self.can_consume_sem.release()
+
+    def consume_op_queue_time(self, timings):
+        """
+        Continually take operations from the central queue and do them
+        """
+        ops_done = 0
         while True:
             curr_timing = []
             # get item from the queue
@@ -179,10 +236,10 @@ class CRDTApp(object):
             # logging.debug('got lock'.format())
             try:
                 # do the operation on the local CRDT
-                # t = process_time()
+                t = process_time()
                 op_to_store, should_send = self.crdt.perform_op(op)
-                # curr_timing.append(process_time() - t)
-                # t1 = process_time()
+                curr_timing.append(process_time() - t)
+                t1 = process_time()
                 assert isinstance(op_to_store, RemoteCRDTOp)
             except VertexNotFound as e:
                 logging.warning('{} Failed to do op {}, {}'.format(self.puid, op, e))
@@ -195,14 +252,14 @@ class CRDTApp(object):
 
             # Store operation
             self.op_store.add_op(op_to_store.op_id.puid, op_to_store)
-            # curr_timing.append(process_time() - t1)
+            curr_timing.append(process_time() - t1)
             # t2 = process_time()
-            logging.debug('{} did and stored op {}'.format(self.puid, op_to_store))
+            # logging.debug('{} did and stored op {}'.format(self.puid, op_to_store))
 
             # Update UI
-            self.local_client.update(self.crdt.pretty_print())
+            # self.local_client.update(self.crdt.pretty_print())
             # curr_timing.append(process_time() - t2)
-            # t3 = process_time()
+            t3 = process_time()
             # if we've got something to send to others, send to others
             if should_send:
                 self.network_client.send_op(op_to_store)
@@ -210,8 +267,8 @@ class CRDTApp(object):
                 # increment corresponding component of vector clock
                 self.seen_ops_vc.update(op_to_store)
                 self.done_ops_vc.update(op_to_store)
-            # curr_timing.append(process_time() - t3)
-            # t4 = process_time()
+            curr_timing.append(process_time() - t3)
+            t4 = process_time()
             # for all operations held back that reference nodes with
             # clocks equal to the op just done,
             # add them to the front of the queue
@@ -220,14 +277,14 @@ class CRDTApp(object):
                 for new_op in self.held_back_ops.get_ops_for_key(recovery_clock):
                     self.op_queue.append(new_op)
                 self.held_back_ops.remove_ops_for_key(recovery_clock)
-            # curr_timing.append(process_time() - t4)
-            # ops_done += 1
+            curr_timing.append(process_time() - t4)
+            ops_done += 1
             # if ops_done >= 1000:
             #     self.can_consume_sem.release()
             #     self.connect()
             #     return
 
             self.can_consume_sem.release()
-            # timings.append(curr_timing)
-            # if len(timings) == 1000:
-            #     return timings
+            timings.append(curr_timing)
+            if len(timings) == 10000:
+                return timings

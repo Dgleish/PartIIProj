@@ -5,6 +5,19 @@ from tools.decorators import synchronized
 
 
 # noinspection PyArgumentList
+def _find_next_biggest(ops, t):
+    # binary search variant
+    # returns index of first element with timestamp > t or
+    # -1 if no such element exists
+    t.increment()
+    # returns i such that all elements in ops[:i] are < t
+    i = bisect_left([op.op_id for op in ops], t)
+    if i == len(ops):
+        return -1
+    return i
+
+
+# noinspection PyArgumentList
 class OperationStore(object):
     def __init__(self, value_store):
         self.ops = defaultdict(value_store)
@@ -12,21 +25,33 @@ class OperationStore(object):
             self.add = lambda store, x: store.add(x)
         else:
             self.add = lambda store, x: store.append(x)
+        # stack of undone things, push and pop between this and the local list of operations
+        self.undone_ops = []
+
+    def undo(self, puid):
+        if len(self.ops[puid]) > 0:
+            op_to_undo = self.ops[puid].pop()
+            # logging.debug('op_to_undo {}'.format(op_to_undo))
+            return op_to_undo
+        else:
+            # nothing to undo
+            return None
+
+    def redo(self, puid):
+        if len(self.undone_ops) > 0:
+            op_to_redo = self.undone_ops.pop()
+            # logging.debug('op_to_redo {}'.format(op_to_redo))
+            return op_to_redo
+        else:
+            # nothing to redo
+            return None
 
     @synchronized
-    def add_op(self, key, op):
-        self.add(self.ops[key], op)
-
-    def _find_next_biggest(self, ops, t):
-        # binary search variant
-        # returns index of first element with timestamp > t or
-        # -1 if no such element exists
-        t.increment()
-        # returns i such that all elements in ops[:i] are < t
-        i = bisect_left([op.op_id for op in ops], t)
-        if i == len(ops):
-            return -1
-        return i
+    def add_op(self, key, op, store_in_undo=False):
+        if store_in_undo:
+            self.undone_ops.append(op)
+        else:
+            self.add(self.ops[key], op)
 
     def _get_ops_for_key_after(self, key, timestamp=None):
 
@@ -37,7 +62,7 @@ class OperationStore(object):
         # find first the next operation after the given timestamp
         # then return all elements in that list after and including the found one
         # if no such operation exists, return empty list
-        index = self._find_next_biggest(self.ops[key], timestamp)
+        index = _find_next_biggest(self.ops[key], timestamp)
         if index == -1:
             return []
         else:

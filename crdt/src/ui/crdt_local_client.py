@@ -1,7 +1,7 @@
 import threading
 import tkinter as Tk
 
-from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
+from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal, CRDTUndo, CRDTRedo
 
 
 class CRDTLocalClient(object):
@@ -88,9 +88,12 @@ class CRDTLocalClient(object):
             return
         elif event.char == '\x08':
             self.op_q.appendleft(CRDTOpDeleteLocal())
+        elif event.char == '(':
+            self.op_q.appendleft(CRDTUndo())
+        elif event.char == ')':
+            self.op_q.appendleft(CRDTRedo())
         elif len(event.char) > 0 and 32 <= ord(event.char) <= 126:
             self.op_q.appendleft(CRDTOpAddRightLocal(event.char))
-        # self.move_cursor('Right')
         return "break"
 
     def update(self, crdt_state):

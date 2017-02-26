@@ -2,7 +2,7 @@ import pytest
 
 from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
 from crdt.list_crdt import ListCRDT
-from crdt.lseq_ordered_list import LSEQOrderedList
+from crdt.ordered_list.lseq_ordered_list import LSEQOrderedList
 
 puid = 'a'
 

@@ -8,6 +8,43 @@ from crypto.DiffieHellman import DiffieHellman
 from crypto.cipher import Cipher
 
 
+def recvall(sock, cipher=None):
+    # make sure you receive `length` bytes of data
+    length_struct = sock.recv(4)
+    if not length_struct:
+        raise socket.error
+    length, = struct.unpack('!I', length_struct)
+
+    buf = []
+    while length:
+        newbuf = sock.recv(length)
+        if not newbuf:
+            return None
+        buf.append(newbuf)
+        length -= len(newbuf)
+    if len(buf) == 0:
+        raise socket.error('No data received')
+    else:
+        buf = b''.join(buf)
+    if cipher is not None:
+        buf = cipher.decrypt2(buf)
+
+    return pickle.loads(buf)
+
+
+def pack_and_send(unpickled_data, sock, cipher=None):
+    # serialise data and send along with its length
+    pickle_func = getattr(unpickled_data, "pickle", None)
+    if pickle_func is None:
+        pickled_data = pickle.dumps(unpickled_data)
+    else:
+        pickled_data = unpickled_data.pickle()
+    if cipher is not None:
+        pickled_data = cipher.encrypt2(pickled_data)
+    header = struct.pack('!I', len(pickled_data))
+    sock.sendall(header + pickled_data)
+
+
 class CRDTNetworkClient(object):
     def __init__(self, seen_ops_vc, stored_ops, puid, encrypt=False):
         self.seen_ops_vc = seen_ops_vc
@@ -17,41 +54,6 @@ class CRDTNetworkClient(object):
         self.can_send = True
         if encrypt:
             self.my_DH = DiffieHellman()
-
-    def recvall(self, sock, cipher=None):
-        # make sure you receive `length` bytes of data
-        length_struct = sock.recv(4)
-        if not length_struct:
-            raise socket.error
-        length, = struct.unpack('!I', length_struct)
-
-        buf = []
-        while length:
-            newbuf = sock.recv(length)
-            if not newbuf:
-                return None
-            buf.append(newbuf)
-            length -= len(newbuf)
-        if len(buf) == 0:
-            raise socket.error('No data received')
-        else:
-            buf = b''.join(buf)
-        if cipher is not None:
-            buf = cipher.decrypt2(buf)
-
-        return pickle.loads(buf)
-
-    def pack_and_send(self, unpickled_data, sock, cipher=None):
-        # serialise data and send along with its length
-        pickle_func = getattr(unpickled_data, "pickle", None)
-        if pickle_func is None:
-            pickled_data = pickle.dumps(unpickled_data)
-        else:
-            pickled_data = unpickled_data.pickle()
-        if cipher is not None:
-            pickled_data = cipher.encrypt2(pickled_data)
-        header = struct.pack('!I', len(pickled_data))
-        sock.sendall(header + pickled_data)
 
     def connect(self):
         pass
@@ -69,7 +71,7 @@ class CRDTNetworkClient(object):
         :param sock: socket to send to
         """
         # logging.debug('sending {}'.format(self.seen_ops_vc))
-        self.pack_and_send(self.seen_ops_vc, sock, cipher)
+        pack_and_send(self.seen_ops_vc, sock, cipher)
 
     def sync_ops(self, sock, cipher):
         """
@@ -78,14 +80,14 @@ class CRDTNetworkClient(object):
         :param cipher: the crypto object
         """
 
-        their_vc = self.recvall(sock, cipher)
+        their_vc = recvall(sock, cipher)
         # logging.debug('got vector clock {}'.format(their_vc))
         assert isinstance(their_vc, VectorClock)
         # determine which ops to send
         ops_to_send = self.stored_ops.determine_ops_after_vc(their_vc)
         logging.debug('sync ops sending over {}'.format(ops_to_send))
         for op in ops_to_send:
-            self.pack_and_send(op, sock, cipher)
+            pack_and_send(op, sock, cipher)
             # MEASUREMENTS
             # if self.can_send:
             #     self.can_send = False
@@ -99,10 +101,10 @@ class CRDTNetworkClient(object):
 
     def do_DH(self, sock):
         # send public key
-        self.pack_and_send(self.my_DH.publicKey, sock)
+        pack_and_send(self.my_DH.publicKey, sock)
 
         # receive other public key
-        other_key = self.recvall(sock)
+        other_key = recvall(sock)
 
         # generate shared secret
         key = self.my_DH.genKey(other_key)

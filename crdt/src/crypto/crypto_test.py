@@ -8,6 +8,6 @@ if __name__ == '__main__':
     a.genKey(b.publicKey)
     b.genKey(a.publicKey)
 
-    if (a.getKey() == b.getKey()):
+    if a.getKey() == b.getKey():
         print("Shared keys match.")
         print("Key:", hexlify(a.getKey()))
