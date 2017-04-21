@@ -1,7 +1,7 @@
 from crdt.identifier import Identifier
 
 
-class CRDTClock(Identifier):
+class ClockID(Identifier):
     def __init__(self, puid, initial_timestamp=0):
         super().__init__(puid)
         self._timestamp = initial_timestamp
@@ -25,13 +25,13 @@ class CRDTClock(Identifier):
     def __eq__(self, other_clock):
         if other_clock is None:
             return False
-        if isinstance(other_clock, CRDTClock):
+        if isinstance(other_clock, ClockID):
             return (self.timestamp == other_clock.timestamp) and (self.puid == other_clock.puid)
 
     def __lt__(self, other_clock):
         if other_clock is None:
             return True
-        if isinstance(other_clock, CRDTClock):
+        if isinstance(other_clock, ClockID):
             if self.timestamp == other_clock.timestamp:
                 return self.puid < other_clock.puid
             else:

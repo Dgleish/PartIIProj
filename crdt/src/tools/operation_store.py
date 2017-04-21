@@ -28,6 +28,7 @@ class OperationStore(object):
         # stack of undone things, push and pop between this and the local list of operations
         self.undone_ops = []
 
+    @synchronized
     def undo(self, puid):
         if len(self.ops[puid]) > 0:
             op_to_undo = self.ops[puid].pop()
@@ -37,6 +38,7 @@ class OperationStore(object):
             # nothing to undo
             return None
 
+    @synchronized
     def redo(self, puid):
         if len(self.undone_ops) > 0:
             op_to_redo = self.undone_ops.pop()
@@ -47,11 +49,16 @@ class OperationStore(object):
             return None
 
     @synchronized
+    def clear_undo(self):
+        self.undone_ops.clear()
+
+    @synchronized
     def add_op(self, key, op, store_in_undo=False):
-        if store_in_undo:
-            self.undone_ops.append(op)
-        else:
-            self.add(self.ops[key], op)
+        if key is not None:
+            if store_in_undo:
+                self.undone_ops.append(op)
+            else:
+                self.add(self.ops[key], op)
 
     def _get_ops_for_key_after(self, key, timestamp=None):
 
@@ -72,9 +79,9 @@ class OperationStore(object):
     def determine_ops_after_vc(self, vector_clock):
         ops_to_send = []
         for key in self.ops:
-            ops_to_send += self._get_ops_for_key_after(key, vector_clock.get_clock(key))
+            # ops_to_send += self._get_ops_for_key_after(key, vector_clock.get_clock(key))
             # MEASUREMENTS
-            # ops_to_send += self.ops[key]
+            ops_to_send += self.ops[key]
         return ops_to_send
 
     @synchronized

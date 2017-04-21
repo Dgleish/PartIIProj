@@ -1,4 +1,4 @@
-from crdt.crdt_ops import CRDTOpDeleteRemote, CRDTOpDeleteLocal
+from crdt.ops import CRDTOpDeleteRemote, OpDeleteLocal
 from tools.operation_queue import OperationQueue
 
 
@@ -22,11 +22,11 @@ def test_queue2():
 
 def test_queue3():
     q = OperationQueue()
-    ops = [CRDTOpDeleteRemote(None, None), CRDTOpDeleteLocal()]
+    ops = [CRDTOpDeleteRemote(None, None), OpDeleteLocal()]
     for o in ops:
         q.append(o)
     ops = []
 
     while len(q.queue) > 0:
         ops.append(q.popleft())
-    assert isinstance(ops[0], CRDTOpDeleteRemote) and isinstance(ops[1], CRDTOpDeleteLocal)
+    assert isinstance(ops[0], CRDTOpDeleteRemote) and isinstance(ops[1], OpDeleteLocal)

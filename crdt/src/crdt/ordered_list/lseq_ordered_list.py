@@ -3,6 +3,7 @@ from typing import Any
 
 from sortedcontainers import SortedList
 
+from crdt.clock_id import ClockID
 from crdt.crdt_exceptions import VertexNotFound
 from crdt.ordered_list.base_ordered_list import BaseOrderedList, Node
 from crdt.path_id import PathId
@@ -25,8 +26,8 @@ class LSEQOrderedList(BaseOrderedList):
         self.boundary = 10
         self.base = 5
 
-        head_id = PathId(None, 1)
-        end_id = PathId(None, ((1 << self.base) - 1))
+        head_id = PathId(None, None, 1)
+        end_id = PathId(None, None, ((1 << self.base) - 1))
         self.head = Node((None, head_id), flag='START')
         end_node = Node((None, end_id), flag='END')
         self.head.next_node = end_node
@@ -46,7 +47,7 @@ class LSEQOrderedList(BaseOrderedList):
     def get_initial_cursor(self):
         return self.head.id
 
-    def alloc(self, left_id: PathId, right_id: PathId):
+    def alloc(self, left_id: PathId, right_id: PathId, clock: ClockID):
         depth = 0
         interval = 0
         # work out how many ids lie between left_id and right_id and at what depth
@@ -63,9 +64,9 @@ class LSEQOrderedList(BaseOrderedList):
         if depth not in self.alloc_strategy:
             self.alloc_strategy[depth] = alloc_hash(depth)
         if self.alloc_strategy[depth]:
-            vertex_id = PathId(self.puid, left_id.prefix(depth) + add_val, depth)
+            vertex_id = PathId(self.puid, clock, left_id.prefix(depth) + add_val, depth)
         else:
-            vertex_id = PathId(self.puid, right_id.prefix(depth) - add_val, depth)
+            vertex_id = PathId(self.puid, clock, right_id.prefix(depth) - add_val, depth)
 
         return vertex_id
 
@@ -84,14 +85,15 @@ class LSEQOrderedList(BaseOrderedList):
         :return: the next smallest id than vertex_id
         """
         i = self.ids.bisect_left(vertex_id)
+        assert (i > 0)
         prev_id = self.ids[i - 1]
         return self._lookup(prev_id)
 
-    def _get_node(self, left_id: PathId) -> Node:
+    def _get_node(self, identifier: PathId) -> Node:
         try:
-            left_node = self._lookup(left_id)
+            left_node = self._lookup(identifier)
         except VertexNotFound as e:
-            left_node = self._approx_lookup(left_id)
+            left_node = self._approx_lookup(identifier)
         return left_node
 
     def _insert(self, left_id, a, new_id, left_node, right_node):
@@ -103,29 +105,31 @@ class LSEQOrderedList(BaseOrderedList):
         if right_node is not None:
             right_node.prev_node = new_node
 
-        # yay log search
         self.ids.add(new_id)
         self.nodes[new_id] = new_node
-        # MUST RETURN ID AS WE JUST GENERATED IT
         return left_id, (a, new_id)
 
     def insert(self, left_id, new_vertex):
-        a, vertex_id = new_vertex
+        a, clock = new_vertex
         # lookup node
         left_node = self._get_node(left_id)
         # get next node
         right_node = left_node.next_node
         # allocate id between them
-        new_id = self.alloc(left_id, right_node.id)
+        new_id = self.alloc(left_id, right_node.id, clock)
         return self._insert(left_id, a, new_id, left_node, right_node)
 
     def insert_remote(self, left_id, new_vertex):
         a, vertex_id = new_vertex
+
         # we've inserted this before
         if vertex_id in self.nodes:
-            return left_id, new_vertex
-        # lookup node
-        left_node = self._get_node(left_id)
+            # then we want the node before this one for the left_id
+            return self.predecessor(new_vertex.id), new_vertex
+
+        # lookup node (or greatest one smaller than it whether it exists or not)
+        left_node = self._get_node(vertex_id)
+
         # get next node
         right_node = left_node.next_node
         # insert new node with this id
@@ -133,11 +137,12 @@ class LSEQOrderedList(BaseOrderedList):
         l_id = left_node.id
         r_id = right_node.id
         # gives a total ordering so we insert in the same place as all others
+
         while r_id != l_id and new_id > r_id:
             l_id, r_id = r_id, self.successor(r_id)
         left_node = self._lookup(l_id)
         right_node = self._lookup(r_id)
-        return self._insert(left_id, a, new_id, left_node, right_node)
+        return self._insert(left_node.id, a, new_id, left_node, right_node)
 
     def _remove_node(self, vertex_id):
         del self.nodes[vertex_id]
@@ -154,7 +159,7 @@ class LSEQOrderedList(BaseOrderedList):
             succ = node.next_node
             succ.prev_node = prev
             self._remove_node(vertex_id)
-            return node.atom, prev.id
+            return (node.atom, vertex_id), prev.id
         except VertexNotFound as e:
             return None, vertex_id
 

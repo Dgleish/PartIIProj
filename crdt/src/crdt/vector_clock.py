@@ -1,7 +1,7 @@
 import logging
 import pickle
 
-from crdt.crdt_clock import CRDTClock
+from crdt.clock_id import ClockID
 from crdt.path_id import PathId
 from tools.decorators import synchronized
 
@@ -11,7 +11,7 @@ class VectorClock(object):
     """ contains most recently seen op from each peer """
 
     def __init__(self, owner_clock):
-        assert isinstance(owner_clock, CRDTClock)
+        assert isinstance(owner_clock, ClockID)
         self.owner_puid = owner_clock.puid
         self.clocks = {self.owner_puid: owner_clock}
 
@@ -47,7 +47,7 @@ class VectorClock(object):
         op_id = op.op_id
         other_puid = op_id.puid
         if other_puid not in self.clocks:
-            self.clocks[other_puid] = CRDTClock(other_puid)
+            self.clocks[other_puid] = ClockID(other_puid)
         self.clocks[other_puid].update(op.op_id)
 
     @synchronized
@@ -70,7 +70,7 @@ class VectorClock(object):
         """
         if puid in self.clocks:
             logging.warning('already had peer {}'.format(puid))
-        self.clocks[puid] = CRDTClock(puid)
+        self.clocks[puid] = ClockID(puid)
 
     @synchronized
     def remove_peer(self, puid):
@@ -89,7 +89,7 @@ class VectorClock(object):
 
     @synchronized
     def __eq__(self, other):
-        if isinstance(other, CRDTClock):
+        if isinstance(other, ClockID):
             # Essentially compares our corresponding clock component to
             # the given clock for equality
             other_puid = other.puid
@@ -102,7 +102,7 @@ class VectorClock(object):
     def __lt__(self, other):
         if other is None:
             return False
-        if isinstance(other, CRDTClock):
+        if isinstance(other, ClockID):
             # This is comparison is used to see if our vector clock
             # is behind a specific single clock
             # If we don't have an entry for it, it would default to 0

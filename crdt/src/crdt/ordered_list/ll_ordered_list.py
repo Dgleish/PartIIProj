@@ -89,7 +89,7 @@ class LLOrderedList(BaseOrderedList):
         node = self.lookup(vertex_id)
         node.deleted = True
         prev_node = self.lookup(self.predecessor(vertex_id, only_active=True))
-        return node.atom, prev_node.id
+        return (node.atom, vertex_id), prev_node.id
 
     # for pretty printing
     def get_repr(self, cursor):

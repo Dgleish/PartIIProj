@@ -1,0 +1,20 @@
+\documentclass[diss.tex]{subfiles}
+
+\begin{document}
+\chapter{Introduction}
+\label{chap:introduction}
+A common use of the Internet is to perform some kind of online editing of documents. Real-time collaborative editors allow multiple clients to edit a document simultaneously, regardless of location. One popular such editor is provided as part of Google Drive \cite{googledrive}. However, by using this service, you are giving Google access to everything you write, as this extract from the Google Terms Of Service \cite{googletos} state: \begin{quote}
+When you upload, submit, store, send or receive content to or through our Services, you give Google (and those we work with) a worldwide license to use, host, store, reproduce, modify, create derivative works (such as those resulting from translations, adaptations or other changes we make so that your content works better with our Services), communicate, publish, publicly perform, publicly display and distribute such content.
+\end{quote} 
+For the privacy conscious, it may be undesirable for Google to be able to \textit{publish} or \textit{distribute} your content. Instead of sending all your writings through large, corporate servers (the client-server architecture) that may inspect the data as they please, my project makes use of the peer-to-peer (P2P) architecture, so that all data about a document is stored only by those editing it.
+
+A P2P real-time collaborative editor is inherently a distributed system, and as such suffers from the usual pitfalls of distributed systems. For an editor we don't necessarily care about \textit{physical} time, only which events happened before others, referred to as \textit{logical} time. However, in some cases events $A$ and $B$ might not be ordered by the happens-before \cite{lamportshappensbefore} relation (they are \textit{concurrent}).
+
+% Example
+Imagine a simple situation with two clients A and B, who are editing the same document. A types an $a$, and tells B about this. Before B receives the message, it types $b$ and tells A about this. Thus, na{\"i}vely, A would have a final state of $ab$ and B would have $ba$. A correct editor would somehow ensure that the final state of any two clients editing the same document is the same. The first part of my project focuses on how this can be done.
+
+
+% Tor
+So far, I have considered the privacy concerns for storing data at a node in a network through which data must travel. However, in the Internet, intermediate nodes are not necessarily friendly, and may inspect the data as they wish \cite{deeppacketinspection}. Moreover, they can read the packet headers to find the source and destination of all the data, and so potentially can infer who you are collaborating with. The Onion Router (Tor) is a project that aims primarily to mitigate the latter concern. Its operation will be described in the Preparation chapter, but using it means your packets randomly hop around the world before reaching the destination, such that none of the intermediate nodes know both the sender and recipient of the message. Moreover, the use of its Hidden Services means additionally no intermediate node can read your data, so Tor is a convenient way to address both problems presented, and the second part of the project builds up to this.
+
+\end{document}

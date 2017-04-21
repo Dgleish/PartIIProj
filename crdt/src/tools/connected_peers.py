@@ -41,12 +41,8 @@ class ConnectedPeers(object):
         return cipher
 
     @synchronized
-    def iterate_sockets(self):
-        return {(peer, val['sock']) for peer, val in self.peers.items()}
-
-    @synchronized
     def iterate(self):
-        return self.peers.items()
+        return list(self.peers.items())
 
     @synchronized
     def __repr__(self):

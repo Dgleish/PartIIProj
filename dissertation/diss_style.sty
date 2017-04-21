@@ -1,0 +1,106 @@
+\ProvidesPackage{diss_style}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+
+\usepackage{xcolor}
+\definecolor{Code}{rgb}{0,0,0}
+\definecolor{Decorators}{rgb}{0.5,0.5,0.5}
+\definecolor{Numbers}{rgb}{0.5,0,0}
+\definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5}
+\definecolor{Keywords}{rgb}{0,0,1}
+\definecolor{self}{rgb}{0,0,0}
+\definecolor{Strings}{rgb}{0,0.63,0}
+\definecolor{Comments}{rgb}{0,0.63,1}
+\definecolor{Backquotes}{rgb}{0,0,0}
+\definecolor{Classname}{rgb}{0,0,0}
+\definecolor{FunctionName}{rgb}{0,0,0}
+\definecolor{Operators}{rgb}{0,0,0}
+\definecolor{Background}{rgb}{0.98,0.98,0.98}
+
+\usepackage{setspace}
+
+\usepackage{listings}
+\lstdefinelanguage{Python}{
+numbers=left,
+numberstyle=\footnotesize,
+numbersep=1em,
+xleftmargin=1em,
+framextopmargin=2em,
+framexbottommargin=2em,
+showspaces=false,
+showtabs=false,
+showstringspaces=false,
+frame=l,
+tabsize=2,
+% Basic
+basicstyle=\ttfamily\small\setstretch{1},
+backgroundcolor=\color{Background},
+% Comments
+commentstyle=\color{Comments}\slshape,
+% Strings
+stringstyle=\color{Strings},
+morecomment=[s][\color{Strings}]{"""}{"""},
+morecomment=[s][\color{Strings}]{'''}{'''},
+% keywords
+morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+keywordstyle={\color{Keywords}\bfseries},
+% additional keywords
+morekeywords={[2]@invariant,pylab,numpy,np,scipy},
+keywordstyle={[2]\color{Decorators}\slshape},
+emph={self},
+emphstyle={\color{self}\slshape},
+breaklines=true,
+%
+}
+\lstset{language=Python}
+
+
+\usepackage[a4paper, portrait,margin=3cm]{geometry}
+\usepackage{titling}
+
+\usepackage{subfiles}
+
+\usepackage{graphicx}
+\graphicspath{ {img/} }
+\usepackage{float}
+
+\usepackage{subcaption}
+\usepackage{wrapfig}
+
+
+\usepackage{parskip}
+% paragraph indentation and separation
+\setlength{\parindent}{5ex}
+\setlength{\parskip}{1em}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usetikzlibrary{decorations.markings}
+\usetikzlibrary{arrows.meta}
+\usepackage{pgf-umlsd}
+\tikzset{
+queue/.pic = {
+  \draw[line width=1pt]
+    (0,0) -- ++(2.75cm,0) -- ++(0,-1cm) -- ++(-2.75cm,0);
+   \foreach \Val in {1,...,#1}
+     \draw ([xshift=-\Val*10pt]2.75cm,0) -- ++(0,-1cm); 
+},
+stack/.pic = {	
+		\draw[line width=1pt]
+    	 (0, 0) -- ++(-0.5cm, 0) -- ++(0, 2.75cm)
+		 (0, 0) -- ++(0.5cm, 0) -- ++ (0, 2.75cm);
+   		\foreach \Val in {1,...,#1}
+    	 \draw ([yshift=\Val*10pt]-0.5cm,0) -- ++(1cm,0); 
+    	\node {\tikzpictext};
+}
+}

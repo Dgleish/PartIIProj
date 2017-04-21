@@ -2,7 +2,7 @@ import plotly as py
 import plotly.graph_objs as go
 from plotly import tools
 
-from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal
+from crdt.ops import OpAddRightLocal, OpDeleteLocal
 from crdt.ordered_list.arr_ordered_list import ArrOrderedList
 from crdt.ordered_list.ll_ordered_list import LLOrderedList
 from crdt.ordered_list.lseq_ordered_list import LSEQOrderedList
@@ -13,7 +13,7 @@ def add_time(iterations):
     results = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[CRDTOpAddRightLocal('1')] * 10000,
+        app = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[OpAddRightLocal('1')] * 10000,
                       list_repr=LLOrderedList)
         results.append(app.time())
     aggr = [min(sum(l[i][:2] + l[i][3:]) for l in results) for i in range(len(results[0]))]
@@ -21,7 +21,7 @@ def add_time(iterations):
     results2 = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app2 = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[CRDTOpAddRightLocal('1')] * 10000,
+        app2 = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[OpAddRightLocal('1')] * 10000,
                        list_repr=ArrOrderedList)
         results2.append(app2.time())
     aggr2 = [min(sum(l[i][:2] + l[i][3:]) for l in results2) for i in range(len(results2[0]))]
@@ -29,7 +29,7 @@ def add_time(iterations):
     results3 = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
-        app3 = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[CRDTOpAddRightLocal('1')] * 10000,
+        app3 = CRDTApp('127001', 8889, '127.0.0.1', ops_to_do=[OpAddRightLocal('1')] * 10000,
                        list_repr=LSEQOrderedList)
         results3.append(app3.time())
     aggr3 = [min(sum(l[i][:2] + l[i][3:]) for l in results3) for i in range(len(results3[0]))]
@@ -43,29 +43,35 @@ def detail_add_olist_time(iterations):
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
         app = CRDTApp('127001', 8889, '127.0.0.1',
-                      ops_to_do=[CRDTOpAddRightLocal('1')] * 50000, list_repr=LLOrderedList)
+                      ops_to_do=[OpAddRightLocal('1')] * 50000, list_repr=LLOrderedList)
         results.append(app.time())
     aggr = [[min(sample[i][j] for sample in results) for i in range(len(results[0]))] for j in range(4)]
 
-    results2 = []
-    for i in range(iterations):
-        print('iteration {}'.format(i + 1))
-        app2 = CRDTApp('127001', 8889, '127.0.0.1',
-                       ops_to_do=[CRDTOpAddRightLocal('1')] * 50000, list_repr=ArrOrderedList)
-        results2.append(app2.time())
-    aggr2 = [[min(sample[i][j] for sample in results2) for i in range(len(results2[0]))] for j in range(4)]
+    # results2 = []
+    # for i in range(iterations):
+    #     print('iteration {}'.format(i + 1))
+    #     app2 = CRDTApp('127001', 8889, '127.0.0.1',
+    #                    ops_to_do=[CRDTOpAddRightLocal('1')] * 50000, list_repr=LSEQOrderedList)
+    #     results2.append(app2.time())
+    # aggr2 = [[min(sample[i][j] for sample in results2) for i in range(len(results2[0]))] for j in range(4)]
 
-    results3 = []
-    for i in range(iterations):
-        print('iteration {}'.format(i + 1))
-        app3 = CRDTApp('127001', 8889, '127.0.0.1',
-                       ops_to_do=[CRDTOpAddRightLocal('1')] * 50000, list_repr=LSEQOrderedList)
-        results3.append(app3.time())
-    aggr3 = [[min(sample[i][j] for sample in results3) for i in range(len(results3[0]))] for j in range(4)]
+    # results3 = []
+    # for i in range(iterations):
+    #     print('iteration {}'.format(i + 1))
+    #     app3 = CRDTApp('127001', 8889, '127.0.0.1',
+    #                    ops_to_do=[CRDTOpAddRightLocal('1')] * 50000, list_repr=ArrOrderedList)
+    #     results3.append(app3.time())
+    # aggr3 = [[min(sample[i][j] for sample in results3) for i in range(len(results3[0]))] for j in range(4)]
 
-    stacked([aggr, aggr2, aggr3], ['LLOrderedList', 'ArrOrderedList', 'LSEQOrderedList'],
+    stacked([aggr], ['LLOrderedList'],
             ['insertion', 'store_op', 'network_send', 'recovery'],
-            'add_right_local_dual_cost', 'Timing of AddRightLocal in different implementations')
+            'add_LL', 'Latency of AddRightLocal for LLOrderedList')
+    # stacked([aggr2], ['LSEQOrderedList'],
+    #         ['insertion', 'store_op', 'network_send', 'recovery'],
+    #         'add_LSEQ', 'Latency of AddRightLocal for LSEQOrderedList')
+    # stacked([aggr3], ['ArrOrderedList'],
+    #         ['insertion', 'store_op', 'network_send', 'recovery'],
+    #         'add_Arr', 'Latency of AddRightLocal for ArrOrderedList')
 
 
 def detail_remove_olist_time(iterations):
@@ -73,29 +79,42 @@ def detail_remove_olist_time(iterations):
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
         app = CRDTApp('127001', 8889, '127.0.0.1',
-                      ops_to_do=[CRDTOpDeleteLocal()] * 10000, list_repr=LLOrderedList)
-        results.append(app.time())
+                      ops_to_do=[OpDeleteLocal()] * 10000, list_repr=LLOrderedList)
+        curr_result = app.time()
+        curr_result.reverse()
+        results.append(curr_result)
     aggr = [[min(sample[i][j] for sample in results) for i in range(len(results[0]))] for j in range(4)]
+
 
     results2 = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
         app2 = CRDTApp('127001', 8889, '127.0.0.1',
-                       ops_to_do=[CRDTOpDeleteLocal()] * 10000, list_repr=ArrOrderedList)
-        results2.append(app2.time())
+                       ops_to_do=[OpDeleteLocal()] * 10000, list_repr=LSEQOrderedList)
+        curr_result = app2.time()
+        curr_result.reverse()
+        results2.append(curr_result)
     aggr2 = [[min(sample[i][j] for sample in results2) for i in range(len(results2[0]))] for j in range(4)]
 
     results3 = []
     for i in range(iterations):
         print('iteration {}'.format(i + 1))
         app3 = CRDTApp('127001', 8889, '127.0.0.1',
-                       ops_to_do=[CRDTOpDeleteLocal()] * 10000, list_repr=LSEQOrderedList)
-        results3.append(app3.time())
+                       ops_to_do=[OpDeleteLocal()] * 10000, list_repr=ArrOrderedList)
+        curr_result = app3.time()
+        curr_result.reverse()
+        results3.append(curr_result)
     aggr3 = [[min(sample[i][j] for sample in results3) for i in range(len(results3[0]))] for j in range(4)]
 
-    stacked([aggr, aggr2, aggr3], ['LLOrderedList', 'ArrOrderedList', 'LSEQOrderedList'],
+    stacked([aggr], ['LLOrderedList'],
             ['insertion', 'store_op', 'network_send', 'recovery'],
-            'delete_local detail cost', 'Timing of DeleteLocal in two implementations')
+            'delete_local LL', 'Latency of DeleteLocal for LLOrderedList')
+    stacked([aggr2], ['LSEQOrderedList'],
+            ['insertion', 'store_op', 'network_send', 'recovery'],
+            'delete_local LSEQ', 'Latency of DeleteLocal for LSEQOrderedList')
+    stacked([aggr3], ['ArrOrderedList'],
+            ['insertion', 'store_op', 'network_send', 'recovery'],
+            'delete_local Arr', 'Latency of DeleteLocal for ArrOrderedList')
 
 
 def double(results, titles, filename, title):
@@ -137,7 +156,8 @@ def stacked(results, titles, labels, filename, title):
             fig.append_trace(trace, i + 1, 1)
 
         axes['xaxis{}'.format(i + 1)] = dict(
-            title='Operation no.'
+            title='Document length',
+            type='log'
         )
         axes['yaxis{}'.format(i + 1)] = dict(
             title='Time taken (s)'
@@ -192,7 +212,7 @@ def plotly_stacked(aggr_results, labels, title, filename):
     layout = go.Layout(
         xaxis=dict(
             type='linear',
-            title='Operation no.'
+            title='Document length'
         ),
         yaxis=dict(
             type='linear',
@@ -205,6 +225,7 @@ def plotly_stacked(aggr_results, labels, title, filename):
 
 
 if __name__ == '__main__':
-    detail_remove_olist_time(15)
+    # detail_remove_olist_time(15)
+    detail_add_olist_time(15)
     # stacked([[[0,1,2],[0,1,2]],[[0,4,5],[0,4,5]]],['a','b'],['1','2'],'test','blah')
     # subplot_test()

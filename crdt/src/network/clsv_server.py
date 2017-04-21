@@ -3,24 +3,24 @@ import socket
 import threading
 from logging.config import fileConfig
 
-from crdt.crdt_clock import CRDTClock
-from crdt.crdt_ops import RemoteCRDTOp
+from crdt.clock_id import ClockID
+from crdt.ops import RemoteOp
 from crdt.vector_clock import VectorClock
-from network.crdt_network_client import CRDTNetworkClient, pack_and_send, recvall
+from network.network_client import NetworkClient, pack_and_send, recvall
 from tools.connected_peers import ConnectedPeers
 from tools.operation_store import OperationStore
 
 fileConfig('../logging_config.ini')
 
 
-class CRDTServer(CRDTNetworkClient):
+class CLSVServer(NetworkClient):
     def __init__(self, host, port, encrypt):
         # Operations performed by clients
         logging.debug('{} {} {}'.format(host, port, encrypt))
         self.stored_ops = OperationStore(list)
-        self.seen_ops_vc = VectorClock(CRDTClock('SERVER'))
+        self.seen_ops_vc = VectorClock(ClockID('SERVER'))
 
-        super(CRDTServer, self).__init__(self.seen_ops_vc, self.stored_ops, 'SERVER', encrypt)
+        super(CLSVServer, self).__init__(self.seen_ops_vc, self.stored_ops, 'SERVER', encrypt)
         self.host = host
         self.port = port
 
@@ -72,7 +72,7 @@ class CRDTServer(CRDTNetworkClient):
                 # get length of next message which will be an int
                 op = recvall(sock, cipher)
                 logging.debug('received operation {}'.format(op))
-                if not isinstance(op, RemoteCRDTOp):
+                if not isinstance(op, RemoteOp):
                     raise socket.error('Received garbled operation')
                 # add this to the list of operations performed
                 self.stored_ops.add_op(op.op_id.puid, op)

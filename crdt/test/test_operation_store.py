@@ -1,7 +1,7 @@
 import pytest
 
-from crdt.crdt_clock import CRDTClock
-from crdt.crdt_ops import CRDTOpDeleteRemote
+from crdt.clock_id import ClockID
+from crdt.ops import CRDTOpDeleteRemote
 from tools.operation_store import OperationStore
 
 
@@ -41,7 +41,7 @@ def test_get_ops_for_key(op_store: OperationStore):
 
 def test_get_ops_after1():
     op_store = OperationStore(list)
-    ops = [CRDTOpDeleteRemote(None, CRDTClock('A', 5)), CRDTOpDeleteRemote(None, CRDTClock('A', 6))]
+    ops = [CRDTOpDeleteRemote(None, ClockID('A', 5)), CRDTOpDeleteRemote(None, ClockID('A', 6))]
     op_store.ops['A'] = ops
     result = op_store._get_ops_for_key_after('A', None)
     assert len(result) == len(ops)
@@ -49,22 +49,22 @@ def test_get_ops_after1():
 
 def test_get_ops_after2():
     op_store = OperationStore(list)
-    ops = [CRDTOpDeleteRemote(None, CRDTClock('A', 5)), CRDTOpDeleteRemote(None, CRDTClock('A', 6))]
+    ops = [CRDTOpDeleteRemote(None, ClockID('A', 5)), CRDTOpDeleteRemote(None, ClockID('A', 6))]
     op_store.ops['A'] = ops
-    result = op_store._get_ops_for_key_after('A', CRDTClock('A', 5))
+    result = op_store._get_ops_for_key_after('A', ClockID('A', 5))
     assert len(result) == len(ops) - 1
 
 
 def test_get_ops_after3():
     op_store = OperationStore(list)
     ops = [
-        CRDTOpDeleteRemote(None, CRDTClock('A', 0)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 5)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 6)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 9000))
+        CRDTOpDeleteRemote(None, ClockID('A', 0)),
+        CRDTOpDeleteRemote(None, ClockID('A', 5)),
+        CRDTOpDeleteRemote(None, ClockID('A', 6)),
+        CRDTOpDeleteRemote(None, ClockID('A', 9000))
     ]
     op_store.ops['A'] = ops
-    result = op_store._get_ops_for_key_after('A', CRDTClock('A', 5))
+    result = op_store._get_ops_for_key_after('A', ClockID('A', 5))
     assert len(result) == 2
 
 
@@ -72,41 +72,41 @@ def test_get_ops_after4():
     op_store = OperationStore(list)
     ops = {
         'A': [
-            CRDTOpDeleteRemote(None, CRDTClock('A', 2)),
-            CRDTOpDeleteRemote(None, CRDTClock('A', 5)),
-            CRDTOpDeleteRemote(None, CRDTClock('A', 6)),
-            CRDTOpDeleteRemote(None, CRDTClock('A', 9))
+            CRDTOpDeleteRemote(None, ClockID('A', 2)),
+            CRDTOpDeleteRemote(None, ClockID('A', 5)),
+            CRDTOpDeleteRemote(None, ClockID('A', 6)),
+            CRDTOpDeleteRemote(None, ClockID('A', 9))
         ],
         'B': [
-            CRDTOpDeleteRemote(None, CRDTClock('B', 2)),
-            CRDTOpDeleteRemote(None, CRDTClock('B', 5)),
-            CRDTOpDeleteRemote(None, CRDTClock('B', 6)),
-            CRDTOpDeleteRemote(None, CRDTClock('B', 9))
+            CRDTOpDeleteRemote(None, ClockID('B', 2)),
+            CRDTOpDeleteRemote(None, ClockID('B', 5)),
+            CRDTOpDeleteRemote(None, ClockID('B', 6)),
+            CRDTOpDeleteRemote(None, ClockID('B', 9))
         ]
     }
     op_store.ops = ops
-    result = op_store._get_ops_for_key_after('B', CRDTClock('B', 5))
+    result = op_store._get_ops_for_key_after('B', ClockID('B', 5))
     assert len(result) == 2
 
 
 def test_get_ops_after5():
     op_store = OperationStore(list)
     ops = [
-        CRDTOpDeleteRemote(None, CRDTClock('A', 0)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 1)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 6)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 9))
+        CRDTOpDeleteRemote(None, ClockID('A', 0)),
+        CRDTOpDeleteRemote(None, ClockID('A', 1)),
+        CRDTOpDeleteRemote(None, ClockID('A', 6)),
+        CRDTOpDeleteRemote(None, ClockID('A', 9))
     ]
     op_store.ops['A'] = ops
-    result = op_store._get_ops_for_key_after('A', CRDTClock('A', 0))
+    result = op_store._get_ops_for_key_after('A', ClockID('A', 0))
     assert len(result) == 3
 
 
 def test_undo1():
     op_store = OperationStore(list)
     ops = [
-        CRDTOpDeleteRemote(None, CRDTClock('A', 1)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 3))
+        CRDTOpDeleteRemote(None, ClockID('A', 1)),
+        CRDTOpDeleteRemote(None, ClockID('A', 3))
     ]
     for op in ops:
         op_store.add_op('A', op)
@@ -118,12 +118,12 @@ def test_undo1():
 def test_undo2():
     op_store = OperationStore(list)
     ops = [
-        CRDTOpDeleteRemote(None, CRDTClock('A', 1)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 3)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 4)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 5)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 6)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 7)),
+        CRDTOpDeleteRemote(None, ClockID('A', 1)),
+        CRDTOpDeleteRemote(None, ClockID('A', 3)),
+        CRDTOpDeleteRemote(None, ClockID('A', 4)),
+        CRDTOpDeleteRemote(None, ClockID('A', 5)),
+        CRDTOpDeleteRemote(None, ClockID('A', 6)),
+        CRDTOpDeleteRemote(None, ClockID('A', 7)),
     ]
     for op in ops:
         op_store.add_op('A', op)
@@ -146,8 +146,8 @@ def test_undo2():
 def test_undo3():
     op_store = OperationStore(list)
     ops = [
-        CRDTOpDeleteRemote(None, CRDTClock('A', 1)),
-        CRDTOpDeleteRemote(None, CRDTClock('A', 3))
+        CRDTOpDeleteRemote(None, ClockID('A', 1)),
+        CRDTOpDeleteRemote(None, ClockID('A', 3))
     ]
     for op in ops:
         op_store.add_op('A', op)

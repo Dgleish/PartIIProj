@@ -4,7 +4,7 @@ from crdt.identifier import Identifier
 
 
 class PathId(Identifier):
-    def __init__(self, puid, num, depth=1):
+    def __init__(self, puid, clock, num, depth=1):
         super().__init__(puid)
         self.num = num
         self.basebase = 4
@@ -19,6 +19,7 @@ class PathId(Identifier):
             num >>= base
             d -= 1
         self.num_list.reverse()
+        self.clock = clock
 
     def get_num(self, maxdepth=math.inf):
         res = 0
@@ -44,7 +45,7 @@ class PathId(Identifier):
         if isinstance(other, PathId):
             if self.num == other.num:
                 if self.puid is not None:
-                    return self.puid < other.puid
+                    return self.clock < other.clock
                 else:
                     return False
             else:
@@ -60,24 +61,24 @@ class PathId(Identifier):
     def __le__(self, other):
         return self.__lt__(other) or self.__eq__(other)
 
-    def __str__(self):
-        return '{}:{}'.format(self.num_list, self.puid)
-
-    def __repr__(self):
-        return self.__str__()
-
-    def __hash__(self):
-        if self.puid is None:
-            return hash(self.get_num())
-        else:
-            return hash(self.puid + str(self.get_num()))
-
     def __eq__(self, other):
         if self.puid is not None:
-            return ((self.puid == other.puid)
+            return ((self.clock == other.clock)
                     and self.num_list == other.num_list)
         else:
             return self.num_list == other.num_list
+
+    def __hash__(self):
+        if self.clock is None:
+            return hash(self.get_num())
+        else:
+            return hash(str(self.clock) + str(self.get_num()))
+
+    def __str__(self):
+        return '{}:{}'.format(self.num_list, self.clock)
+
+    def __repr__(self):
+        return self.__str__()
 
     def prefix(self, depth):
         if depth <= len(self.num_list):

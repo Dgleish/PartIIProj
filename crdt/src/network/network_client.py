@@ -2,6 +2,7 @@ import logging
 import pickle
 import socket
 import struct
+from time import sleep, perf_counter
 
 from crdt.vector_clock import VectorClock
 from crypto.DiffieHellman import DiffieHellman
@@ -27,7 +28,7 @@ def recvall(sock, cipher=None):
     else:
         buf = b''.join(buf)
     if cipher is not None:
-        buf = cipher.decrypt2(buf)
+        buf = cipher.decrypt(buf)
 
     return pickle.loads(buf)
 
@@ -40,12 +41,12 @@ def pack_and_send(unpickled_data, sock, cipher=None):
     else:
         pickled_data = unpickled_data.pickle()
     if cipher is not None:
-        pickled_data = cipher.encrypt2(pickled_data)
+        pickled_data = cipher.encrypt(pickled_data)
     header = struct.pack('!I', len(pickled_data))
     sock.sendall(header + pickled_data)
 
 
-class CRDTNetworkClient(object):
+class NetworkClient(object):
     def __init__(self, seen_ops_vc, stored_ops, puid, encrypt=False):
         self.seen_ops_vc = seen_ops_vc
         self.stored_ops = stored_ops
@@ -85,18 +86,19 @@ class CRDTNetworkClient(object):
         assert isinstance(their_vc, VectorClock)
         # determine which ops to send
         ops_to_send = self.stored_ops.determine_ops_after_vc(their_vc)
-        logging.debug('sync ops sending over {}'.format(ops_to_send))
-        for op in ops_to_send:
-            pack_and_send(op, sock, cipher)
-            # MEASUREMENTS
-            # if self.can_send:
-            #     self.can_send = False
-            #     for op in ops_to_send:
-            #         sleep(0.1)
-            #         self.pack_and_send(op, sock, cipher)
-            #         t = perf_counter()
-            #         with open(self.puid, 'a') as f:
-            #             f.write('{}\n'.format(t))
+        # logging.debug('sync ops sending over {}'.format(ops_to_send))
+        # for op in ops_to_send:
+        # pack_and_send(op, sock, cipher)
+        # MEASUREMENTS
+        if self.can_send:
+            self.can_send = False
+            with open(self.puid + 'send', 'w+') as f:
+                for op in ops_to_send:
+                    sleep(0.1)
+                    pack_and_send(op, sock, cipher)
+                    t = perf_counter()
+                    f.write('{}\n'.format(t))
+            logging.debug('sent all ops')
 
 
     def do_DH(self, sock):

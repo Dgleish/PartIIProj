@@ -80,7 +80,7 @@ class ArrOrderedList(BaseOrderedList):
         (node, index, _) = self._lookup(vertex_id)
         node.deleted = True
         prev_node = self._lookup(self.predecessor(vertex_id, only_active=True))[0]
-        return node.atom, prev_node.id
+        return (node.atom, vertex_id), prev_node.id
 
     def get_repr(self, cursor):
         list_repr = [x.contents[0] for x in filter(

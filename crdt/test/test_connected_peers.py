@@ -49,6 +49,6 @@ def test_connected_peers6():
     c.add_peer('2', None, 'E')
     c.add_peer('3', None, 'E2')
     c.add_peer('4', None, 'E2')
-    for _ in c.iterate_sockets():
+    for _ in c.iterate():
         count += 1
     assert count == 4

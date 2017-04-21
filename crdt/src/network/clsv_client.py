@@ -3,11 +3,11 @@ import pickle
 import socket
 import threading
 
-from crdt.crdt_ops import RemoteCRDTOp
-from network.crdt_network_client import CRDTNetworkClient, pack_and_send, recvall
+from crdt.ops import RemoteOp
+from network.network_client import NetworkClient, pack_and_send, recvall
 
 
-class CRDTServerClient(CRDTNetworkClient):
+class CRDTServerClient(NetworkClient):
     def __init__(self, server_port, op_queue, can_consume_sem,
                  puid, seen_ops_vc, stored_ops, encrypt, server_address):
         super(CRDTServerClient, self).__init__(seen_ops_vc, stored_ops, puid, encrypt)
@@ -71,7 +71,7 @@ class CRDTServerClient(CRDTNetworkClient):
         while True:
             try:
                 op = recvall(self.sock, self.cipher)
-                if not isinstance(op, RemoteCRDTOp):
+                if not isinstance(op, RemoteOp):
                     raise socket.error('Received garbled operation')
 
                 # Note that we've received this only if it references something we've seen

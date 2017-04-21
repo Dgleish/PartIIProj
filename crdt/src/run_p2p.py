@@ -1,6 +1,6 @@
 import sys
 
-from crdt.crdt_ops import CRDTOpAddRightLocal
+from crdt.ops import OpAddRightLocal
 from crdt_app import CRDTApp
 
 
@@ -9,7 +9,7 @@ def run_p2p(my_addr, known_peers, encrypt=False, priv_key=None, my_cookie=None, 
     if other_cookies is not None:
         auth_cookies = dict(zip(known_peers, other_cookies))
     app = CRDTApp(my_addr.replace('.', '')[-6:], 8889, my_addr,
-                  ops_to_do=[CRDTOpAddRightLocal(my_addr[-1])] * 1, known_peers=known_peers,
+                  ops_to_do=[OpAddRightLocal(my_addr[-1])] * 1, known_peers=known_peers,
                   encrypt=encrypt, priv_key=priv_key, auth_cookies=auth_cookies, my_cookie=my_cookie)
 
 

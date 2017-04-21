@@ -1,7 +1,7 @@
 import threading
 import tkinter as Tk
 
-from crdt.crdt_ops import CRDTOpAddRightLocal, CRDTOpDeleteLocal, CRDTUndo, CRDTRedo
+from crdt.ops import OpAddRightLocal, OpDeleteLocal, OpUndo, OpRedo
 
 
 class CRDTLocalClient(object):
@@ -66,6 +66,7 @@ class CRDTLocalClient(object):
         return "break"
 
     def onclick_text(self, event):
+        #
         self.t.mark_set('insert', '1.{}'.format(self.cursor_pos))
         return "break"
 
@@ -87,13 +88,13 @@ class CRDTLocalClient(object):
             self.update_cursor_pos(event.keysym)
             return
         elif event.char == '\x08':
-            self.op_q.appendleft(CRDTOpDeleteLocal())
+            self.op_q.appendleft(OpDeleteLocal())
         elif event.char == '(':
-            self.op_q.appendleft(CRDTUndo())
+            self.op_q.appendleft(OpUndo())
         elif event.char == ')':
-            self.op_q.appendleft(CRDTRedo())
+            self.op_q.appendleft(OpRedo())
         elif len(event.char) > 0 and 32 <= ord(event.char) <= 126:
-            self.op_q.appendleft(CRDTOpAddRightLocal(event.char))
+            self.op_q.appendleft(OpAddRightLocal(event.char))
         return "break"
 
     def update(self, crdt_state):

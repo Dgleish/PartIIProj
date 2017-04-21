@@ -7,15 +7,15 @@ from time import perf_counter
 
 import socks
 
-from crdt.crdt_ops import RemoteCRDTOp
+from crdt.ops import RemoteOp
 from crdt.vector_clock import VectorClock
-from network.crdt_network_client import CRDTNetworkClient, pack_and_send, recvall
+from network.network_client import NetworkClient, pack_and_send, recvall
 from tools.connected_peers import ConnectedPeers
 from tools.operation_queue import OperationQueue
 from tools.operation_store import OperationStore
 
 
-class CRDTP2PClient(CRDTNetworkClient):
+class CRDTP2PClient(NetworkClient):
     def __init__(
             self, port, op_q: OperationQueue, can_consume_sem,
             puid, seen_ops_vc: VectorClock, stored_ops: OperationStore,
@@ -102,12 +102,13 @@ class CRDTP2PClient(CRDTNetworkClient):
             logging.error('failed to do protocol with {} {}'.format(peer_ip, e))
             return
 
-        logging.debug('starting op thread for {}'.format(peer_ip))
+            # logging.debug('starting op thread for {}'.format(peer_ip))
         # start listening for other operations from this peer
         # MEASUREMENT
-        op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, cipher))
-        op_thread.daemon = True
-        op_thread.start()
+            # LENGTH_MEASUREMENT
+            # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, cipher))
+            # op_thread.daemon = True
+            # op_thread.start()
 
     def disconnect(self):
         """
@@ -116,9 +117,9 @@ class CRDTP2PClient(CRDTNetworkClient):
         """
         logging.debug('disconnecting')
         # MEASUREMENT
-        self.can_consume_sem.acquire()
+        # self.can_consume_sem.acquire()
         peers_to_remove = []
-        for ip, sock in self.connected_peers.iterate_sockets():
+        for ip, sock in self.connected_peers.iterate():
             peers_to_remove.append((ip, sock))
         logging.debug('about to remove {}'.format(peers_to_remove))
         for ip, sock in peers_to_remove:
@@ -149,40 +150,43 @@ class CRDTP2PClient(CRDTNetworkClient):
         listen_thread.daemon = True
         listen_thread.start()
 
-        for peer_ip in self.known_peers:
+        for peer_addr in self.known_peers:
             try:
-                logging.debug('trying to connect to {} out of {}'.format(peer_ip, self.known_peers))
+                logging.debug('trying to connect to {} out of {}'.format(peer_addr, self.known_peers))
                 self.add_peer_lock.acquire()
-                if self.connected_peers.contains(peer_ip) or (
-                        self.connecting_peers.contains(peer_ip)):
-                    logging.debug('already connected to {}'.format(peer_ip))
+                if self.connected_peers.contains(peer_addr) or (
+                        self.connecting_peers.contains(peer_addr)):
+                    logging.debug('already connected to {}'.format(peer_addr))
                     continue
                 if use_tor:
                     sock = socks.socksocket()
-                    logging.debug('connecting to {} over Tor'.format(peer_ip + '.onion'))
-                    sock.connect((peer_ip + '.onion', self.port))
+                    logging.debug('connecting to {} over Tor'.format(peer_addr + '.onion'))
+                    sock.connect((peer_addr + '.onion', self.port))
                 else:
                     sock = socket.socket()
-                    sock.connect((peer_ip, self.port))
-                logging.debug('connected to {}'.format(peer_ip))
+                    sock.connect((peer_addr, self.port))
+                logging.debug('connected to {}'.format(peer_addr))
                 pack_and_send(self.my_addr, sock)
-                self.connecting_peers.add_peer(peer_ip, sock)
+                self.connecting_peers.add_peer(peer_addr, sock)
 
             except (socket.error, struct.error, socks.SOCKS5Error) as e:
-                logging.warning('couldn\'t connect to {}, {}'.format(peer_ip, e))
+                logging.warning('couldn\'t connect to {}, {}'.format(peer_addr, e))
                 continue
             finally:
                 self.add_peer_lock.release()
                 # logging.debug('released add peer lock')
 
-            self.do_p2p_protocol(sock, peer_ip, encrypt)
+            # self.do_p2p_protocol(sock, peer_addr, encrypt)
             # MEASUREMENT
-            # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, None))
+            # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_addr, sock, None))
             # op_thread.daemon = True
             # op_thread.start()
-            # self.listen_for_ops(peer_ip, sock, None)
-            # listen_thread.join()
-            logging.debug('finished connecting to {}'.format(peer_ip))
+            # LENGTH_MEASUREMENT
+            # self.listen_for_ops(peer_addr, sock, None)
+            self.sync_ops(sock, None)
+            break
+            # logging.debug('finished connecting to {}'.format(peer_addr))
+        listen_thread.join()
 
         self.can_consume_sem.release()
 
@@ -220,7 +224,12 @@ class CRDTP2PClient(CRDTNetworkClient):
             self.connecting_peers.add_peer(peer_addr, sock)
             self.add_peer_lock.release()
 
-            self.do_p2p_protocol(sock, peer_addr, encrypt)
+            # self.do_p2p_protocol(sock, peer_addr, encrypt)
+            self.sync_ops_req(sock, None)
+
+            # LENGTH MEASUREMENT
+            self.listen_for_ops(peer_addr, sock, None)
+            return
 
     def listen_for_ops(self, peer_ip, sock, cipher):
         """
@@ -230,34 +239,36 @@ class CRDTP2PClient(CRDTNetworkClient):
         :param cipher: the crypto object
         """
         ops_done = 0
-        with open(self.time_file, 'a+') as f:
+        with open(self.time_file, 'w+') as f:
             while True:
                 try:
                     op = recvall(sock, cipher)
+                    # logging.debug('{} got op {}'.format(self.puid, op))
                     f.write('{}\n'.format(perf_counter()))
                     ops_done += 1
-                    if not isinstance(op, RemoteCRDTOp):
+                    if not isinstance(op, RemoteOp):
                         logging.warning('op {} was garbled, disconnecting from {}'.format(
                             op, peer_ip
                         ))
                         raise socket.error('Garbled operation')
-                    # logging.debug('{} got op {}'.format(self.puid, op))
+
 
                     # Note that we've received this
                     if not (self.seen_ops_vc < op.vertex_id):
                         # We have seen the vertex this operation references
+                        # TODO: for lseq ids the comparison should look at timestamp first instead of postition
                         self.seen_ops_vc.update(op)
 
                     # add to the operation queue and signal something has been added
                     # MEASUREMENT
-                    self.op_q.appendleft(op)
+                    # self.op_q.appendleft(op)
 
                     # MEASUREMENT
-                    # if ops_done >= 1000:
-                    #     print('finished')
-                    #     f.flush()
-                    #     self.disconnect()
-                    #     return
+                    if ops_done >= 100:
+                        print('finished')
+                        f.flush()
+                        self.disconnect()
+                        return
 
                 except (socket.error, pickle.UnpicklingError, IndexError, ValueError) as e:
                     logging.warning('Failed to receive op from {} {}'.format(peer_ip, e))
