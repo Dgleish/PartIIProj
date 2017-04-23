@@ -1,8 +1,5 @@
 \relax 
-\citation{googledrive}
-\citation{googletos}
 \citation{lamportshappensbefore}
-\citation{deeppacketinspection}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{6}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -13,32 +10,29 @@
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:preparation}{{2}{8}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}CRDTs}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Distributed Systems}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}CRDTs}{8}}
 \citation{lamportshappensbefore}
-\citation{amdahl}
 \citation{logoot}
 \citation{shapstudy}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Ordered Lists}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Tombstoning Approach}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Ordered Lists}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Tombstoning Approach}{10}}
+\citation{logoot}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Variable-size Identifier Approach}{11}}
 \citation{logoot}
 \citation{logoot}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Variable-size Identifier Approach}{11}}
-\citation{logoot}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The tree-like structure of identifiers. Each number in the position represents a location to the right of its parent one level down in the tree. The outer two nodes at the top level are the positions of the start and end vertex, $\vdash $ and $\dashv $.\relax }}{12}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:tree}{{2.1}{12}}
 \citation{lseq}
-\citation{tor}
-\citation{DH}
-\citation{hiddenservice}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}Tor}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Onion routing}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Hidden Services}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Client Authorization}{15}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Project Development}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Choice of platform}{15}}
-\citation{stem}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Existing Code}{16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Development Plan}{16}}
-\citation{docker}
-\citation{pycharm}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Tor}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Onion routing}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Hidden Services}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Client Authorization}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Project Development}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Choice of platform}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Existing Code}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Development Plan}{16}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}Implementation}{17}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -46,48 +40,42 @@
 \@writefile{toc}{\contentsline {section}{\numberline {3.1}Implementation tools}{17}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}CRDT Ordered List Library}{17}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Class hierarchy for the supported CRDT operations. Shaded classes are concrete. Type $T$ must be representable as a string.\relax }}{18}}
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:ops}{{3.1}{18}}
-\citation{sortedlist}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces How \texttt  {ListCRDT} performs a \texttt  {OpAddRightLocal}\relax }}{19}}
 \newlabel{fig:listcrdtaddright}{{3.2}{19}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}RGA}{19}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}LSEQ}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Na{\"i}ve Implementation - \texttt  {ArrOrderedList}}{19}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}RGA - \texttt  {LLOrderedList}}{19}}
 \citation{hlseq}
 \citation{logootundo}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Undo/Redo}{20}}
-\newlabel{sec:undo}{{3.2.3}{20}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces How operations are undone and redone at replica with id $rid$\relax }}{20}}
-\newlabel{fig:undostorage}{{3.3}{20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}LSEQ - \texttt  {LSEQOrderedList}}{20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Undo/Redo}{20}}
+\newlabel{sec:undo}{{3.2.4}{20}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces How operations are undone and redone at replica with id $rid$\relax }}{21}}
+\newlabel{fig:undostorage}{{3.3}{21}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces How OpUndo and OpRedo fit into the operation hierarchy\relax }}{21}}
 \newlabel{fig:undoops}{{3.4}{21}}
-\citation{synchronised}
 \@writefile{toc}{\contentsline {section}{\numberline {3.3}Application}{22}}
 \newlabel{sec:helper}{{3.3}{22}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces The layout of the application; arrows indicate the flow of operations. The numbers indicate the order in which \texttt  {CRDTApp} does these actions\relax }}{22}}
 \newlabel{fig:app}{{3.5}{22}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces An example sending of operations with $opID$s 1:A, 2:A and 2:B\relax }}{23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces An example sending of operations with $opID$s 1:A, 2:A and 2:B. The latter arrives at C before its causal predecessor 1:A.\relax }}{23}}
 \newlabel{fig:deliveryorder}{{3.6}{23}}
-\citation{tkinter}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}GUI}{24}}
-\citation{pickle}
 \@writefile{toc}{\contentsline {section}{\numberline {3.4}Networking}{25}}
 \newlabel{sec:networking}{{3.4}{25}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Client-server Architecture}{26}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces The standard client-server architecture with 5 clients\relax }}{27}}
-\newlabel{fig:clsv}{{3.7}{27}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}P2P Architecture}{27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces The standard P2P architecture with 5 clients\relax }}{27}}
-\newlabel{fig:p2p}{{3.8}{27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The networking classes used in the application. \texttt  {NetworkClient} contains common code for sending and receiving data as described above.\relax }}{28}}
-\newlabel{fig:nethier}{{3.9}{28}}
-\citation{DH}
-\citation{aesccm}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces The networking classes used in the application. \texttt  {NetworkClient} contains common code for sending and receiving data as described above.\relax }}{27}}
+\newlabel{fig:nethier}{{3.7}{27}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Client-server Architecture}{27}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces The standard client-server architecture with 5 clients\relax }}{27}}
+\newlabel{fig:clsv}{{3.8}{27}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}P2P Architecture}{28}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The standard P2P architecture with 5 clients\relax }}{28}}
+\newlabel{fig:p2p}{{3.9}{28}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces The protocol for peers connecting in the P2P architecture. After exchanging peer identifiers, they synchronize their operations.\relax }}{29}}
 \newlabel{fig:protocol}{{3.10}{29}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.5}Encryption}{29}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.6}Tor}{30}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Basic Authentication}{30}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Client Authorization}{30}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {4}Evaluation}{31}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -112,10 +100,14 @@
 \newlabel{sub@fig:del_arr}{{c}{35}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces DeleteLocal latencies plotted against the length of the document\relax }}{35}}
 \newlabel{fig:del_latencies}{{4.2}{35}}
+\newlabel{fig:ll_log}{{\caption@xref {fig:ll_log}{ on input line 109}}{36}}
+\newlabel{sub@fig:ll_log}{{}{36}}
+\newlabel{fig:lseq_log}{{4.3b}{36}}
+\newlabel{sub@fig:lseq_log}{{b}{36}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Latency for 50,000 AddRightLocal operations on logarithmic scales\relax }}{36}}
 \newlabel{fig:logs}{{4.3}{36}}
-\citation{wiki_edits}
-\citation{wikilongpages}
+\citation{lseq}
+\citation{logootundo}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Memory usage}{37}}
 \newlabel{fig:sehna}{{4.4a}{38}}
 \newlabel{sub@fig:sehna}{{a}{38}}
@@ -128,15 +120,29 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Undo correctness (proof)}{39}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.3}Networking}{40}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Network Latency (show latency profiles of different Tor circuit setups)}{40}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Security}{40}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Reliability (tbd)}{41}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}Network Architecture}{41}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.5}TODO REMOVE}{41}}
-\citation{id}
+\newlabel{fig:tor1}{{4.5a}{41}}
+\newlabel{sub@fig:tor1}{{a}{41}}
+\newlabel{fig:tor2}{{4.5b}{41}}
+\newlabel{sub@fig:tor2}{{b}{41}}
+\newlabel{fig:tor3}{{4.5c}{41}}
+\newlabel{sub@fig:tor3}{{c}{41}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Locations of Tor relays used in a Hidden Service circuit and the latency profiles for sending 100 operations through them\relax }}{41}}
+\newlabel{fig:tortime}{{4.5}{41}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Security}{42}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Reliability (tbd)}{42}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}Network Architecture}{43}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.5}TODO REMOVE}{43}}
 \bibstyle{ieeetr}
 \bibdata{bibliography}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Conclusions}{43}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Conclusions}{44}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:conclusions}{{5}{43}}
-\bibcite{id}{1}
+\newlabel{chap:conclusions}{{5}{44}}
+\bibcite{lamportshappensbefore}{1}
+\bibcite{CAP}{2}
+\bibcite{kleppmann}{3}
+\bibcite{logoot}{4}
+\bibcite{shapstudy}{5}
+\bibcite{lseq}{6}
+\bibcite{hlseq}{7}
+\bibcite{logootundo}{8}

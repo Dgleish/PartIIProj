@@ -16,24 +16,56 @@ url = 'http://freegeoip.net/json/'
 
 def time_latency(num, iterations):
     results = []
+
+    with open('recv' + str(num), 'w+'):
+        pass
+
+    with open('send' + str(num), 'w+'):
+        pass
+
     for i in range(iterations):
+        print('iteration {}'.format(i))
         app = CRDTApp('alex', 8889, '26ny4uuqnztxvdrx', ops_to_do=[OpAddRightLocal('1')] * 100,
                       priv_key='MIICXAIBAAKBgQDZV3gtx3ZLFZKZXU8skVXZmAWaNqWgz6/XkL7934XxnyNZr2kvg7Rd+yKmlGoz6/AEDa6/a7afupi7KWunfQpK2n3WyaUEZXIt+Ec/YYUJENrjcvODtd4vf40POeH6zz1o8Lbomn060g8/PkeCmIbYvqP02ozr5UUl93yW67/f4QIDAQABAoGAFmgeozWXm/kO4pHMmk8ndyXlmfb9T11qBwLMtfan4/egmNvtL7FX1IKSGXNemZi+52QTundb3g7KNS15hExvVYR7Bk9zrcu7THrjQFH3kS6Vk8gHca5SEMJt0RaMuD1fm7Y1P/78ZPpA5Ov/W0p0ubhKY530pwEbPOmAdTaEFRkCQQDbjec16kJ3gY67ND717VoT0UJ/v55teEna/B5CWiNNNYbvDHtUnfFDBqm5SdOpnSgsDydEIO0iQNUIjPrzSLStAkEA/WuKA+up1cz/eH67fboU3g2cuKethLpGFzKiQbTcyjwhD748PC06MF8ixoKbhaLsrv6EoylUiJ673gEbJcBKhQJAQmYMArYyG8pGzD7ku6Nolo22usPMufai/2M4E4EHJBaIFEuGEPUjPc4KDktRg/5PY+PBUE1U6gMJamiYjHL0kQJAPOr+8FZUKyruNn7wfxaeMYrAI7tbAM7uTmFDk9vwP0UZBXnLbQPKOxqDd4ip7gPuNVrFc5tZ0MWnj4RgjECfKQJBANDFieHrQ9knsCOFK9em43Xo+cHyFp61OUllmBY/4seOwN1jFTLw2+i8gh8uOQm94wtvz5hvBPzr5qdIRdh50Uw=',
                       known_peers=['26ny4uuqnztxvdrx'], list_repr=LLOrderedList)
 
-        with open('recv' + str(num), 'r') as f:
-            recvdata1 = [l[:-2] for l in f.readlines()]
+        with open('alexrecv', 'r') as f:
+            recvdata = [l[:-2] for l in f.readlines()]
 
+        with open('alexsend', 'r') as f:
+            senddata = [l[:-2] for l in f.readlines()]
+
+        with open('recv' + str(num), 'a') as f:
+            f.writelines('\n'.join(recvdata) + '\n')
+
+        with open('send' + str(num), 'a') as f:
+            f.writelines('\n'.join(senddata) + '\n')
+
+        print(len(recvdata))
+        print(len(senddata))
+        avgtime1 = sum([float(recvdata[i]) - float(senddata[i]) for i in range(len(recvdata))]) / len(recvdata)
+        print(avgtime1)
+        curr_result = [float(recvdata[i]) - float(senddata[i]) for i in range(len(recvdata))]
+        results.append(curr_result)
+    x = range(len(results[0]))
+    plot_latencies(num, iterations, x, results)
+
+
+def plot_latencies(num, iterations, x=None, results=None):
+    if results is None:
+        results = []
+
+        with open('recv' + str(num), 'r') as f:
+            recvdata = [l[:-2] for l in f.readlines()]
         with open('send' + str(num), 'r') as f:
             senddata = [l[:-2] for l in f.readlines()]
 
-        print(len(recvdata1))
-        print(len(senddata))
-        avgtime1 = sum([float(recvdata1[i]) - float(senddata[i]) for i in range(len(recvdata1))]) / len(recvdata1)
-        print(avgtime1)
-        curr_result = [float(recvdata1[i]) - float(senddata[i]) for i in range(len(recvdata1))]
-        results.append(curr_result)
-    x = range(len(results[0]))
+        for i in range(iterations):
+            curr_result = [float(recvdata[i]) - float(senddata[i]) for i in range(100 * i, 100 * (i + 1))]
+            results.append(curr_result)
+
+        x = range(len(results[0]))
+
 
     trace1 = go.Scatter(
         x=list(x),
@@ -104,7 +136,7 @@ def plot_locs(num):
                 type='scattergeo',
                 lat=d,
                 lon=longs[i],
-                mode='lines',
+                mode='markers',
                 line=dict(
                     width=1
 
@@ -115,12 +147,18 @@ def plot_locs(num):
 
     layout = dict(
         title='Tor relays',
+        geo=dict(
+            projection=dict(type='azimuthal equal area'),
+        )
     )
     fig = dict(data=data, layout=layout)
     py.offline.plot(fig, filename='TorRelays' + str(num))
 
 
 if __name__ == '__main__':
-    time_latency(11, 15)
-    print_circuits(11)
-    plot_locs(11)
+    num = 19
+    iterations = 15
+    time_latency(num, iterations)
+    print_circuits(num)
+    plot_locs(num)
+    # plot_latencies(11, 15)

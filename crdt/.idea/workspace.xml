@@ -6,113 +6,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="81b371f9-6977-4ed6-a966-2f167b395852" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/images/detail_remove_triple.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/wiki/Administrator_intervention_against_vandalism.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/wiki/Oxbridge.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/wiki/sehna.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../diss.synctex.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.dvi" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.synctex.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/evaluation.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/evaluation.synctex.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/Administrator_intervention_against_vandalism.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/Oxbridge.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/Sehna.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/add_arr.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/add_ll.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/add_ll_log.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/add_lseq.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/add_lseq_log.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/del_arr.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/del_ll.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/img/del_lseq.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/implementation.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/implementation.synctex.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/introduction.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/introduction.synctex.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/preparation.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/preparation.synctex.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/proforma.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/proforma.synctex.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../progress-report.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../progress-report.synctex.gz" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../sample graphs.pdf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../ui.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/alex.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/alexrecv" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/alexsend" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/measurements/wiki/char_diff.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../diss.aux" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../diss.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/bibliography.bib" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/conclusions.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/count.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/declaration.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.aux" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.bbl" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.blg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.out" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss.toc" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/diss_style.sty" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/evaluation.aux" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/evaluation.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/evaluation.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/implementation.aux" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/implementation.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/implementation.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/introduction.aux" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/introduction.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/introduction.out" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/introduction.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/preparation.aux" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/preparation.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/preparation.out" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/preparation.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/proforma.aux" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/proforma.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/proforma.tex" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../dissertation/texput.log" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../progress-report.aux" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../progress-report.log" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/measurements/ipcurl.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/measurements/wiki/parse_diff.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/measurements/wiki/wiki_getter.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/time_multiple.py" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/crdt/crdt_clock.py" afterPath="$PROJECT_DIR$/src/crdt/clock_id.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/crdt/crdt_ops.py" afterPath="$PROJECT_DIR$/src/crdt/ops.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/network/crdt_network_client.py" afterPath="$PROJECT_DIR$/src/network/network_client.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/network/crdt_p2p_client.py" afterPath="$PROJECT_DIR$/src/network/p2p_client.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/network/crdt_server.py" afterPath="$PROJECT_DIR$/src/network/clsv_server.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/network/crdt_server_client.py" afterPath="$PROJECT_DIR$/src/network/clsv_client.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dissertation/diss.pdf" afterPath="$PROJECT_DIR$/../dissertation/diss.pdf" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dissertation/diss.synctex.gz" afterPath="$PROJECT_DIR$/../dissertation/diss.synctex.gz" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/list_crdt.py" afterPath="$PROJECT_DIR$/src/crdt/list_crdt.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/ordered_list/arr_ordered_list.py" afterPath="$PROJECT_DIR$/src/crdt/ordered_list/arr_ordered_list.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/ordered_list/ll_ordered_list.py" afterPath="$PROJECT_DIR$/src/crdt/ordered_list/ll_ordered_list.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/ordered_list/lseq_ordered_list.py" afterPath="$PROJECT_DIR$/src/crdt/ordered_list/lseq_ordered_list.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/path_id.py" afterPath="$PROJECT_DIR$/src/crdt/path_id.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt/vector_clock.py" afterPath="$PROJECT_DIR$/src/crdt/vector_clock.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crdt_app.py" afterPath="$PROJECT_DIR$/src/crdt_app.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/crypto/cipher.py" afterPath="$PROJECT_DIR$/src/crypto/cipher.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/plot_timings.py" afterPath="$PROJECT_DIR$/src/measurements/plot_timings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/relays" afterPath="$PROJECT_DIR$/src/measurements/relays" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/alexrecv" afterPath="$PROJECT_DIR$/src/measurements/alexrecv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/alexsend" afterPath="$PROJECT_DIR$/src/measurements/alexsend" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/measurements/tor_measure.py" afterPath="$PROJECT_DIR$/src/measurements/tor_measure.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/run_cl_sv.py" afterPath="$PROJECT_DIR$/src/run_cl_sv.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/run_p2p.py" afterPath="$PROJECT_DIR$/src/run_p2p.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/run_sv.py" afterPath="$PROJECT_DIR$/src/run_sv.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tools/connected_peers.py" afterPath="$PROJECT_DIR$/src/tools/connected_peers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tools/operation_store.py" afterPath="$PROJECT_DIR$/src/tools/operation_store.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tor/tor_controller.py" afterPath="$PROJECT_DIR$/src/tor/tor_controller.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ui/crdt_local_client.py" afterPath="$PROJECT_DIR$/src/ui/crdt_local_client.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_connected_peers.py" afterPath="$PROJECT_DIR$/test/test_connected_peers.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_list_crdt.py" afterPath="$PROJECT_DIR$/test/test_list_crdt.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_lseq.py" afterPath="$PROJECT_DIR$/test/test_lseq.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_operation_queue.py" afterPath="$PROJECT_DIR$/test/test_operation_queue.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/test_operation_store.py" afterPath="$PROJECT_DIR$/test/test_operation_store.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dissertation/diss.aux" afterPath="$PROJECT_DIR$/../dissertation/diss.aux" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dissertation/diss.log" afterPath="$PROJECT_DIR$/../dissertation/diss.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dissertation/diss.toc" afterPath="$PROJECT_DIR$/../dissertation/diss.toc" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../dissertation/preparation.tex" afterPath="$PROJECT_DIR$/../dissertation/preparation.tex" />
     </list>
     <ignored path="crdt.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -134,7 +37,7 @@
     <SUITE FILE_PATH="coverage/crdt$py_test_in_test_p2p.coverage" NAME="py.test in test_p2p Coverage Results" MODIFIED="1481972030019" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/crdt$crdt_client.coverage" NAME="crdt_client Coverage Results" MODIFIED="1479076815788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/crdt$py_test_in_test_insert1.coverage" NAME="py.test in test_insert1 Coverage Results" MODIFIED="1486827574004" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/crdt$tor_measure.coverage" NAME="tor_measure Coverage Results" MODIFIED="1492639346576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/measurements" />
+    <SUITE FILE_PATH="coverage/crdt$tor_measure.coverage" NAME="tor_measure Coverage Results" MODIFIED="1492953557582" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/measurements" />
     <SUITE FILE_PATH="coverage/crdt$py_test_in_test_orderedList_py.coverage" NAME="py.test in test_orderedList.py Coverage Results" MODIFIED="1476624583361" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/crdt$plot_timings__1_.coverage" NAME="plot_timings Coverage Results" MODIFIED="1487001270450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/measurements" />
     <SUITE FILE_PATH="coverage/crdt$crdt_server.coverage" NAME="crdt_server Coverage Results" MODIFIED="1479401770210" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
@@ -189,27 +92,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="crdt_app.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/crdt_app.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3105">
-              <caret line="131" column="0" lean-forward="false" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-                <element signature="e#5404#5849#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="p2p_client.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/network/p2p_client.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="81">
+            <state relative-caret-position="-5589">
               <caret line="17" column="35" lean-forward="false" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
               <folding>
-                <element signature="e#0#14#0" expanded="true" />
-                <marker date="1491245663231" expanded="true" signature="10514:10536" ph="..." />
+                <marker date="1492764638299" expanded="true" signature="10534:10556" ph="..." />
               </folding>
             </state>
           </provider>
@@ -218,9 +107,77 @@
       <file leaf-file-name="tor_measure.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/measurements/tor_measure.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="891">
-              <caret line="51" column="34" lean-forward="true" selection-start-line="51" selection-start-column="34" selection-end-line="51" selection-end-column="34" />
+            <state relative-caret-position="605">
+              <caret line="157" column="26" lean-forward="true" selection-start-line="157" selection-start-column="26" selection-end-line="157" selection-end-column="26" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="clsv_server.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/network/clsv_server.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-211">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="alexsend" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/measurements/alexsend">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="459">
+              <caret line="17" column="14" lean-forward="false" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="send11" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/measurements/send11">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="recv11" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/measurements/recv11">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="path_id.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/crdt/path_id.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-89">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="plot_timings.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/measurements/plot_timings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-891">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -228,7 +185,7 @@
       <file leaf-file-name="network_client.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/network/network_client.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="-2268">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
@@ -313,9 +270,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/crdt/crdt_clock.py" />
-        <option value="$PROJECT_DIR$/src/crdt/identifier.py" />
-        <option value="$PROJECT_DIR$/src/crdt/arr_ordered_list.py" />
         <option value="$PROJECT_DIR$/src/crdt/path_identifier.py" />
         <option value="$PROJECT_DIR$/src/crdt/PathId.py" />
         <option value="$PROJECT_DIR$/src/crdt/ll_ordered_list.py" />
@@ -363,6 +317,9 @@
         <option value="$PROJECT_DIR$/src/crdt/clock_id.py" />
         <option value="$PROJECT_DIR$/src/ui/crdt_local_client.py" />
         <option value="$PROJECT_DIR$/src/crdt_app.py" />
+        <option value="$PROJECT_DIR$/src/measurements/alexsend" />
+        <option value="$PROJECT_DIR$/src/measurements/send11" />
+        <option value="$PROJECT_DIR$/src/measurements/recv11" />
         <option value="$PROJECT_DIR$/src/measurements/tor_measure.py" />
       </list>
     </option>
@@ -381,8 +338,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="65" />
     <option name="y" value="24" />
-    <option name="width" value="1855" />
-    <option name="height" value="1056" />
+    <option name="width" value="2495" />
+    <option name="height" value="1416" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -1436,7 +1393,14 @@
       <option name="project" value="LOCAL" />
       <updated>1488126457423</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="quasi-done dis">
+      <created>1492764746837</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1492764746837</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1481,36 +1445,36 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
+    <frame x="65" y="24" width="2495" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21890548" sideWeight="0.4939759" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32852808" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.44258872" sideWeight="0.50359315" order="15" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31941545" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32776618" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19071311" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31790593" sideWeight="0.49640685" order="5" side_tool="false" content_ui="tabs" x="2625" y="48" width="1855" height="1032" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32852808" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2209065" sideWeight="0.4939759" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Tail" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3256785" sideWeight="0.497006" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19071311" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21227197" sideWeight="0.5060241" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3929336" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2498618" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Metrics" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Tail" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection Results" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3929336" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32881" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Run Dashboard" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" x="2725" y="148" width="1655" height="856" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3183716" sideWeight="0.49640685" order="5" side_tool="false" content_ui="tabs" x="2625" y="48" width="1855" height="1032" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3256785" sideWeight="0.497006" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Concurrent Activities Diagram" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985386" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -1582,7 +1546,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/.." />
     </ignored-roots>
-    <MESSAGE value="Client-server v1 w/ op objects" />
     <MESSAGE value="Fix sending before connected bug" />
     <MESSAGE value="Fix deletion" />
     <MESSAGE value="Hold back out of order messages" />
@@ -1607,7 +1570,8 @@
     <MESSAGE value="Mark special measurement code" />
     <MESSAGE value="Added local undo/redo" />
     <MESSAGE value="Arr insert bug catch unit test win" />
-    <option name="LAST_COMMIT_MESSAGE" value="Arr insert bug catch unit test win" />
+    <MESSAGE value="quasi-done dis" />
+    <option name="LAST_COMMIT_MESSAGE" value="quasi-done dis" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -1655,67 +1619,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/crypto/DiffieHellman.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="162" column="36" lean-forward="true" selection-start-line="162" selection-start-column="36" selection-end-line="162" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/local/lib/python3.5/dist-packages/nltk/cluster/kmeans.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="537">
-          <caret line="123" column="0" lean-forward="false" selection-start-line="123" selection-start-column="0" selection-end-line="123" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../programming/music/mfc_cluster.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="829">
-          <caret line="55" column="10" lean-forward="false" selection-start-line="50" selection-start-column="10" selection-end-line="55" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#39#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_lseq.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../partII/sec/sha1coll.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="11" column="22" lean-forward="true" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/test_operation_store.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4185">
-          <caret line="159" column="43" lean-forward="false" selection-start-line="159" selection-start-column="43" selection-end-line="159" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../partII/ai2/metropolis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2781">
-          <caret line="105" column="10" lean-forward="false" selection-start-line="97" selection-start-column="0" selection-end-line="105" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/measurements/measure_packets.py" />
-    <entry file="file://$PROJECT_DIR$/test/test_connected_peers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1377">
-          <caret line="51" column="22" lean-forward="false" selection-start-line="51" selection-start-column="22" selection-end-line="51" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../partII/ai2/metro.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="77">
@@ -1832,9 +1735,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#10#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1842,13 +1743,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/measurements/plot_timings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1674">
-          <caret line="70" column="45" lean-forward="false" selection-start-line="68" selection-start-column="41" selection-end-line="70" selection-end-column="45" />
         </state>
       </provider>
     </entry>
@@ -1863,13 +1757,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3132">
           <caret line="125" column="36" lean-forward="true" selection-start-line="125" selection-start-column="36" selection-end-line="125" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/crdt/path_id.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="19" column="18" lean-forward="false" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
         </state>
       </provider>
     </entry>
@@ -1915,13 +1802,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/network/clsv_server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt/clock_id.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
@@ -1945,29 +1825,101 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/crdt_app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3105">
+        <state relative-caret-position="0">
           <caret line="131" column="0" lean-forward="false" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <element signature="e#5404#5849#0" expanded="false" />
+            <element signature="e#5387#5832#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/network/p2p_client.py">
+    <entry file="file://$PROJECT_DIR$/src/crdt/path_id.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="17" column="35" lean-forward="false" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
+        <state relative-caret-position="-89">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
-            <marker date="1491245663231" expanded="true" signature="10514:10536" ph="..." />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/network/network_client.py">
+    <entry file="file://$PROJECT_DIR$/src/measurements/plot_timings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-891">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/send19">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/recv15">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/recv19">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/recv14">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="60" lean-forward="true" selection-start-line="0" selection-start-column="60" selection-end-line="0" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/relays11">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/alexsend">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="17" column="14" lean-forward="false" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/send11">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/recv11">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/network/clsv_server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-211">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
@@ -1975,11 +1927,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/network/p2p_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5589">
+          <caret line="17" column="35" lean-forward="false" selection-start-line="17" selection-start-column="35" selection-end-line="17" selection-end-column="35" />
+          <folding>
+            <marker date="1492764638299" expanded="true" signature="10534:10556" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/network/network_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2268">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/measurements/TorRelays6.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/measurements/tor_measure.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="891">
-          <caret line="51" column="34" lean-forward="true" selection-start-line="51" selection-start-column="34" selection-end-line="51" selection-end-column="34" />
-          <folding />
+        <state relative-caret-position="605">
+          <caret line="157" column="26" lean-forward="true" selection-start-line="157" selection-start-column="26" selection-end-line="157" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

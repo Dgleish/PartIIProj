@@ -36,11 +36,11 @@ This approach additionally requires operations to be delivered only once (or alt
 Furthermore, if operation $A$ \textit{happens-before} \cite{lamportshappensbefore} operation $B$, $A$ should be delivered before $B$ at all replicas. Usually some messaging middleware provides these exactly-once and causally-ordered delivery guarantees. Finally, for all concurrent operations (those not ordered by \textit{happens-before}), the \textsc{downstream} phase commutes. So, for concurrent operations $o_1$ and $o_2$: $$\textsc{downstream}(o_1, \textsc{downstream}(o_2, s)) \equiv \textsc{downstream}(o_2, \textsc{downstream}(o_1, s))$$
 
 % pros/cons
-So, there are advantages and disadvantages of each approach. One the one hand, state-based CRDTs require transmitting the entire state every time an update is made. When you have a large state and lots of replicas, this can use a lot of bandwidth. Conversely, op-based CRDTs may save you in bandwidth, but require extra messaging guarantees. As well as this, a state-based CRDT can send one state representing multiple updates at once, whereas in the other case every single operation has to be distributed, so there is certainly a tradeoff based on the state size and rate of updates the system has as to which makes more efficient use of the network.
+Hence, there are advantages and disadvantages of each approach. On the one hand, state-based CRDTs require transmitting the entire state every time an update is made. When you have a large state and lots of replicas, this can use a lot of bandwidth. Conversely, op-based CRDTs may save you in bandwidth, but require extra messaging guarantees. As well as this, a state-based CRDT can send one state representing multiple updates at once, whereas in the other case every single operation has to be distributed, so there is certainly a tradeoff based on the state size and rate of updates the system has as to which makes more efficient use of the network.
 %%%% DIAGRAM STATE VS OP %%%%
 
 % my choice
-For my collaborative editing scenario, in general the size of the document will be much larger than any update to it. So, sending the whole document around the network on every update will be much less efficient than just sending the new operations that need to be performed. However, my editor supports offline editing, so upon reconnecting it may be the case that lots of operations are sent separately and it may have been more efficient just to send the state. Despite this, I decided it was better to optimise for the online case (which I expected to be the more common case, appealing to Amdahl's Law \cite{amdahl}) and hence I chose the op-based variety.
+For my collaborative editing scenario, in general the size of the document will be much larger than any update to it. So, sending the whole document around the network on every update will be much less efficient than just sending the new operations that need to be performed. However, my editor supports offline editing, so upon reconnecting it may be the case that lots of operations are sent separately and it may have been more efficient just to send the state. Despite this, I decided it was better to optimise for the online case (which I expected to be the more common case, appealing to Amdahl's Law) and hence I chose the op-based variety.
 
 \subsection{Ordered Lists}
  
@@ -57,21 +57,10 @@ There are different approaches people have taken to representing an ordered list
 One approach, called the Replicated Growable Array (RGA) is described in \cite{shapstudy}. A vertex in this system looks like:
 $$ v \equiv (a, (t, rid))$$
  The identifier for a vertex is a pair of a timestamp $t \in \mathbb{N}$ and a globally unique replica identifier $rid \in \mathbb{N}$ (so $\mathcal{ID} = \mathbb{N} \times \mathbb{N}$). Identifiers are ordered first by timestamp, then by \textit{rid}. Each vertex additionally has a boolean property \texttt{deleted}, which is initially false. Let there be projection functions associated with all these properties named similarly. The timestamp is such that if the insertion of one vertex $v$ \textit{happens-before} the insertion of another $v'$, $\textsc{timestamp}(v) < \textsc{timestamp}(v')$.
-The state represented is the sequence of projected atoms $a$ of the vertices whose \texttt{deleted} property is false only. 
+The state represented is the sequence of projected atoms $a$ of the vertices whose \texttt{deleted} property is false only. The ordering $<_v$ follows from the order on the identifiers.
 
-
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-%
-It supports the following operations:
+\noindent
+RGA supports the following operations:
 \begin{algorithm}[H]
 \caption*{RGA}
 \begin{algorithmic}[1]
@@ -87,7 +76,7 @@ It supports the following operations:
 \Require state $s = \langle ..., v_1, v_l, v_2, ...\rangle$
 \Function{AddRight}{$v_l$, $a$}
 \BState \textsc{atSource}:
-\State $t \gets \Call{now}{ }$
+\State $t \gets$ \Call{now}{ } \Comment{Generates a fresh timestamp}
 \State $v \gets (a,(t, rid))$
 \BState \textsc{downstream}:
 \State $l \gets v_l$
@@ -107,9 +96,7 @@ It supports the following operations:
 \Require state $s = \langle ..., v_l, v, v_r, ... \rangle$
 \Function{Delete}{$v$}
 \BState \textsc{downstream}:
-\If{$v \in s$}
 \State $v.\mathtt{deleted} = \mathtt{True}$
-\EndIf
 \EndFunction
 \Ensure state $s = \langle ..., v_l, v, v_r, ... \rangle ~\wedge~ \mathtt{deleted}(v)$
 \end{algorithmic}
@@ -120,7 +107,7 @@ The obvious weakness of this approach is that, since no vertex is ever actually 
 \subsection{Variable-size Identifier Approach}
 Whereas vertex identifiers consist of a single timestamp and a replica identifier, a different system (used in Logoot \cite{logoot}) has identifiers of unbounded size, but in doing this vertices are allowed to be properly deleted.
 
-So, identifiers are now a globally unique 3-tuple of a positional identifier ($p \in \mathbb{N^*}$), replica identifier ($rid \in \mathbb{N}$) and timestamp ($t \in \mathbb{N}$). Here, $\mathcal{ID} = \mathbb{N^*} \times \mathcal{R} \times \mathbb{N} $. The positional identifier is a sequence of numbers representing a path in a tree.
+So, identifiers are now a globally unique 3-tuple of a positional identifier ($p \in \mathbb{N^*}$), replica identifier ($rid \in \mathbb{N}$) and timestamp ($t \in \mathbb{N}$). Here, $\mathcal{ID} = \mathbb{N^*} \times \mathbb{N} \times \mathbb{N} $. The positional identifier is a sequence of numbers representing a path in a tree.
 
 %%% DIAGRAM %%%
 \begin{figure}[H]
@@ -153,9 +140,9 @@ $$ p_1 = p_1^0.p_1^1...p_1^n$$ $$p_2 = p_2^0.p_2^1...p_2^m$$
 Then, 
 $$ p_1 \prec p_2 \Leftrightarrow \exists j \leq m.~ (\forall i<j.~ p_1^i = p_2^i) \wedge (j=n+1 \vee p_1^j < p_2^j)$$
 $$ p_1 = p_2 \Leftrightarrow (n=m)~ \wedge~ \forall i. p_1^i = p_2^i$$
-And $$id_1 \prec id_2 \Leftrightarrow (p_1 \prec p_2) \vee ((p_1 = p_2) \wedge (rid_1 < rid_2)) \vee ((p_1 = p_2) \wedge (rid_1 = rid_2) \wedge (t_1 < t_2))$$
+Finally, $$id_1 \prec id_2 \Leftrightarrow (p_1 \prec p_2) \vee ((p_1 = p_2) \wedge (rid_1 < rid_2)) \vee ((p_1 = p_2) \wedge (rid_1 = rid_2) \wedge (t_1 < t_2))$$
 \\
-I use the base-doubling strategy from \cite{logoot} so that the there are $k$ positions at depth 1, $2k$ at depth 2 et cetera. Also, positions are represented internally as single numbers such that the lower $\log_2(base(1))$ bits are the position at depth 1, the next $\log_2(base(2))$ bits are the position at depth 2 et cetera. Therefore, subtraction of positions is just integer subtraction.
+I use the base-doubling strategy from \cite{logoot} so that the there are $k$ possible positions at depth 1, $2k$ at depth 2 et cetera. Also, positions are represented internally as single numbers such that the lower $\log_2(base(1))$ bits are the position at depth 1, the next $\log_2(base(2))$ bits are the position at depth 2 et cetera. Therefore, subtraction of positions is just integer subtraction.
 \\\\
 
 \begin{algorithm}[H]
@@ -207,7 +194,7 @@ $p\_copy = p\_copy.append(0_{base(d)})$ \Comment{such that the binary representa
 \begin{algorithmic}[1]
 \Function{AddRight}{$v_l$, $a$}
 \BState \textsc{atSource}
-\State $t \gets $ \Call{now}{ }
+\State $t \gets $ \Call{now}{ } \Comment{Generates a fresh timestamp}
 \State $newPosition \gets $\Call{Alloc}{$v_l.id.p$}
 \State $v \gets (a, (newPosition, rid, t)$
 \BState \textsc{downstream}
@@ -239,7 +226,7 @@ A proposed improvement to this scheme is called LSEQ \cite{lseq}. It provides si
 
 \section{Tor}
 \subsection{Onion routing}
-The Tor \cite{tor} overlay network is designed to provide anonymity to its users online. Its name stems from \textit{The Onion Router}, describing how packets are sent around its network. Data is wrapped up in layers of encryption at the source, then this \textit{onion} (because it has layers) is gradually unwrapped as it hops around the network, until it reaches the destination unencrypted.
+The Tor\footnote{https://www.torproject.org} overlay network is designed to provide anonymity to its users online. Its name stems from \textit{The Onion Router}, describing how packets are sent around its network. Data is wrapped up in layers of encryption at the source, then this \textit{onion} (because it has layers) is gradually unwrapped as it hops around the network, until it reaches the destination unencrypted.
 
 When a source $S$ wants to send some data to a destination $D$, it chooses a number of Tor \textit{relays} to send the data through (typically 3). The first is called the \textit{entry node}, the last the \textit{exit node}, and any intermediate nodes \textit{middle nodes}. $S$ contacts the entry node directly, and establishes a shared key with it. Then, it asks the entry node to extend the Tor \textit{circuit} to the chosen middle node, and establishes a shared key with that. The process is repeated to reach the exit node. When the whole circuit is established (and $S$ has 3 separate keys), $S$ encrypts the data with all the keys sequentially, in reverse of acquisition order, and sends the data to the entry node. The entry node decrypts the outer layer and forwards it to the middle node, similarly for the middle node, then the exit node decrypts the final layer and forwards to the destination $D$.
 
@@ -285,7 +272,7 @@ When a source $S$ wants to send some data to a destination $D$, it chooses a num
 
 In this way, only the exit node knows the address of $D$, and only the entry node knows the address of $S$, and $D$ knows only the address of the exit node. So, nobody except $S$ knows the address of both $S$ and $D$ for sure. However, the link between the exit node and $D$ is unencrypted, so for confidentiality, encryption at the transport or application layer is needed.
 \subsection{Hidden Services}
-A traditional service can be configured to accept incoming connections only over Tor, when it is called a \textit{Hidden Service} (HS) \cite{hiddenservice}. A client can connect to a HS by specifying its \textit{onion address}, a 16 character string derived from a hash of a special public key it owns. In this way, a HS can hide its location from clients, improving on the asymmetry of knowledge in traditional Onion Routing, so that both parties are anonymous to each other. 
+A traditional service can be configured to accept incoming connections only over Tor, when it is called a \textit{Hidden Service} (HS). A client can connect to a HS by specifying its \textit{onion address}, a 16 character string derived from a hash of a special public key it owns. In this way, a HS can hide its location from clients, improving on the asymmetry of knowledge in traditional Onion Routing, so that both parties are anonymous to each other. 
 
 After looking up information about the HS in special directories, the client chooses a random Tor relay as a rendezvous point (RP) and both the client and the HS build a Tor circuit to that. The RP relays end-to-end encrypted messages between the client and the HS. Thus the client and HS know only the address of the RP and not each other, whilst the RP knows nothing about either.
 
@@ -300,7 +287,7 @@ The HS essentially creates a different identity for each client that wishes to c
 \subsection{Choice of platform}
 At the beginning of the project, I had to decide in what form an application using my library would be in. I narrowed it down to three choices:
 \begin{itemize}
-\item A web application, using JavaScript
+\item A web application using JavaScript
 \item An Android application, using Java and the Android API
 \item A desktop application using Python
 \end{itemize}
@@ -308,7 +295,7 @@ At the beginning of the project, I had to decide in what form an application usi
 I had a little experience with JavaScript and Python on a previous internship, and obviously Java from the Part I Tripos courses. I first ruled out the Android application, as there would have been significant overhead in learning the Android framework properly, and also in actually developing and testing the app. Debugging appeared to be significantly harder remotely. As I knew I wanted to interact with Tor, I needed some way for my library to interact with a Tor daemon running on the same machine. The Tor project actively supports a library for just this called Stem in Python, so that was what finalised my decision to design a desktop application.
 
 \subsection{Existing Code}
-I installed Tor locally, which exposes a SOCKS5 proxy to send data to and runs a daemon process which implements the correct protocols for using the Tor network. To interact with the Tor process, I used the Stem \cite{stem} Python library, which provides convenient API calls to use hidden services. Other minor libraries used are described in the next section.
+I installed Tor locally, which exposes a SOCKS5 proxy to send data to and runs a daemon process which implements the correct protocols for using the Tor network. To interact with the Tor process, I used the Stem\footnote{https://stem.torproject.org/} Python library, which provides convenient API calls to use hidden services. Other minor libraries used are described in the next section.
 
 \subsection{Development Plan}
 I decided to iteratively develop the code for my project based on each of my goals stated in the project proposal. That way, I could plan and evaluate each part separately. Moreover, a single-pass \textit{Waterfall}-like approach would have been problematic as it is then difficult to adapt to changing or refined requirements after everything is planned. Also, planning a large project such as this before any code was written would have been very difficult as writing code gives you a good insight into further design.
