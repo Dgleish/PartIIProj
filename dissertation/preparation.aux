@@ -1,34 +1,44 @@
 \relax 
+\citation{baconOS}
 \citation{CAP}
+\citation{brewer}
 \citation{kleppmann}
+\citation{crdt}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Preparation}{1}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:preparation}{{1}{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}Distributed Systems}{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.2}CRDTs}{1}}
+\citation{deltacrdts}
 \citation{lamportshappensbefore}
-\citation{amdahl}
 \citation{logoot}
+\citation{rga}
 \citation{shapstudy}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Ordered Lists}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}Tombstoning Approach}{3}}
-\citation{logoot}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Variable-size Identifier Approach}{4}}
-\citation{logoot}
-\citation{logoot}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces The tree-like structure of identifiers. Each number in the position represents a location to the right of its parent one level down in the tree. The outer two nodes at the top level are the positions of the start and end vertex, $\vdash $ and $\dashv $.\relax }}{5}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces RGA\relax }}{4}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{alg:rga}{{1}{4}}
+\citation{logoot}
+\citation{logoot}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Variable-size Identifier Approach}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces The tree-like structure of identifiers. Each number in the position represents a location to the right of its parent one level down in the tree. The outer two nodes at the top level are the positions of the start and end vertex, $\vdash $ and $\dashv $.\relax }}{5}}
 \newlabel{fig:tree}{{1.1}{5}}
+\citation{logoot}
 \citation{lseq}
-\citation{tor}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Tor}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Onion routing}{7}}
-\citation{hiddenservice}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Hidden Services}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}Client Authorization}{8}}
-\citation{stem}
-\@writefile{toc}{\contentsline {section}{\numberline {1.4}Project Development}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.1}Choice of platform}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.2}Existing Code}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.3}Development Plan}{9}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Pseudocode for the two list operations (\textsc  {AddRight} and \textsc  {Delete}) and auxiliary functions in Logoot\relax }}{7}}
+\newlabel{alg:logoot}{{2}{7}}
+\citation{torpaper}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces Dotted lines show the two choices LSEQ offers. Choosing a position close to $p_l$ leaves lots of free spaces on the right, but few on the left. Choosing close to $p_r$ leaves lots on the left, but few on the right. If typing sequentially (inserting always at the end), then to minimize the total depth one should always allocate immediately after $p_l$, so all the spaces are filled before having to go deeper.\relax }}{8}}
+\newlabel{fig:lseqalloc}{{1.2}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Tor}{8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Onion routing}{8}}
+\citation{torrendspec}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces The data is encrypted with keys sequentially starting with the key of the last node in the circuit and going backwards.\relax }}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Hidden Services}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}Client Authentication}{10}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Project Development}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.1}Choice of platform}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.2}Starting Point}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.3}Development Plan}{11}}

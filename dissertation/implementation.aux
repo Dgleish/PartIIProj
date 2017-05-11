@@ -1,52 +1,55 @@
 \relax 
-\citation{docker}
-\citation{pycharm}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Implementation}{1}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:implementation}{{1}{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.1}Implementation tools}{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.2}CRDT Ordered List Library}{1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Class hierarchy for the supported CRDT operations. Shaded classes are concrete. Type $T$ must be representable as a string.\relax }}{2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Class hierarchy for the supported CRDT operations. All are subtypes of \texttt  {Op}, which represents any kind of operation. Shaded classes are concrete. Type $T$ must be representable as a string.\relax }}{2}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:ops}{{1.1}{2}}
-\citation{sortedlist}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces How \texttt  {ListCRDT} performs a \texttt  {OpAddRightLocal}\relax }}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces How \texttt  {ListCRDT} performs an \texttt  {OpAddRightLocal}\relax }}{3}}
 \newlabel{fig:listcrdtaddright}{{1.2}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}RGA}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}LSEQ}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Na{\"i}ve Implementation - \texttt  {ArrOrderedList}}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}RGA - \texttt  {LLOrderedList}}{3}}
 \citation{hlseq}
 \citation{logootundo}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Undo/Redo}{4}}
-\newlabel{sec:undo}{{1.2.3}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces How operations are undone and redone at replica with id $rid$\relax }}{4}}
-\newlabel{fig:undostorage}{{1.3}{4}}
+\citation{undoatanytime}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}LSEQ - \texttt  {LSEQOrderedList}}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}Undo/Redo}{4}}
+\newlabel{sec:undo}{{1.2.4}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces How operations are undone and redone at replica with id $rid$\relax }}{5}}
+\newlabel{fig:undostorage}{{1.3}{5}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1.4}{\ignorespaces How OpUndo and OpRedo fit into the operation hierarchy\relax }}{5}}
 \newlabel{fig:undoops}{{1.4}{5}}
-\citation{synchronised}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Application}{6}}
-\newlabel{sec:helper}{{1.3}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.5}{\ignorespaces The layout of the application; arrows indicate the flow of operations. The numbers indicate the order in which \texttt  {CRDTApp} does these actions\relax }}{6}}
-\newlabel{fig:app}{{1.5}{6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.6}{\ignorespaces An example sending of operations with $opID$s 1:A, 2:A and 2:B\relax }}{7}}
-\newlabel{fig:deliveryorder}{{1.6}{7}}
-\citation{tkinter}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}GUI}{8}}
-\citation{pickle}
-\@writefile{toc}{\contentsline {section}{\numberline {1.4}Networking}{9}}
-\newlabel{sec:networking}{{1.4}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.1}Client-server Architecture}{10}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.7}{\ignorespaces The standard client-server architecture with 5 clients\relax }}{11}}
-\newlabel{fig:clsv}{{1.7}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.2}P2P Architecture}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.8}{\ignorespaces The standard P2P architecture with 5 clients\relax }}{11}}
-\newlabel{fig:p2p}{{1.8}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.9}{\ignorespaces The networking classes used in the application. \texttt  {NetworkClient} contains common code for sending and receiving data as described above.\relax }}{12}}
-\newlabel{fig:nethier}{{1.9}{12}}
-\citation{DH}
-\citation{aesccm}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.10}{\ignorespaces The protocol for peers connecting in the P2P architecture. After exchanging peer identifiers, they synchronize their operations.\relax }}{13}}
-\newlabel{fig:protocol}{{1.10}{13}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.5}Encryption}{13}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.6}Tor}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.6.1}Basic Authentication}{14}}
+\citation{logootundo}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces How \textsc  {inverse} inverts operations\relax }}{6}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Pseudocode for the cemetary operations and the amended list operations to support undo/redo (\textsc  {AddRight} is now just \textsc  {Add})\relax }}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Application Library}{8}}
+\newlabel{sec:helper}{{1.3}{8}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.5}{\ignorespaces The layout of the application; arrows indicate the flow of operations. The numbers indicate the order in which \texttt  {CRDTApp} does these actions\relax }}{8}}
+\newlabel{fig:app}{{1.5}{8}}
+\citation{lamportshappensbefore}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.6}{\ignorespaces An example sending of operations with $opID$s 1:A, 2:A and 2:B. The latter arrives at C before its causal predecessor 1:A.\relax }}{10}}
+\newlabel{fig:deliveryorder}{{1.6}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}GUI Application}{11}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Networking}{12}}
+\newlabel{sec:networking}{{1.4}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.7}{\ignorespaces The networking classes used in the application. \texttt  {NetworkClient} contains common code for sending and receiving data as described above.\relax }}{13}}
+\newlabel{fig:nethier}{{1.7}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.1}Client-server Architecture}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.8}{\ignorespaces The standard client-server architecture with 5 clients\relax }}{13}}
+\newlabel{fig:clsv}{{1.8}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.9}{\ignorespaces The protocol for clients connecting to the server.\relax }}{14}}
+\newlabel{fig:protocolsv}{{1.9}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4.2}P2P Architecture}{15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.10}{\ignorespaces The standard P2P architecture with 5 clients\relax }}{15}}
+\newlabel{fig:p2p}{{1.10}{15}}
+\citation{ccm}
+\@writefile{toc}{\contentsline {section}{\numberline {1.5}Encryption}{16}}
+\citation{torrendspec}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.11}{\ignorespaces The protocol for peers connecting in the P2P architecture. After exchanging identifiers, they synchronize their operations.\relax }}{17}}
+\newlabel{fig:protocol}{{1.11}{17}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.6}Tor}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.6.1}Client Authentication}{18}}
+\newlabel{sec:auth}{{1.6.1}{18}}

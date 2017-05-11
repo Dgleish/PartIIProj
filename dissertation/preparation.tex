@@ -5,38 +5,38 @@
 
 \section{Distributed Systems}
 
-In order to serve arbitrary volumes of read/write requests for data, we replicate it across different machines and allow the requests to be split amongst them. I will use \textit{replica} to refer to a node in a network that is part of a distributed system. By default, it is connected to all other replicas and has some state that it wishes to keep consistent with them, which it does by sending/receiving updates about that state. 
+In order to serve arbitrary volumes of read/write requests for data, it is common practice to replicate the data across different machines and allow the requests to be split amongst them \cite{baconOS}. I will use \textit{replica} to refer to a node in a network that is part of a distributed system. By default, it is connected to all other replicas and has some state that it wishes to keep consistent with them, which it does by sending/receiving updates about that state. 
 
-One formulation of the popular CAP Theorem \cite{CAP} is that for a distributed system you can have at most two of Consistency, Availability and Partition Tolerance, though this has been criticised as misleading \cite{kleppmann}, and a clearer statement would be that when a network partition occurs, you can choose to have consistency or availability, but not both. A network partition is where the system is divided into disjoint subsets such that each subset is connected internally, but disconnected from every other subset. In such an event, a modification to one of the replicas in a subset would mean that all the replicas in different subsets would have stale values, and the system would be inconsistent, unless all the other subsets went down so that the modified subset only was available. This is the consistency-availability trade-off the theorem mentions.
+One formulation of the popular CAP Theorem \cite{CAP} is that for a distributed system you can have at most two of Consistency, Availability and Partition Tolerance, though this has been criticised as misleading \cite{brewer}, and an alternative statement would be that when a network partition occurs, you can choose to have consistency or availability, but not both \cite{kleppmann}. A network partition is where the system is divided into disjoint subsets such that each subset is connected internally, but disconnected from every other subset. In such an event, a modification to one of the replicas in a subset would mean that all the replicas in different subsets would have stale values, and the system would be inconsistent, unless all the other subsets went down so that only the modified subset was available. This is the consistency-availability trade-off the theorem mentions.
 
 \section{CRDTs}
-Conflict-Free Replicated Data Types (CRDTs) are a class of data structure designed to specifically for distributed systems to provide Strong Eventual Consistency (SEC). 
+Conflict-Free Replicated Data Types (CRDTs) are a class of data structure designed to specifically for distributed systems to provide Strong Eventual Consistency (SEC) \cite{crdt}. 
 
 The CRDT approach is to be available and sacrifice strong consistency (the system behaves as if no replication is present - a read will always give the value of the most recent write). That is, in a network partition, all parts of the system can function, they just may give different results on a read as they can't communicate updates.
 
-For some CRDT-based system, let $o \in \mathcal{O}$ be an operation that can be applied to the state, and $s_i \in \mathcal{S}$ be a possible state in replica $i$. Also, let $u_i \in \mathcal{U}$ be a set of updates to the state seen by replica $i$. 
+For some CRDT-based system, let $o \in \mathcal{O}$ be an operation that can be applied to the state, and $s_i \in \mathcal{S}$ be a possible state in replica $i$. Also, let $m_i \in \mathcal{M}$ be a set of modifications to the state seen by replica $i$. A modification here is either a set of states or of operations, depending on which of the two classes of CRDT (described below) are used.
 
 %SEC
- Eventually consistent systems have the property that any two replicas with the same set of updates will eventually reach equivalent state. However, some conflict resolution process might be needed to reach the state.
- Strong Eventual Consistency (SEC) goes a step further to assert that as soon as the set of updates are the same, the states will be equivalent. This means no conflict resolution process is needed. That is, $\forall $ replicas $i,j.~~u_i = u_j \Rightarrow s_i \equiv s_j$.
+ Eventually consistent systems have the property that any two replicas with the same set of modifications will eventually reach equivalent state. However, some conflict resolution process might be needed to reach the state.
+ Strong Eventual Consistency (SEC) goes a step further to assert that as soon as the set of modifications are the same, the states will be equivalent. This means no conflict resolution process is needed. That is, $\forall $ replicas $i,j.~~m_i = m_j \Rightarrow s_i \equiv s_j$.
  
  
  % STATE VS OP
-CRDTs fall into two broad categories: State-based and Operation(op)-based. 
+CRDTs fall into two broad categories: state-based and operation(op)-based. 
 % state
-A state based system has a function \textsc{update}: $\mathcal{O} \times \mathcal{S} \rightarrow \mathcal{S}$
-which applies operations locally, then distributes the new state to other replicas. On receipt of the new state, another replica applies the function \textsc{merge}: $\mathcal{S} \times \mathcal{S} \rightarrow \mathcal{S}$  for combining incoming states with the local state. This merge function is associative, commutative and idempotent, so that (assuming the states are distributed properly, a liveness guarantee) all replicas will reach equivalent state which is the composed \textsc{merge} of all received states.
+A traditional\footnote{There have also been delta state CRDTs proposed \cite{deltacrdts}, where incremental state changes (deltas) are disseminated, but these won't be discussed in detail here.} state based CRDT has a function \textsc{update}: $\mathcal{O} \times \mathcal{S} \rightarrow \mathcal{S}$
+which applies operations locally, then distributes the new state to other replicas. On receipt of the new state, another replica applies the function \textsc{merge}: $\mathcal{S} \times \mathcal{S} \rightarrow \mathcal{S}$  for combining incoming states with the local state. This merge function is associative, commutative and idempotent, so that (assuming the states are distributed properly, a liveness guarantee) all replicas will reach equivalent state which is the composed \textsc{merge} of all received states. Here, $\mathcal{M} = \mathcal{P}(\mathcal{S})$ (the powerset).
 
 
 % op
-The op-based approach is similar, but instead of distributing new states, operations are sent to other replicas. The \textsc{update} function is split into two. \textsc{atSource} is performed only at the operation's source replica, whereas \textsc{downstream} is performed at all replicas. 
+The op-based approach ($\mathcal{M} = \mathcal{P}(\mathcal{O})$) is similar, but instead of distributing new states, operations are sent to other replicas. The \textsc{update} function (as above) is split into two; \textsc{atSource} is performed only at the operation's source replica, whereas \textsc{downstream} is performed at all replicas. Both share the signature of \textsc{update}.
 % network guarantees
 This approach additionally requires operations to be delivered only once (or alternatively be idempotent), as for example sending an \textit{increment counter} operation and the network duplicating it means the counter would be incremented twice at other replicas, but only once at the source, giving inconsistent state. 
 % causal delivery
 Furthermore, if operation $A$ \textit{happens-before} \cite{lamportshappensbefore} operation $B$, $A$ should be delivered before $B$ at all replicas. Usually some messaging middleware provides these exactly-once and causally-ordered delivery guarantees. Finally, for all concurrent operations (those not ordered by \textit{happens-before}), the \textsc{downstream} phase commutes. So, for concurrent operations $o_1$ and $o_2$: $$\textsc{downstream}(o_1, \textsc{downstream}(o_2, s)) \equiv \textsc{downstream}(o_2, \textsc{downstream}(o_1, s))$$
 
 % pros/cons
-Hence, there are advantages and disadvantages of each approach. On the one hand, state-based CRDTs require transmitting the entire state every time an update is made. When you have a large state and lots of replicas, this can use a lot of bandwidth. Conversely, op-based CRDTs may save you in bandwidth, but require extra messaging guarantees. As well as this, a state-based CRDT can send one state representing multiple updates at once, whereas in the other case every single operation has to be distributed, so there is certainly a tradeoff based on the state size and rate of updates the system has as to which makes more efficient use of the network.
+Hence, there are advantages and disadvantages of each approach. On the one hand, state-based CRDTs require transmitting the entire state frequently. When you have a large state and lots of replicas, this can use a lot of bandwidth. Conversely, op-based CRDTs may save you in bandwidth, but require extra messaging guarantees. As well as this, a state-based CRDT can send one state representing multiple updates at once, whereas in the other case every single operation has to be distributed, so there is certainly a tradeoff based on the state size and rate of updates the system has as to which makes more efficient use of the network.
 %%%% DIAGRAM STATE VS OP %%%%
 
 % my choice
@@ -44,70 +44,80 @@ For my collaborative editing scenario, in general the size of the document will 
 
 \subsection{Ordered Lists}
  
-I define an ordered list as a set of vertices ordered totally by some binary relation $<_v$. For collaborative editing, I use CRDTs to represent an ordered list $\langle v_1, ..., v_n\rangle$ where vertex $v_i = (a_i, id_i)$ is a tuple of an atom $a_i \in \mathcal{A}$ and an identifier $id_i \in \mathcal{ID}$. The document represented is then the concatenation of atoms projected from the ordered vertices. In my implementation, $\mathcal{A}$ is the set of single characters, though in other work it has been the set of all possible whole lines of characters \cite{logoot}. For two lists $l$ and $l'$, let $l \equiv_l l'$ if and only if the documents represented by them are the same.
+I define an ordered list as a set of vertices ordered totally by some binary relation $<_v$. For collaborative editing, I use CRDTs to represent an ordered list $\langle v_1, ..., v_n\rangle$ where vertex $v_i = (a_i, id_i)$ is a tuple of an atom $a_i \in \mathcal{A}$ and an identifier $id_i \in \mathcal{ID}$. The document represented is then the concatenation of atoms projected from the ordered vertices. In my implementation, $\mathcal{A}$ is the set of single characters, though in other work it has been the set of all possible whole lines of characters \cite{logoot}. For two lists $l$ and $l'$, let $l \equiv_l l'$ if and only if the vertices are all the same.
 
-Initially, the state $s = \langle \vdash, \dashv\rangle$, two special, invisible vertices such that $\forall $ other vertices $v$,  $$\textsc{identifier}(\vdash) < \textsc{identifier}(v) ~\wedge~ \textsc{identifier}(v) <\textsc{identifier}(\dashv)$$
+Initially, the state $l = \langle \vdash, \dashv\rangle$, two special, invisible vertices such that $\forall $ other vertices $v$,  $$\textsc{identifier}(\vdash) < \textsc{identifier}(v) ~\wedge~ \textsc{identifier}(v) <\textsc{identifier}(\dashv)$$
 
+The two operations that can be performed are \textsc{AddRight}($v_l$,$a$), which inserts a character $a$ to the right of vertex $v_l$ in the document, and \textsc{Delete}($v$), which removes vertex $v$ from the document.
 There are different approaches people have taken to representing an ordered list with a CRDT, and I have implemented two of these.
 %
 %
 
 %
 \subsection{Tombstoning Approach}
-One approach, called the Replicated Growable Array (RGA) is described in \cite{shapstudy}. A vertex in this system looks like:
+One approach, called the Replicated Growable Array (RGA) is described in \cite{rga} and summarised nicely in \cite{shapstudy}. A vertex in this system looks like:
 $$ v \equiv (a, (t, rid))$$
- The identifier for a vertex is a pair of a timestamp $t \in \mathbb{N}$ and a globally unique replica identifier $rid \in \mathbb{N}$ (so $\mathcal{ID} = \mathbb{N} \times \mathbb{N}$). Identifiers are ordered first by timestamp, then by \textit{rid}. Each vertex additionally has a boolean property \texttt{deleted}, which is initially false. Let there be projection functions associated with all these properties named similarly. The timestamp is such that if the insertion of one vertex $v$ \textit{happens-before} the insertion of another $v'$, $\textsc{timestamp}(v) < \textsc{timestamp}(v')$.
-The state represented is the sequence of projected atoms $a$ of the vertices whose \texttt{deleted} property is false only. The ordering $<_v$ follows from the order on the identifiers.
+ The identifier for a vertex is a pair of a timestamp $t \in \mathbb{N}$ and a globally unique replica identifier $rid \in \mathbb{N}$ (so $\mathcal{ID} = \mathbb{N} \times \mathbb{N}$). Identifiers are ordered first by timestamp, then by \textit{rid}. Each vertex additionally has a boolean property \texttt{deleted}, which is initially false. Let there be projection functions associated with all these properties named similarly.\\
+The timestamp is such that if the insertion of one vertex $v$ \textit{happens-before} the insertion of another $v'$, $\textsc{timestamp}(v) < \textsc{timestamp}(v')$.
+The document state represented is the sequence of projected atoms $a$ of the vertices whose \texttt{deleted} property is false only. The ordering $<_v$ follows from the usual tuple ordering on the identifiers.
 
 \noindent
-RGA supports the following operations:
+Below, Algorithm \ref{alg:rga} shows pseudocode for the two main operations for RGA, as well as an auxiliary \textsc{successor} function:
 \begin{algorithm}[H]
-\caption*{RGA}
+\caption{RGA}
+\label{alg:rga}
 \begin{algorithmic}[1]
-\Require $v \in s$
-\Function{successor}{$v$}
-\State \Return $\min \left\{ v' ~|~ v' \in s ~\wedge~ v <_v v'  \right\}$
+\Require $v \in l - \{\dashv\}$
+\Function{successor}{$v$} \Comment{Finds the next vertex in the list}
+\State $succ \gets \min \left\{ v' ~|~ v' \in l -\{\dashv\} ~\wedge~ v <_v v'  \right\}$
+\If{$succ \neq None$}
+\State \Return $succ$
+\Else
+\State \Return $v$
+\EndIf
 \EndFunction
 \end{algorithmic}
 
 \hrule
 
 \begin{algorithmic}[1]
-\Require state $s = \langle ..., v_1, v_l, v_2, ...\rangle$
-\Function{AddRight}{$v_l$, $a$}
+\Require $v_l \in l$
+\Function{AddRight}{$v_l$, $a$} \Comment{Inserts \textit{a} on the right of vertex $v_l$}
 \BState \textsc{atSource}:
 \State $t \gets$ \Call{now}{ } \Comment{Generates a fresh timestamp}
-\State $v \gets (a,(t, rid))$
+\State $v \gets (a,(t, rid))$ \Comment{This replica's \textit{rid}}
 \BState \textsc{downstream}:
-\State $l \gets v_l$
-\State $r \gets \Call{successor}{v_l}$
-\While{$\textsc{identifer}(v) < \textsc{identifier}(r)$}
-\State $l,~r \gets r, ~\Call{successor}{r}$
+\State $left \gets v_l$
+\State $right \gets \Call{successor}{v_l}$
+\While{$left \neq right \wedge \textsc{identifer}(v) < \textsc{identifier}(right)$}
+\State $left,~right \gets right, ~\Call{successor}{right}$
 \EndWhile
-\State $s \gets \langle ..., l, v, r, ...\rangle$
+\State $l \gets \langle ..., left, v, right, ...\rangle$
 \EndFunction
 
-\Ensure $v \in s ~\wedge~ v_l <_v v ~\wedge~ \forall v'.~ v_l<_v v'<_v v. ~\textsc{identifier}(v') < \textsc{identifier}(v)$
+\Ensure $v_l \in l ~\wedge~ v \in l ~\wedge~ v_l <_v v ~\wedge~ \forall v'.~ v_l<_v v'<_v v \Rightarrow \textsc{identifier}(v) < \textsc{identifier}(v')$
 \end{algorithmic}
 
 \hrule
 
 \begin{algorithmic}[1]
-\Require state $s = \langle ..., v_l, v, v_r, ... \rangle$
-\Function{Delete}{$v$}
+\Require $v \in l$
+\Function{Delete}{$v$} \Comment{Marks vertex $v$ as deleted}
 \BState \textsc{downstream}:
-\State $v.\mathtt{deleted} = \mathtt{True}$
+\State $v.\mathtt{deleted} \gets \mathtt{True}$
 \EndFunction
-\Ensure state $s = \langle ..., v_l, v, v_r, ... \rangle ~\wedge~ \mathtt{deleted}(v)$
+\Ensure $v \in l ~\wedge~ v.\texttt{deleted} = \mathtt{True}$
 \end{algorithmic}
 \end{algorithm}
 
-The obvious weakness of this approach is that, since no vertex is ever actually deleted, just marked as deleted (\textit{tombstoned}), the memory used by such a CRDT never decreases with time. So, you could have an empty document in front of you that contains a million vertices all marked as deleted which is obviously not ideal.
+The details of the \textsc{now} function are described in the next chapter, but loosely it allows a replica to use a timestamp it hasn't seen before.
+
+When characters in the document are deleted under RGA, their vertices are just marked as deleted (\textit{tombstoned}) and the character stops appearing in the representation, but the vertices persist under-the-hood. The obvious weakness of this approach then, is that the memory used by such a CRDT never decreases with time. So, you could have an empty document in front of you that contains a million vertices all marked as deleted which is obviously not ideal.
 
 \subsection{Variable-size Identifier Approach}
-Whereas vertex identifiers consist of a single timestamp and a replica identifier, a different system (used in Logoot \cite{logoot}) has identifiers of unbounded size, but in doing this vertices are allowed to be properly deleted.
+Whereas identifiers in RGA consist of a single timestamp and a replica identifier, a different system called Logoot \cite{logoot} has identifiers which grow in size more quickly, but in doing this vertices are allowed to be properly deleted. In RGA, the identifiers grow in memory approximately with the logarithm of the number of vertices (as this is the number of bits needed to count them). Identifiers in Logoot can in the best case use logarithmic space (as a normal timestamp would), but in the worst could (in my implementation) occupy quadratic space (as shown below).
 
-So, identifiers are now a globally unique 3-tuple of a positional identifier ($p \in \mathbb{N^*}$), replica identifier ($rid \in \mathbb{N}$) and timestamp ($t \in \mathbb{N}$). Here, $\mathcal{ID} = \mathbb{N^*} \times \mathbb{N} \times \mathbb{N} $. The positional identifier is a sequence of numbers representing a path in a tree.
+Identifiers are now a globally unique 3-tuple of a positional identifier ($p \in \mathbb{N^*}$), replica identifier ($rid \in \mathbb{N}$) and timestamp ($t \in \mathbb{N}$). Here, $\mathcal{ID} = \mathbb{N^*} \times \mathbb{N} \times \mathbb{N} $. The positional identifier is a sequence of numbers representing a path in a tree.
 
 %%% DIAGRAM %%%
 \begin{figure}[H]
@@ -121,9 +131,11 @@ So, identifiers are now a globally unique 3-tuple of a positional identifier ($p
 \draw (0,0) -- node[pos=1.1](3) {3} ++ (-\width / 3,\depth) ;
 \draw (0,0) -- node[pos=1.1](5) {5} ++ (2, \depth);
 \draw (3) --  node[pos=1.15] {3.1}  ++ (0.5, \depth);
-\draw (3) -- node[pos=1.15] {$3.2k$} ++ (2.5,\depth);
+\draw (3) -- node[pos=1.15] {$3.13$} ++ (2.5,\depth);
 
 \draw (5) -- node[pos=1.15]{5.2} ++ (0.5, \depth);
+
+\draw[draw=none] (\width+2, 0) -- node[right, pos=0] {depth 0} ++(0, \depth) -- node[right, pos=0] {depth 1} ++(0, \depth) node[right, pos=1.1] {depth 2};
 
 \end{tikzpicture}
 \caption{The tree-like structure of identifiers. Each number in the position represents a location to the right of its parent one level down in the tree. The outer two nodes at the top level are the positions of the start and end vertex, $\vdash$ and $\dashv$.}
@@ -133,7 +145,8 @@ So, identifiers are now a globally unique 3-tuple of a positional identifier ($p
 %
 %
 %
-Define the ordering of the vertices $<_v$ by the total ordering on their identifiers $\prec$ from \cite{logoot}: 
+\noindent
+In Logoot, the ordering of the vertices $<_v$ is the total ordering on their identifiers $\prec$ \cite{logoot} which is defined as follows. 
 Let: $$id_1 = (p_1, rid_1, t_1)$$ $$id_2 = (p_2, rid_2, t_2)$$
 And, (wlog. assume $n \leq m$)
 $$ p_1 = p_1^0.p_1^1...p_1^n$$ $$p_2 = p_2^0.p_2^1...p_2^m$$
@@ -142,45 +155,53 @@ $$ p_1 \prec p_2 \Leftrightarrow \exists j \leq m.~ (\forall i<j.~ p_1^i = p_2^i
 $$ p_1 = p_2 \Leftrightarrow (n=m)~ \wedge~ \forall i. p_1^i = p_2^i$$
 Finally, $$id_1 \prec id_2 \Leftrightarrow (p_1 \prec p_2) \vee ((p_1 = p_2) \wedge (rid_1 < rid_2)) \vee ((p_1 = p_2) \wedge (rid_1 = rid_2) \wedge (t_1 < t_2))$$
 \\
-I use the base-doubling strategy from \cite{logoot} so that the there are $k$ possible positions at depth 1, $2k$ at depth 2 et cetera. Also, positions are represented internally as single numbers such that the lower $\log_2(base(1))$ bits are the position at depth 1, the next $\log_2(base(2))$ bits are the position at depth 2 et cetera. Therefore, subtraction of positions is just integer subtraction.
-\\\\
+My implementation the base-doubling strategy from \cite{logoot} so that there are $2^{i-1} \cdot k$ possible spaces at depth $i$. Also, positions are represented internally as single numbers such that the lower $\log_2(base(1))$ bits is the number at depth 1, the next $\log_2(base(2))$ bits is the number at depth 2 et cetera. Therefore, subtraction of positions (as in line 7 of \textsc{alloc} from Algorithm \ref{alg:logoot}) is just integer subtraction.
+
+In the worst case, one might pick the maximum possible identifier at each depth ($2^{i-1} \cdot k$) when inserting a new vertex, then insert another vertex after it (meaning having to go to the next depth) and repeat this. Then, the number at each depth is double the last, so needs one more bit than the last, and the total size of the position is the sum of consecutive integers which grows quadratically.
 
 \begin{algorithm}[H]
-\caption*{Logoot}
+\caption{Pseudocode for the two list operations (\textsc{AddRight} and \textsc{Delete}) and auxiliary functions  in Logoot}
+\label{alg:logoot}
 \begin{algorithmic}[1]
-\Require $v \in s$
-\Function{Successor}{$v$}
-\State \Return $\min \left\{ v' ~|~ v' \in s ~\wedge~ v <_v v'  \right\}$
+\Require $v \in l - \{\dashv\}$
+\Function{successor}{$v$}  \Comment{Finds the next vertex in the list}
+\State $succ \gets \min \left\{ v' ~|~ v' \in l -\{\dashv\} ~\wedge~ v <_v v'  \right\}$
+\If{$succ \neq None$}
+\State \Return $succ$
+\Else
+\State \Return $v$
+\EndIf
 \EndFunction
 \end{algorithmic}
 
 \hrule
 
 \begin{algorithmic}[1]
-\Function{Prefix}{$p$, $depth$}
-\State $p\_copy \gets [~]$\Comment{The empty sequence}
+\Function{prefix}{$p$, $depth$} \Comment{}
+\State $pCopy \gets [~]$\Comment{The empty position}
 \State $d \gets 1$
 \While{$d < depth$} 
 \If{$d < p.length$}
-$p\_copy = p\_copy.append(p^d)$
-\Else
-$p\_copy = p\_copy.append(0_{base(d)})$ \Comment{such that the binary representation of 0 uses $\log_2(base(d))$ digits}
+$pCopy \gets pCopy.append(p^d)$
+\Else{}
+$pCopy \gets pCopy.append(0_{base(d)})$ \Comment{s.t. the binary representation of 0 uses $\log_2(base(d))$ digits}
 \EndIf
 \State $d \gets d+1$
 \EndWhile
+\Return $pCopy$
 \EndFunction
 \end{algorithmic}
 
 \hrule
 
 \begin{algorithmic}[1]
-\Function{Alloc}{$p_l$}\Comment{Logoot's \textit{boundary} strategy}
+\Function{alloc}{$p_l$}\Comment{Logoot's \textit{boundary} strategy}
 \State $p_r \gets $ \Call{Successor}{$p_l$}
 \State $depth \gets 0$
 \State $interval \gets 0$
 \While{$interval < 1$}\Comment{Find a gap to insert in}
 \State $depth \gets depth + 1$
-\State $interval = $ \Call{Prefix}{$p_r, depth$} $ - $ \Call{Prefix}{$p_l, depth$} $-~1$ 
+\State $interval \gets $ \Call{prefix}{$p_r, depth$} $ - $ \Call{prefix}{$p_l, depth$} $-~1$ 
 \EndWhile
 
 \State $step \gets \min(boundary, interval)$ 
@@ -195,38 +216,63 @@ $p\_copy = p\_copy.append(0_{base(d)})$ \Comment{such that the binary representa
 \Function{AddRight}{$v_l$, $a$}
 \BState \textsc{atSource}
 \State $t \gets $ \Call{now}{ } \Comment{Generates a fresh timestamp}
-\State $newPosition \gets $\Call{Alloc}{$v_l.id.p$}
+\State $newPosition \gets $\Call{alloc}{$v_l.id.p$}
 \State $v \gets (a, (newPosition, rid, t)$
 \BState \textsc{downstream}
-\State $s \gets s \cup \{v\}$
+\State $l \gets l \cup \{v\}$
 \EndFunction
-\Ensure state $s = \langle ..., v_l, v, v_r, ... \rangle$ such that $v_l <_v v <_v v_r$
+\Ensure state $l = \langle ..., v_l, v, v_r, ... \rangle$ such that $v_l <_v v <_v v_r$
 \end{algorithmic}
 
 \hrule
 
 \begin{algorithmic}[1]
 
-\Require state $s = \langle ..., v_l, v, v_r, ... \rangle \vee v \notin s$
+\Require state $l = \langle ..., v_l, v, v_r, ... \rangle \vee v \notin l$
 \Function{Delete}{$v$}
-\If {$v \in s$}
-\State $s \gets \langle ..., v_l, v_r, ... \rangle$
+\BState \textsc{downstream}
+\If {$v \in l$}
+\State $l \gets \langle ..., v_l, v_r, ... \rangle$
 \EndIf
 \EndFunction
-\Ensure $v \notin s$
+\Ensure $v \notin l$
 \end{algorithmic}
 \end{algorithm}
 
 
+The \textsc{alloc} function chooses a position for a new vertex at random in between the provided left position $p_l$ and its successor $p_r$. The parameter $boundary$ is a constant used to cap how far away the position is from $p_l$. 
+A proposed improvement to this scheme is called LSEQ \cite{lseq}. It provides simple changes to \textsc{alloc} that improves space complexity over plain Logoot. For each replica, a mapping from depth to a randomly generated bit is stored. In \textsc{alloc}, if the bit for the required depth is 0, return \textsc{prefix}$(p_l, depth) + o\!f\!f\!set$, otherwise return \textsc{prefix}$(p_r, depth) - o\!f\!f\!set$.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\def \width{5};
+\def \depth{2};
+\draw (0,0) --  node[pos=1.1] {$p_l$} ++(-\width, -\depth);
 
-A proposed improvement to this scheme is called LSEQ \cite{lseq}. It provides simple changes to \textsc{Alloc} that claims to improve memory efficiency over plain Logoot. For each replica, a mapping from depth to a randomly generated bit is stored. In \textsc{Alloc}, if the bit for the required depth is 0, return \textsc{prefix}$(p_l, depth) + o\!f\!f\!set$, otherwise return \textsc{prefix}$(p_r, depth) - o\!f\!f\!set$. Essentially, for each level in the tree you choose randomly whether to insert close to the left or right elements when inserting between them. If you always insert close to the left element, there will be more free identifiers at this depth between the new element and its successor, but few between the new one and its predecessor. The converse is true when you insert close to the right. To save memory, a good allocation scheme would allocate positions at the smallest depths possible based on future knowledge of what will be inserted, but this obviously isn't possible, so this scheme chooses randomly in the hope of doing well. I implemented LSEQ to be able to contrast it with RGA.
+\draw (0,0) -- node[pos=1.1] {$p_r$} ++(\width, -\depth);
+
+\draw [dashed] (0,0) -- + (\width/2 , -\depth);
+\draw [dashed] (0,0) -- + (-\width/2 , -\depth);
+\end{tikzpicture}
+\caption{Dotted lines show the two choices LSEQ offers. Choosing a position close to $p_l$ leaves lots of free spaces on the right, but few on the left. Choosing close to $p_r$ leaves lots on the left, but few on the right. If typing sequentially (inserting always at the end), then to minimize the total depth one should always allocate immediately after $p_l$, so all the spaces are filled before having to go deeper.}
+\label{fig:lseqalloc}
+\end{figure}
+That is, as Figure \ref{fig:lseqalloc} shows, at each depth you randomly choose whether to pick a position close to $p_l$ or to $p_r$, then stick with that choice every time that depth is used. To save memory, a good allocation scheme would allocate positions at the smallest depths possible based on future knowledge of what will be inserted, but this obviously isn't possible, so this scheme chooses randomly in the hope of doing well. I implemented LSEQ to be able to contrast it with RGA.
 %
 %
 %
+%
+%
+%
+%
+%
+%
+%
+
 
 \section{Tor}
 \subsection{Onion routing}
-The Tor\footnote{https://www.torproject.org} overlay network is designed to provide anonymity to its users online. Its name stems from \textit{The Onion Router}, describing how packets are sent around its network. Data is wrapped up in layers of encryption at the source, then this \textit{onion} (because it has layers) is gradually unwrapped as it hops around the network, until it reaches the destination unencrypted.
+The Tor\footnote{https://www.torproject.org} \cite{torpaper} overlay network is designed to provide anonymity to its users online. Its name stems from \textit{The Onion Router}, describing how packets are sent around its network. Data is wrapped up in layers of encryption at the source, then this \textit{onion} (because it has layers) is gradually unwrapped as it hops around the network, until it reaches the destination unencrypted.
 
 When a source $S$ wants to send some data to a destination $D$, it chooses a number of Tor \textit{relays} to send the data through (typically 3). The first is called the \textit{entry node}, the last the \textit{exit node}, and any intermediate nodes \textit{middle nodes}. $S$ contacts the entry node directly, and establishes a shared key with it. Then, it asks the entry node to extend the Tor \textit{circuit} to the chosen middle node, and establishes a shared key with that. The process is repeated to reach the exit node. When the whole circuit is established (and $S$ has 3 separate keys), $S$ encrypts the data with all the keys sequentially, in reverse of acquisition order, and sends the data to the entry node. The entry node decrypts the outer layer and forwards it to the middle node, similarly for the middle node, then the exit node decrypts the final layer and forwards to the destination $D$.
 
@@ -258,29 +304,49 @@ When a source $S$ wants to send some data to a destination $D$, it chooses a num
 %
 %
 %   relays 
-%		|
-%		v
+%	  |
+%	  v
 %
 %
 %
 
-\node[draw, rectangle split, rectangle split parts=2] at (-3,-4){entry node\nodepart{second} $key1$};
-\node[draw, rectangle split, rectangle split parts=2] at (0, -4){middle node\nodepart{second} $key2$};
-\node[draw, rectangle split, rectangle split parts=2] at (3,-4){exit node\nodepart{second} $key3$};
+
+
+\node[draw, circle](S) at (-6,-4) {S};
+\node[draw, circle](D) at (6, -4) {D};
+
+
+\node[above  = 0.8cm of S](s)  {} ;
+\node [above  = 0.8cm of D](d)  {} ;
+
+%\draw[-triangle 45, decorate, decoration={snake, amplitude=5, segment length=19,}] (s) -- (d);
+
+
+
+\node[draw, rectangle split, rectangle split parts=2, align=center, text height=1.75ex,text depth=.25ex](r1) at (-3,-4){entry node\nodepart{second} $key1$};
+\node[draw, rectangle split, rectangle split parts=2, align=center, text height=1.75ex,text depth=.25ex](r2) at (0, -4){middle node\nodepart{second} $key2$};
+\node[draw, rectangle split, rectangle split parts=2, align=center,text height=1.75ex,text depth=.25ex](r3) at (3,-4){exit node\nodepart{second} $key3$};
+
+\draw[->, line width=0.5mm] (S) -- (r1);
+\draw[->, line width=0.5mm] (r1) -- (r2);
+\draw[->, line width=0.5mm] (r2) -- (r3);
+\draw[->, line width=0.5mm] (r3) -- (D);
+
 \end{tikzpicture}
+\caption{The data is encrypted with keys sequentially starting with the key of the last node in the circuit and going backwards.}
 \end{figure}
 
 In this way, only the exit node knows the address of $D$, and only the entry node knows the address of $S$, and $D$ knows only the address of the exit node. So, nobody except $S$ knows the address of both $S$ and $D$ for sure. However, the link between the exit node and $D$ is unencrypted, so for confidentiality, encryption at the transport or application layer is needed.
 \subsection{Hidden Services}
-A traditional service can be configured to accept incoming connections only over Tor, when it is called a \textit{Hidden Service} (HS). A client can connect to a HS by specifying its \textit{onion address}, a 16 character string derived from a hash of a special public key it owns. In this way, a HS can hide its location from clients, improving on the asymmetry of knowledge in traditional Onion Routing, so that both parties are anonymous to each other. 
+A traditional service can be configured to accept incoming connections only over Tor, when it is called a \textit{Hidden Service} (HS) \cite{torrendspec}. A client can connect to a HS by specifying its \textit{onion address}, a 16 character string derived from a hash of a special public key it owns. In this way, a HS can hide its location from clients, improving on the asymmetry of knowledge in traditional Onion Routing, so that both parties are anonymous to each other. 
 
 After looking up information about the HS in special directories, the client chooses a random Tor relay as a rendezvous point (RP) and both the client and the HS build a Tor circuit to that. The RP relays end-to-end encrypted messages between the client and the HS. Thus the client and HS know only the address of the RP and not each other, whilst the RP knows nothing about either.
 
-\subsection{Client Authorization}
+\subsection{Client Authentication}
 
-Since the onion address of a HS is derivable from its public key, a connecting client can verify it is connecting to the expected HS. However, the HS knows nothing about the client. It may be desirable for a HS to verify the clients which can build a circuit to it, so the HS protocol supports a couple of methods of client authorization. The one I made use of is called \textit{stealth} authorization.
+Since the onion address of a HS is derivable from its public key, a connecting client can verify it is connecting to the expected HS. However, the HS knows nothing about the client. It may be desirable for a HS to verify the clients which can build a circuit to it, so the HS protocol supports a couple of methods of client authentication. The one I made use of is called \textit{stealth} authentication.
 
-The HS essentially creates a different identity for each client that wishes to connect, then passes secrets corresponding to each identity to each client through some other channel. When a client looks up the HS in the directory, it finds the entry corresponding to the identity it was told about, and decrypts the HS information using the secret it was given. So, only allowed clients are allowed to even lookup \textit{how} to connect to an authorizing HS. Unfortunately, at the moment the protocol only allows 16 separately authorized clients per HS, but I decided that this was sufficient for my needs on this project.
+Here, the HS essentially creates a different identity for each client that wishes to connect, then passes secrets corresponding to each identity to each client through some other channel. When a client looks up the HS in the directory, it finds the entry corresponding to the identity it was told about, and decrypts the HS information using the secret it was given. So, only allowed clients are allowed to even lookup \textit{how} to connect to an authorizing HS. At the time of writing the protocol only allows 16 separately authorized clients per HS, but I decided that this was sufficient for my needs on this project.
 
 \section{Project Development}
 
@@ -292,10 +358,10 @@ At the beginning of the project, I had to decide in what form an application usi
 \item A desktop application using Python
 \end{itemize}
 
-I had a little experience with JavaScript and Python on a previous internship, and obviously Java from the Part I Tripos courses. I first ruled out the Android application, as there would have been significant overhead in learning the Android framework properly, and also in actually developing and testing the app. Debugging appeared to be significantly harder remotely. As I knew I wanted to interact with Tor, I needed some way for my library to interact with a Tor daemon running on the same machine. The Tor project actively supports a library for just this called Stem in Python, so that was what finalised my decision to design a desktop application.
+I had a little experience with JavaScript and Python on a previous internship, and obviously Java from the Part I Tripos courses. I first ruled out the Android application, as there would have been significant overhead in learning the Android framework properly, and also in actually developing and testing the app. Debugging appeared to be significantly harder remotely. As I knew I wanted to interact with Tor, I needed some way for my library to interact with a Tor daemon running on the same machine. The Tor project actively supports a library for this called Stem\footnote{https://stem.torproject.org/} in Python, so that was what finalised my decision to design a desktop application.
 
-\subsection{Existing Code}
-I installed Tor locally, which exposes a SOCKS5 proxy to send data to and runs a daemon process which implements the correct protocols for using the Tor network. To interact with the Tor process, I used the Stem\footnote{https://stem.torproject.org/} Python library, which provides convenient API calls to use hidden services. Other minor libraries used are described in the next section.
+\subsection{Starting Point}
+I installed Tor locally, which exposes a SOCKS5 proxy to send data through and runs a daemon process which implements the correct protocols for using the Tor network. To interact with the Tor process, I used the Stem Python library, which provides convenient API calls to work with hidden services. Any other minor libraries used are described in the next section. Otherwise, the code written was from scratch. I initially proposed to make use of some code for a server by Martin Kleppmann, but having planned out how my clients should act, the differences were large enough that writing my own seemed the better approach.
 
 \subsection{Development Plan}
 I decided to iteratively develop the code for my project based on each of my goals stated in the project proposal. That way, I could plan and evaluate each part separately. Moreover, a single-pass \textit{Waterfall}-like approach would have been problematic as it is then difficult to adapt to changing or refined requirements after everything is planned. Also, planning a large project such as this before any code was written would have been very difficult as writing code gives you a good insight into further design.

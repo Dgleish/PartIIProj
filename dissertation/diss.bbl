@@ -1,6 +1,112 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{id}
-Me, {\em HI}.
+\bibitem{lamportshappensbefore}
+L.~Lamport, ``Time, clocks, and the ordering of events in a distributed
+  system,'' {\em Communications of the ACM}, vol.~21, no.~7, pp.~558--565,
+  1978.
+
+\bibitem{crdt}
+M.~Shapiro, N.~Pregui{\c{c}}a, C.~Baquero, and M.~Zawirski, {\em Conflict-Free
+  Replicated Data Types}, pp.~386--400.
+\newblock Berlin, Heidelberg: Springer Berlin Heidelberg, 2011.
+
+\bibitem{shapstudy}
+M.~Shapiro, N.~Pregui{\c{c}}a, C.~Baquero, and M.~Zawirski, ``A comprehensive
+  study of convergent and commutative replicated data types,'' tech. rep.,
+  2011.
+
+\bibitem{treedoc}
+N.~Pregui{\c c}a, J.~M. Marqu{\`e}s, M.~Shapiro, and M.~Leția, ``{A
+  commutative replicated data type for cooperative editing},'' in {\em {29th
+  IEEE International Conference on Distributed Computing Systems (ICDCS
+  2009)}}, (Montreal, Qu{\'e}bec, Canada), pp.~395--403, {IEEE Computer
+  Society}, June 2009.
+
+\bibitem{crate}
+B.~N{\'e}delec, P.~Molli, and A.~Mostefaoui, ``Crate: Writing stories together
+  with our browsers,'' in {\em Proceedings of the 25th International Conference
+  Companion on World Wide Web}, pp.~231--234, International World Wide Web
+  Conferences Steering Committee, 2016.
+
+\bibitem{rga}
+H.-G. Roh, M.~Jeon, J.-S. Kim, and J.~Lee, ``Replicated abstract data types:
+  Building blocks for collaborative applications,'' {\em Journal of Parallel
+  and Distributed Computing}, vol.~71, no.~3, pp.~354 -- 368, 2011.
+
+\bibitem{logoot}
+S.~Weiss, P.~Urso, and P.~Molli, ``Logoot: A scalable optimistic replication
+  algorithm for collaborative editing on {P2P} networks,'' in {\em Distributed
+  Computing Systems, 2009. ICDCS'09. 29th IEEE International Conference on},
+  pp.~404--412, IEEE, 2009.
+
+\bibitem{fiduswriter}
+``Fidus writer.'' \url{https://www.fiduswriter.org/}, Mar. 2013 (accessed May
+  6, 2017).
+
+\bibitem{baconOS}
+J.~Bacon and T.~Harris, ``Operating systems: concurrent and distributed
+  software design,'' ch.~23.3, pp.~602--603, Pearson Education, 2003.
+
+\bibitem{CAP}
+S.~Gilbert and N.~Lynch, ``Brewer's conjecture and the feasibility of
+  consistent, available, partition-tolerant web services,'' {\em SIGACT News},
+  vol.~33, pp.~51--59, June 2002.
+
+\bibitem{brewer}
+E.~Brewer, ``Cap twelve years later: How the "rules" have changed,'' {\em
+  Computer}, vol.~45, pp.~23--29, Feb 2012.
+
+\bibitem{kleppmann}
+M.~Kleppmann, ``A critique of the {CAP} theorem,'' {\em CoRR},
+  vol.~abs/1509.05393, 2015.
+
+\bibitem{deltacrdts}
+P.~S. Almeida, A.~Shoker, and C.~Baquero, ``Delta state replicated data
+  types,'' {\em CoRR}, vol.~abs/1603.01529, 2016.
+
+\bibitem{lseq}
+B.~N{\'e}delec, P.~Molli, A.~Mostefaoui, and E.~Desmontils, ``{LSEQ}: an
+  adaptive structure for sequences in distributed collaborative editing,'' in
+  {\em Proceedings of the 2013 ACM symposium on Document engineering},
+  pp.~37--46, ACM, 2013.
+
+\bibitem{torpaper}
+R.~Dingledine, N.~Mathewson, and P.~Syverson, ``Tor: The second-generation
+  onion router,'' tech. rep., DTIC Document, 2004.
+
+\bibitem{torrendspec}
+``Tor rendezvous specification.''
+  \url{https://gitweb.torproject.org/torspec.git/tree/rend-spec.txt}, Dec. 2017
+  (accessed May 6, 2017).
+
+\bibitem{hlseq}
+B.~N{\'e}delec, P.~Molli, A.~Mostefaoui, and E.~Desmontils, ``Concurrency
+  effects over variable-size identifiers in distributed collaborative
+  editing,'' in {\em Document Changes: Modeling, Detection, Storage and
+  Visualization}, vol.~1008, pp.~0--7, 2013.
+
+\bibitem{logootundo}
+S.~Weiss, P.~Urso, and P.~Molli, ``Logoot-undo: Distributed collaborative
+  editing system on {P2P} networks,'' {\em IEEE Transactions on Parallel and
+  Distributed Systems}, vol.~21, pp.~1162--1174, Aug 2010.
+
+\bibitem{undoatanytime}
+C.~Sun, ``Undo as concurrent inverse in group editors,'' {\em ACM Transactions
+  on Computer-Human Interaction (TOCHI)}, vol.~9, no.~4, pp.~309--361, 2002.
+
+\bibitem{ccm}
+J.~Jonsson, ``On the security of ctr+ cbc-mac,'' in {\em International Workshop
+  on Selected Areas in Cryptography}, pp.~76--93, Springer, 2002.
+
+\bibitem{stringed}
+W.~Yu, L.~Andr{\'e}, and C.-L. Ignat, {\em A CRDT Supporting Selective Undo for
+  Collaborative Text Editing}, pp.~193--206.
+\newblock Cham: Springer International Publishing, 2015.
+
+\bibitem{spray}
+B.~N{\'e}delec, J.~Tanke, D.~Frey, P.~Molli, and A.~Mostefaoui, {\em Spray: an
+  Adaptive Random Peer Sampling Protocol}.
+\newblock PhD thesis, LINA-University of Nantes; INRIA Rennes-Bretagne
+  Atlantique, 2015.
 
 \end{thebibliography}

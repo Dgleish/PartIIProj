@@ -89,9 +89,9 @@ class CRDTLocalClient(object):
             return
         elif event.char == '\x08':
             self.op_q.appendleft(OpDeleteLocal())
-        elif event.char == '(':
+        elif event.char == '`':
             self.op_q.appendleft(OpUndo())
-        elif event.char == ')':
+        elif event.char == '#':
             self.op_q.appendleft(OpRedo())
         elif len(event.char) > 0 and 32 <= ord(event.char) <= 126:
             self.op_q.appendleft(OpAddRightLocal(event.char))

@@ -51,9 +51,9 @@ class CRDTP2PClient(NetworkClient):
             # Send something so that the listening thread gets woken up and can close
             pack_and_send('\x00', sock)
             sock.close()
-        except:
+            logging.debug('closed socket for {}'.format(ip))
+        except socket.error:
             pass
-        logging.debug('closed socket for {}'.format(ip))
         self.connected_peers.remove_peer(ip)
 
     def send_op(self, unpickled_op):
@@ -104,11 +104,10 @@ class CRDTP2PClient(NetworkClient):
 
             # logging.debug('starting op thread for {}'.format(peer_ip))
         # start listening for other operations from this peer
-        # MEASUREMENT
-            # LENGTH_MEASUREMENT
-            # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, cipher))
-            # op_thread.daemon = True
-            # op_thread.start()
+        # LENGTH_MEASUREMENT
+        op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, cipher))
+        op_thread.daemon = True
+        op_thread.start()
 
     def disconnect(self):
         """
@@ -117,14 +116,12 @@ class CRDTP2PClient(NetworkClient):
         """
         logging.debug('disconnecting')
         # MEASUREMENT
-        # self.can_consume_sem.acquire()
-        peers_to_remove = []
-        for ip, sock in self.connected_peers.iterate():
-            peers_to_remove.append((ip, sock))
-        logging.debug('about to remove {}'.format(peers_to_remove))
-        for ip, sock in peers_to_remove:
-            self.remove_peer(ip, sock)
+        self.can_consume_sem.acquire()
+        for ip, val in self.connected_peers.iterate():
+            logging.debug('removing peer {}'.format(ip))
+            self.remove_peer(ip, val['sock'])
 
+        # force listening socket to close as well
         s = socket.socket(socket.AF_INET,
                           socket.SOCK_STREAM)
         s.connect(("localhost", self.port))
@@ -176,17 +173,15 @@ class CRDTP2PClient(NetworkClient):
                 self.add_peer_lock.release()
                 # logging.debug('released add peer lock')
 
-            # self.do_p2p_protocol(sock, peer_addr, encrypt)
+            self.do_p2p_protocol(sock, peer_addr, encrypt)
             # MEASUREMENT
             # op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_addr, sock, None))
             # op_thread.daemon = True
             # op_thread.start()
             # LENGTH_MEASUREMENT
-            # self.listen_for_ops(peer_addr, sock, None)
-            self.sync_ops(sock, None)
-            break
-            # logging.debug('finished connecting to {}'.format(peer_addr))
-        listen_thread.join()
+            # self.sync_ops(sock, None)
+            # break
+        # listen_thread.join()
 
         self.can_consume_sem.release()
 
@@ -204,13 +199,15 @@ class CRDTP2PClient(NetworkClient):
 
         while self.running:
             try:
+                logging.debug('in listening loop')
                 sock, _ = self.recvsock.accept()
                 peer_addr = recvall(sock)
+                logging.info('peer connected from {}'.format(peer_addr))
 
             except (socket.error, struct.error) as e:
                 logging.warning('couldn\'t connect to peer, {}'.format(e))
                 continue
-            logging.info('peer connected from {}'.format(peer_addr))
+
 
             self.add_peer_lock.acquire()
             if (self.connected_peers.contains(peer_addr) or (
@@ -224,12 +221,11 @@ class CRDTP2PClient(NetworkClient):
             self.connecting_peers.add_peer(peer_addr, sock)
             self.add_peer_lock.release()
 
-            # self.do_p2p_protocol(sock, peer_addr, encrypt)
-            self.sync_ops_req(sock, None)
-
             # LENGTH MEASUREMENT
-            self.listen_for_ops(peer_addr, sock, None)
-            return
+            self.do_p2p_protocol(sock, peer_addr, encrypt)
+            # self.sync_ops_req(sock, None)
+            # self.listen_for_ops(peer_addr, sock, None)
+            # return
 
     def listen_for_ops(self, peer_ip, sock, cipher):
         """
@@ -243,7 +239,7 @@ class CRDTP2PClient(NetworkClient):
             while True:
                 try:
                     op = recvall(sock, cipher)
-                    # logging.debug('{} got op {}'.format(self.puid, op))
+                    logging.debug('{} got op {}'.format(self.puid, op))
                     f.write('{}\n'.format(perf_counter()))
                     ops_done += 1
                     if not isinstance(op, RemoteOp):
@@ -258,17 +254,18 @@ class CRDTP2PClient(NetworkClient):
                         # We have seen the vertex this operation references
                         # TODO: for lseq ids the comparison should look at timestamp first instead of postition
                         self.seen_ops_vc.update(op)
+                        logging.debug('vc {}'.format(self.seen_ops_vc))
 
                     # add to the operation queue and signal something has been added
                     # MEASUREMENT
-                    # self.op_q.appendleft(op)
+                    self.op_q.appendleft(op)
 
                     # MEASUREMENT
-                    if ops_done >= 100:
-                        print('finished')
-                        f.flush()
-                        self.disconnect()
-                        return
+                    # if ops_done >= 100:
+                    #     print('finished')
+                    #     f.flush()
+                    #     self.disconnect()
+                    #     return
 
                 except (socket.error, pickle.UnpicklingError, IndexError, ValueError) as e:
                     logging.warning('Failed to receive op from {} {}'.format(peer_ip, e))

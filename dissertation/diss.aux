@@ -4,145 +4,194 @@
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:introduction}{{1}{6}}
+\citation{crdt}
+\citation{shapstudy}
+\citation{treedoc}
+\citation{crate}
+\citation{rga}
+\citation{logoot}
+\citation{fiduswriter}
+\citation{baconOS}
 \citation{CAP}
+\citation{brewer}
 \citation{kleppmann}
+\citation{crdt}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Preparation}{8}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:preparation}{{2}{8}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}Distributed Systems}{8}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}CRDTs}{8}}
+\citation{deltacrdts}
 \citation{lamportshappensbefore}
 \citation{logoot}
+\citation{rga}
 \citation{shapstudy}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Ordered Lists}{10}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Tombstoning Approach}{10}}
-\citation{logoot}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Variable-size Identifier Approach}{11}}
-\citation{logoot}
-\citation{logoot}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The tree-like structure of identifiers. Each number in the position represents a location to the right of its parent one level down in the tree. The outer two nodes at the top level are the positions of the start and end vertex, $\vdash $ and $\dashv $.\relax }}{12}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces RGA\relax }}{11}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{alg:rga}{{1}{11}}
+\citation{logoot}
+\citation{logoot}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Variable-size Identifier Approach}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The tree-like structure of identifiers. Each number in the position represents a location to the right of its parent one level down in the tree. The outer two nodes at the top level are the positions of the start and end vertex, $\vdash $ and $\dashv $.\relax }}{12}}
 \newlabel{fig:tree}{{2.1}{12}}
+\citation{logoot}
 \citation{lseq}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Tor}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Onion routing}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Hidden Services}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Client Authorization}{15}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Project Development}{16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Choice of platform}{16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Existing Code}{16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Development Plan}{16}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Implementation}{17}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Pseudocode for the two list operations (\textsc  {AddRight} and \textsc  {Delete}) and auxiliary functions in Logoot\relax }}{14}}
+\newlabel{alg:logoot}{{2}{14}}
+\citation{torpaper}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Dotted lines show the two choices LSEQ offers. Choosing a position close to $p_l$ leaves lots of free spaces on the right, but few on the left. Choosing close to $p_r$ leaves lots on the left, but few on the right. If typing sequentially (inserting always at the end), then to minimize the total depth one should always allocate immediately after $p_l$, so all the spaces are filled before having to go deeper.\relax }}{15}}
+\newlabel{fig:lseqalloc}{{2.2}{15}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Tor}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Onion routing}{15}}
+\citation{torrendspec}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces The data is encrypted with keys sequentially starting with the key of the last node in the circuit and going backwards.\relax }}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Hidden Services}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Client Authentication}{17}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Project Development}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Choice of platform}{17}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Starting Point}{18}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Development Plan}{18}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Implementation}{19}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:implementation}{{3}{17}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Implementation tools}{17}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}CRDT Ordered List Library}{17}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Class hierarchy for the supported CRDT operations. Shaded classes are concrete. Type $T$ must be representable as a string.\relax }}{18}}
-\newlabel{fig:ops}{{3.1}{18}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces How \texttt  {ListCRDT} performs a \texttt  {OpAddRightLocal}\relax }}{19}}
-\newlabel{fig:listcrdtaddright}{{3.2}{19}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Na{\"i}ve Implementation - \texttt  {ArrOrderedList}}{19}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}RGA - \texttt  {LLOrderedList}}{19}}
+\newlabel{chap:implementation}{{3}{19}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Implementation tools}{19}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}CRDT Ordered List Library}{19}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Class hierarchy for the supported CRDT operations. All are subtypes of \texttt  {Op}, which represents any kind of operation. Shaded classes are concrete. Type $T$ must be representable as a string.\relax }}{20}}
+\newlabel{fig:ops}{{3.1}{20}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces How \texttt  {ListCRDT} performs an \texttt  {OpAddRightLocal}\relax }}{21}}
+\newlabel{fig:listcrdtaddright}{{3.2}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Na{\"i}ve Implementation - \texttt  {ArrOrderedList}}{21}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}RGA - \texttt  {LLOrderedList}}{21}}
 \citation{hlseq}
 \citation{logootundo}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}LSEQ - \texttt  {LSEQOrderedList}}{20}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Undo/Redo}{20}}
-\newlabel{sec:undo}{{3.2.4}{20}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces How operations are undone and redone at replica with id $rid$\relax }}{21}}
-\newlabel{fig:undostorage}{{3.3}{21}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces How OpUndo and OpRedo fit into the operation hierarchy\relax }}{21}}
-\newlabel{fig:undoops}{{3.4}{21}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Application}{22}}
-\newlabel{sec:helper}{{3.3}{22}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces The layout of the application; arrows indicate the flow of operations. The numbers indicate the order in which \texttt  {CRDTApp} does these actions\relax }}{22}}
-\newlabel{fig:app}{{3.5}{22}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces An example sending of operations with $opID$s 1:A, 2:A and 2:B. The latter arrives at C before its causal predecessor 1:A.\relax }}{23}}
-\newlabel{fig:deliveryorder}{{3.6}{23}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}GUI}{24}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Networking}{25}}
-\newlabel{sec:networking}{{3.4}{25}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces The networking classes used in the application. \texttt  {NetworkClient} contains common code for sending and receiving data as described above.\relax }}{27}}
-\newlabel{fig:nethier}{{3.7}{27}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Client-server Architecture}{27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces The standard client-server architecture with 5 clients\relax }}{27}}
-\newlabel{fig:clsv}{{3.8}{27}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}P2P Architecture}{28}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The standard P2P architecture with 5 clients\relax }}{28}}
-\newlabel{fig:p2p}{{3.9}{28}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces The protocol for peers connecting in the P2P architecture. After exchanging peer identifiers, they synchronize their operations.\relax }}{29}}
-\newlabel{fig:protocol}{{3.10}{29}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}Encryption}{29}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.6}Tor}{30}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Client Authorization}{30}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Evaluation}{31}}
+\citation{undoatanytime}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}LSEQ - \texttt  {LSEQOrderedList}}{22}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Undo/Redo}{22}}
+\newlabel{sec:undo}{{3.2.4}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces How operations are undone and redone at replica with id $rid$\relax }}{23}}
+\newlabel{fig:undostorage}{{3.3}{23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces How OpUndo and OpRedo fit into the operation hierarchy\relax }}{23}}
+\newlabel{fig:undoops}{{3.4}{23}}
+\citation{logootundo}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces How \textsc  {inverse} inverts operations\relax }}{24}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Pseudocode for the cemetary operations and the amended list operations to support undo/redo (\textsc  {AddRight} is now just \textsc  {Add})\relax }}{25}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Application Library}{26}}
+\newlabel{sec:helper}{{3.3}{26}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces The layout of the application; arrows indicate the flow of operations. The numbers indicate the order in which \texttt  {CRDTApp} does these actions\relax }}{26}}
+\newlabel{fig:app}{{3.5}{26}}
+\citation{lamportshappensbefore}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces An example sending of operations with $opID$s 1:A, 2:A and 2:B. The latter arrives at C before its causal predecessor 1:A.\relax }}{28}}
+\newlabel{fig:deliveryorder}{{3.6}{28}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}GUI Application}{29}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Networking}{30}}
+\newlabel{sec:networking}{{3.4}{30}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces The networking classes used in the application. \texttt  {NetworkClient} contains common code for sending and receiving data as described above.\relax }}{31}}
+\newlabel{fig:nethier}{{3.7}{31}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Client-server Architecture}{31}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces The standard client-server architecture with 5 clients\relax }}{31}}
+\newlabel{fig:clsv}{{3.8}{31}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The protocol for clients connecting to the server.\relax }}{32}}
+\newlabel{fig:protocolsv}{{3.9}{32}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}P2P Architecture}{33}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces The standard P2P architecture with 5 clients\relax }}{33}}
+\newlabel{fig:p2p}{{3.10}{33}}
+\citation{ccm}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Encryption}{34}}
+\citation{torrendspec}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces The protocol for peers connecting in the P2P architecture. After exchanging identifiers, they synchronize their operations.\relax }}{35}}
+\newlabel{fig:protocol}{{3.11}{35}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}Tor}{35}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6.1}Client Authentication}{36}}
+\newlabel{sec:auth}{{3.6.1}{36}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Evaluation}{37}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:evaluation}{{4}{31}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Success criteria}{31}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Core Library}{31}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Unit tests}{31}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}CRDT Operation Latency}{32}}
-\newlabel{fig:add_ll}{{4.1a}{34}}
-\newlabel{sub@fig:add_ll}{{a}{34}}
-\newlabel{fig:add_lseq}{{4.1b}{34}}
-\newlabel{sub@fig:add_lseq}{{b}{34}}
-\newlabel{fig:add_arr}{{4.1c}{34}}
-\newlabel{sub@fig:add_arr}{{c}{34}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces AddRightLocal latencies plotted against the length of the document\relax }}{34}}
-\newlabel{fig:add_latencies}{{4.1}{34}}
-\newlabel{fig:del_ll}{{4.2a}{35}}
-\newlabel{sub@fig:del_ll}{{a}{35}}
-\newlabel{fig:del_lseq}{{4.2b}{35}}
-\newlabel{sub@fig:del_lseq}{{b}{35}}
-\newlabel{fig:del_arr}{{4.2c}{35}}
-\newlabel{sub@fig:del_arr}{{c}{35}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces DeleteLocal latencies plotted against the length of the document\relax }}{35}}
-\newlabel{fig:del_latencies}{{4.2}{35}}
-\newlabel{fig:ll_log}{{\caption@xref {fig:ll_log}{ on input line 109}}{36}}
-\newlabel{sub@fig:ll_log}{{}{36}}
-\newlabel{fig:lseq_log}{{4.3b}{36}}
-\newlabel{sub@fig:lseq_log}{{b}{36}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Latency for 50,000 AddRightLocal operations on logarithmic scales\relax }}{36}}
-\newlabel{fig:logs}{{4.3}{36}}
+\newlabel{chap:evaluation}{{4}{37}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Success criteria}{37}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Core Library}{37}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Unit tests}{37}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}CRDT Operation Latency}{38}}
+\newlabel{sec:oplat}{{4.2.2}{38}}
+\newlabel{fig:add_ll}{{4.1a}{40}}
+\newlabel{sub@fig:add_ll}{{a}{40}}
+\newlabel{fig:add_lseq}{{4.1b}{40}}
+\newlabel{sub@fig:add_lseq}{{b}{40}}
+\newlabel{fig:add_arr}{{4.1c}{40}}
+\newlabel{sub@fig:add_arr}{{c}{40}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces AddRightLocal latencies plotted against the length of the document. Note the difference in scales.\relax }}{40}}
+\newlabel{fig:add_latencies}{{4.1}{40}}
+\newlabel{fig:del_ll}{{4.2a}{41}}
+\newlabel{sub@fig:del_ll}{{a}{41}}
+\newlabel{fig:del_lseq}{{4.2b}{41}}
+\newlabel{sub@fig:del_lseq}{{b}{41}}
+\newlabel{fig:del_arr}{{4.2c}{41}}
+\newlabel{sub@fig:del_arr}{{c}{41}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces DeleteLocal latencies plotted against the length of the document. Again note the difference in scales.\relax }}{41}}
+\newlabel{fig:del_latencies}{{4.2}{41}}
+\newlabel{fig:ll_log}{{\caption@xref {fig:ll_log}{ on input line 112}}{42}}
+\newlabel{sub@fig:ll_log}{{}{42}}
+\newlabel{fig:lseq_log}{{4.3b}{42}}
+\newlabel{sub@fig:lseq_log}{{b}{42}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Latency for 50,000 AddRightLocal operations on logarithmic scales\relax }}{42}}
+\newlabel{fig:logs}{{4.3}{42}}
 \citation{lseq}
 \citation{logootundo}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Memory usage}{37}}
-\newlabel{fig:sehna}{{4.4a}{38}}
-\newlabel{sub@fig:sehna}{{a}{38}}
-\newlabel{fig:oxbridge}{{4.4b}{38}}
-\newlabel{sub@fig:oxbridge}{{b}{38}}
-\newlabel{fig:wiki_admin}{{4.4c}{38}}
-\newlabel{sub@fig:wiki_admin}{{c}{38}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Memory usage of my implementations of RGA (\texttt  {LLOrderedList}) and LSEQ when simulating editing on Wikipedia revision history.\relax }}{38}}
-\newlabel{fig:wiki_edits}{{4.4}{38}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Undo correctness (proof)}{39}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Networking}{40}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Network Latency (show latency profiles of different Tor circuit setups)}{40}}
-\newlabel{fig:tor1}{{4.5a}{41}}
-\newlabel{sub@fig:tor1}{{a}{41}}
-\newlabel{fig:tor2}{{4.5b}{41}}
-\newlabel{sub@fig:tor2}{{b}{41}}
-\newlabel{fig:tor3}{{4.5c}{41}}
-\newlabel{sub@fig:tor3}{{c}{41}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Locations of Tor relays used in a Hidden Service circuit and the latency profiles for sending 100 operations through them\relax }}{41}}
-\newlabel{fig:tortime}{{4.5}{41}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Security}{42}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Reliability (tbd)}{42}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}Network Architecture}{43}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.5}TODO REMOVE}{43}}
-\bibstyle{ieeetr}
-\bibdata{bibliography}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Conclusions}{44}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Memory usage}{43}}
+\newlabel{fig:sehna}{{4.4a}{44}}
+\newlabel{sub@fig:sehna}{{a}{44}}
+\newlabel{fig:oxbridge}{{4.4b}{44}}
+\newlabel{sub@fig:oxbridge}{{b}{44}}
+\newlabel{fig:wiki_admin}{{4.4c}{44}}
+\newlabel{sub@fig:wiki_admin}{{c}{44}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Memory usage of my implementations of RGA (\texttt  {LLOrderedList}) and LSEQ when simulating editing on Wikipedia revision history.\relax }}{44}}
+\newlabel{fig:wiki_edits}{{4.4}{44}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Undo correctness}{45}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Networking}{45}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Network Latency (show latency profiles of different Tor circuit setups)}{45}}
+\newlabel{fig:tor1}{{4.5a}{46}}
+\newlabel{sub@fig:tor1}{{a}{46}}
+\newlabel{fig:tor2}{{4.5b}{46}}
+\newlabel{sub@fig:tor2}{{b}{46}}
+\newlabel{fig:tor3}{{4.5c}{46}}
+\newlabel{sub@fig:tor3}{{c}{46}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Locations of Tor relays used in a Hidden Service circuit and the latency profiles for sending 100 operations through them\relax }}{46}}
+\newlabel{fig:tortime}{{4.5}{46}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Reliability}{47}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Network Architecture}{47}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}Security}{48}}
+\citation{logootundo}
+\citation{stringed}
+\citation{spray}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Conclusions}{49}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:conclusions}{{5}{44}}
+\newlabel{chap:conclusions}{{5}{49}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces RGA\relax }}{52}}
+\bibstyle{ieeetr}
+\bibdata{bibliography}
 \bibcite{lamportshappensbefore}{1}
-\bibcite{CAP}{2}
-\bibcite{kleppmann}{3}
-\bibcite{logoot}{4}
-\bibcite{shapstudy}{5}
-\bibcite{lseq}{6}
-\bibcite{hlseq}{7}
-\bibcite{logootundo}{8}
+\bibcite{crdt}{2}
+\bibcite{shapstudy}{3}
+\bibcite{treedoc}{4}
+\bibcite{crate}{5}
+\bibcite{rga}{6}
+\bibcite{logoot}{7}
+\bibcite{fiduswriter}{8}
+\bibcite{baconOS}{9}
+\bibcite{CAP}{10}
+\bibcite{brewer}{11}
+\bibcite{kleppmann}{12}
+\bibcite{deltacrdts}{13}
+\bibcite{lseq}{14}
+\bibcite{torpaper}{15}
+\bibcite{torrendspec}{16}
+\bibcite{hlseq}{17}
+\bibcite{logootundo}{18}
+\bibcite{undoatanytime}{19}
+\bibcite{ccm}{20}
+\bibcite{stringed}{21}
+\bibcite{spray}{22}

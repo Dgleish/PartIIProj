@@ -19,8 +19,8 @@
 \definecolor{MatchingBrackets}{rgb}{0.25,0.5,0.5}
 \definecolor{Keywords}{rgb}{0,0,1}
 \definecolor{self}{rgb}{0,0,0}
-\definecolor{Strings}{rgb}{0,0.63,0}
-\definecolor{Comments}{rgb}{0,0.63,1}
+\definecolor{Strings}{rgb}{1,0.63,0}
+\definecolor{Comments}{rgb}{0,0.63,0}
 \definecolor{Backquotes}{rgb}{0,0,0}
 \definecolor{Classname}{rgb}{0,0,0}
 \definecolor{FunctionName}{rgb}{0,0,0}
@@ -46,19 +46,19 @@ tabsize=2,
 basicstyle=\ttfamily\small\setstretch{1},
 backgroundcolor=\color{Background},
 % Comments
-commentstyle=\color{Comments}\slshape,
+comment=[l]{\#},
+commentstyle=\color{Comments},
 % Strings
 stringstyle=\color{Strings},
-morecomment=[s][\color{Strings}]{"""}{"""},
-morecomment=[s][\color{Strings}]{'''}{'''},
+morecomment=[s][\color{Comments}]{"""}{"""},
+morecomment=[s][\color{Comments}]{'''}{'''},
 % keywords
-morekeywords={import,from,class,def,for,while,if,is,in,elif,else,not,and,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
+morekeywords={import,from,class,def,for,while,if,is,elif,else,not,or,print,break,continue,return,True,False,None,access,as,,del,except,exec,finally,global,import,lambda,pass,print,raise,try,assert},
 keywordstyle={\color{Keywords}\bfseries},
 % additional keywords
 morekeywords={[2]@invariant,pylab,numpy,np,scipy},
-keywordstyle={[2]\color{Decorators}\slshape},
-emph={self},
-emphstyle={\color{self}\slshape},
+keywordstyle={[2]\color{Strings}\slshape},
+emphstyle={\color{Comments}\slshape},
 breaklines=true,
 %
 }
@@ -74,9 +74,10 @@ breaklines=true,
 \graphicspath{ {img/} }
 \usepackage{float}
 
+\usepackage{url}
+
 \usepackage{subcaption}
 \usepackage{wrapfig}
-
 
 \usepackage{parskip}
 % paragraph indentation and separation
@@ -86,7 +87,10 @@ breaklines=true,
 \usepackage{tikz}
 \usetikzlibrary{shapes}
 \usetikzlibrary{decorations.markings}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{backgrounds}
 \usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
 \usepackage{pgf-umlsd}
 \tikzset{
 queue/.pic = {

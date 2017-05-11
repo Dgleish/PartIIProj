@@ -41,6 +41,14 @@ def test_mixture2(list_crdt):
     assert res == 'cde'
 
 
+def test_mixture3(list_crdt):
+    assert isinstance(list_crdt, ListCRDT)
+    list_crdt.olist.insert(None, ('a', ClockID('A', 1)))
+    list_crdt.olist.insert(ClockID('A', 1), ('e', ClockID('A', 2)))
+    res, cursor = list_crdt.pretty_print()
+    assert res == 'ae'
+
+
 def test_remote_insert1(list_crdt):
     assert isinstance(list_crdt, ListCRDT)
     other_list_crdt = ListCRDT('C', LLOrderedList('C'))

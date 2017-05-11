@@ -107,13 +107,13 @@ def detail_remove_olist_time(iterations):
     aggr3 = [[min(sample[i][j] for sample in results3) for i in range(len(results3[0]))] for j in range(4)]
 
     stacked([aggr], ['LLOrderedList'],
-            ['insertion', 'store_op', 'network_send', 'recovery'],
+            ['deletion', 'store_op', 'network_send', 'recovery'],
             'delete_local LL', 'Latency of DeleteLocal for LLOrderedList')
     stacked([aggr2], ['LSEQOrderedList'],
-            ['insertion', 'store_op', 'network_send', 'recovery'],
+            ['deletion', 'store_op', 'network_send', 'recovery'],
             'delete_local LSEQ', 'Latency of DeleteLocal for LSEQOrderedList')
     stacked([aggr3], ['ArrOrderedList'],
-            ['insertion', 'store_op', 'network_send', 'recovery'],
+            ['deletion', 'store_op', 'network_send', 'recovery'],
             'delete_local Arr', 'Latency of DeleteLocal for ArrOrderedList')
 
 
@@ -157,7 +157,6 @@ def stacked(results, titles, labels, filename, title):
 
         axes['xaxis{}'.format(i + 1)] = dict(
             title='Document length',
-            type='log'
         )
         axes['yaxis{}'.format(i + 1)] = dict(
             title='Time taken (s)'
@@ -225,7 +224,7 @@ def plotly_stacked(aggr_results, labels, title, filename):
 
 
 if __name__ == '__main__':
-    # detail_remove_olist_time(15)
-    detail_add_olist_time(15)
+    detail_remove_olist_time(15)
+    # detail_add_olist_time(15)
     # stacked([[[0,1,2],[0,1,2]],[[0,4,5],[0,4,5]]],['a','b'],['1','2'],'test','blah')
     # subplot_test()

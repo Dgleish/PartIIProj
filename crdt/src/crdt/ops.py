@@ -48,7 +48,7 @@ class OpRedo(LocalOp):
         return 'Redo {}'.format(self.op)
 
 
-class OpAddRightLocal(Op):
+class OpAddRightLocal(LocalOp):
     def __init__(self, atom):
         self.atom = atom
 
@@ -90,7 +90,7 @@ class OpAddRightRemote(RemoteOp):
         return self.__str__()
 
 
-class OpDeleteLocal(Op):
+class OpDeleteLocal(LocalOp):
     def __init__(self):
         pass
 
@@ -123,7 +123,7 @@ class CRDTOpDeleteRemote(RemoteOp):
         self._op_id = state['op_id']
 
     def __str__(self):
-        return '(DeleteRemote {} {})'.format(self.vertex_atom, self.vertex_id, self._op_id)
+        return '(DeleteRemote {} {} {})'.format(self.vertex_atom, self.vertex_id, self._op_id)
 
     def __repr__(self):
         return self.__str__()

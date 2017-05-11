@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.23)  4 APR 2017 22:50
+This is XeTeX, Version 3.14159265-2.6-0.99992 (TeX Live 2015/Debian) (preloaded format=xelatex 2017.3.23)  6 MAY 2017 16:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -269,6 +269,10 @@ Package graphics Info: Driver file: xetex.def on input line 95.
 )
 \Gin@req@height=\dimen125
 \Gin@req@width=\dimen126
+)
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip11
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 (/usr/share/texlive/texmf-dist/tex/latex/caption/subcaption.sty
 Package: subcaption 2016/02/20 v1.1-142 Sub-captions (AR)
@@ -662,6 +666,16 @@ e.tex
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrary
 decorations.markings.code.tex))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibrarydecorations.pathmorphing.code.tex
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/decorations/pgflibrary
+decorations.pathmorphing.code.tex))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibrarybackgrounds.code.tex
+File: tikzlibrarybackgrounds.code.tex 2013/07/18 v3.0.1a (rcs-revision 1.3)
+\pgf@layerbox@background=\box66
+\pgf@layerboxsaved@background=\box67
+)
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.meta.
 code.tex
 File: pgflibraryarrows.meta.code.tex 2015/05/13 v3.0.1a (rcs-revision 1.13)
@@ -669,7 +683,12 @@ File: pgflibraryarrows.meta.code.tex 2015/05/13 v3.0.1a (rcs-revision 1.13)
 \pgfarrowlength=\dimen190
 \pgfarrowwidth=\dimen191
 \pgfarrowlinewidth=\dimen192
-) (/usr/share/texlive/texmf-dist/tex/latex/pgf-umlsd/pgf-umlsd.sty
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.1a (rcs-revision 1.7)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pgf-umlsd/pgf-umlsd.sty
 Package: pgf-umlsd 2011/07/27 v0.6 Some LaTeX macros for UML Sequence Diagrams.
 
 
@@ -757,17 +776,11 @@ Package caption Info: wrapfig package is loaded.
 Package caption Info: End \AtBeginDocument code.
 ABD: EveryShipout initializing macros
 Chapter 1.
-
-LaTeX Warning: Citation `googledrive' on page 1 undefined on input line 6.
-
-
-LaTeX Warning: Citation `googletos' on page 1 undefined on input line 6.
-
-LaTeX Font Info:    Try loading font information for U+msa on input line 11.
+LaTeX Font Info:    Try loading font information for U+msa on input line 6.
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 11.
+LaTeX Font Info:    Try loading font information for U+msb on input line 6.
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -776,25 +789,43 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Warning: Citation `lamportshappensbefore' on page 1 undefined on input li
 ne 11.
 
-
-LaTeX Warning: Citation `deeppacketinspection' on page 1 undefined on input lin
-e 18.
-
 [1
 
 
-] [2] (./introduction.aux)
+]
+
+LaTeX Warning: Citation `crdt' on page 2 undefined on input line 20.
+
+
+LaTeX Warning: Citation `shapstudy' on page 2 undefined on input line 20.
+
+
+LaTeX Warning: Citation `treedoc' on page 2 undefined on input line 20.
+
+
+LaTeX Warning: Citation `crate' on page 2 undefined on input line 20.
+
+
+LaTeX Warning: Citation `rga' on page 2 undefined on input line 20.
+
+
+LaTeX Warning: Citation `logoot' on page 2 undefined on input line 20.
+
+
+LaTeX Warning: Citation `fiduswriter' on page 2 undefined on input line 20.
+
+[2] (./introduction.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 18734 strings out of 493638
- 388983 string characters out of 6146796
- 466228 words of memory out of 5000000
- 21771 multiletter control sequences out of 15000+600000
- 9545 words of font info for 36 fonts, out of 8000000 for 9000
+ 19012 strings out of 493638
+ 396703 string characters out of 6146796
+ 470892 words of memory out of 5000000
+ 22031 multiletter control sequences out of 15000+600000
+ 11244 words of font info for 44 fonts, out of 8000000 for 9000
  1328 hyphenation exceptions out of 8191
- 71i,5n,84p,1011b,219s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 71i,8n,84p,1047b,219s stack positions out of 5000i,500n,10000p,200000b,80000s
 
 Output written on introduction.pdf (2 pages).

@@ -1,3 +1,4 @@
+import logging
 from random import randint, seed, random
 from typing import Any
 
@@ -37,6 +38,22 @@ class LSEQOrderedList(BaseOrderedList):
         self.ids = SortedList([head_id, end_id])
 
         self.alloc_strategy = {}
+
+        self.cemetary = {}
+
+    def cemetary_get(self, id: PathId) -> int:
+        if id in self.cemetary:
+            return self.cemetary[id]
+        else:
+            return 0
+
+    def cemetary_set(self, id: PathId, degree: int):
+        assert degree <= 1
+
+        if degree == 0 and id in self.cemetary:
+            del self.cemetary[id]
+        else:
+            self.cemetary[id] = degree
 
     def start_of_list_check(self, id: PathId):
         return id.num == 1
@@ -122,27 +139,35 @@ class LSEQOrderedList(BaseOrderedList):
     def insert_remote(self, left_id, new_vertex):
         a, vertex_id = new_vertex
 
-        # we've inserted this before
-        if vertex_id in self.nodes:
-            # then we want the node before this one for the left_id
-            return self.predecessor(new_vertex.id), new_vertex
+        degree = self.cemetary_get(vertex_id) + 1
+        logging.debug('degree is {}'.format(degree))
 
-        # lookup node (or greatest one smaller than it whether it exists or not)
-        left_node = self._get_node(vertex_id)
+        if degree != 1:
+            self.cemetary_set(vertex_id, degree)
+            # we've inserted this before
+            # so we want the node before this one for the left_id (the vertex this one depends on)
+            if vertex_id in self.nodes:
+                return self.predecessor(vertex_id), new_vertex
+            else:
+                return vertex_id, new_vertex
 
-        # get next node
-        right_node = left_node.next_node
-        # insert new node with this id
-        new_id = vertex_id
-        l_id = left_node.id
-        r_id = right_node.id
-        # gives a total ordering so we insert in the same place as all others
+        else:
+            # lookup node (or greatest one smaller than it whether it exists or not)
+            left_node = self._get_node(vertex_id)
 
-        while r_id != l_id and new_id > r_id:
-            l_id, r_id = r_id, self.successor(r_id)
-        left_node = self._lookup(l_id)
-        right_node = self._lookup(r_id)
-        return self._insert(left_node.id, a, new_id, left_node, right_node)
+            # get next node
+            right_node = left_node.next_node
+            # insert new node with this id
+            new_id = vertex_id
+            l_id = left_node.id
+            r_id = right_node.id
+
+            # gives a total ordering so we insert in the same place as all others
+            while r_id != l_id and new_id > r_id:
+                l_id, r_id = r_id, self.successor(r_id)
+            left_node = self._lookup(l_id)
+            right_node = self._lookup(r_id)
+            return self._insert(left_node.id, a, new_id, left_node, right_node)
 
     def _remove_node(self, vertex_id):
         del self.nodes[vertex_id]
@@ -159,8 +184,13 @@ class LSEQOrderedList(BaseOrderedList):
             succ = node.next_node
             succ.prev_node = prev
             self._remove_node(vertex_id)
+
+            self.cemetary_set(vertex_id, 0)
             return (node.atom, vertex_id), prev.id
+
         except VertexNotFound as e:
+            logging.debug('vertex not present, adding to cemetary')
+            self.cemetary_set(vertex_id, self.cemetary_get(vertex_id) - 1)
             return None, vertex_id
 
     def get_repr(self, cursor):

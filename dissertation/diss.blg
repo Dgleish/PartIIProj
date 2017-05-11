@@ -3,47 +3,49 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: diss.aux
 The style file: ieeetr.bst
 Database file #1: bibliography.bib
-Warning--empty publisher in id
-Warning--empty year in id
-You've used 1 entry,
+Warning--can't use both author and editor fields in crdt
+Warning--empty institution in shapstudy
+Warning--empty booktitle in baconOS
+Warning--can't use both author and editor fields in stringed
+You've used 22 entries,
             1876 wiz_defined-function locations,
-            480 strings with 3476 characters,
-and the built_in function-call counts, 160 in all, are:
-= -- 10
-> -- 4
+            616 strings with 7563 characters,
+and the built_in function-call counts, 6073 in all, are:
+= -- 609
+> -- 205
 < -- 0
-+ -- 2
-- -- 1
-* -- 11
-:= -- 29
-add.period$ -- 1
-call.type$ -- 1
-change.case$ -- 0
++ -- 78
+- -- 56
+* -- 429
+:= -- 825
+add.period$ -- 25
+call.type$ -- 22
+change.case$ -- 21
 chr.to.int$ -- 0
-cite$ -- 3
-duplicate$ -- 9
-empty$ -- 20
-format.name$ -- 1
-if$ -- 34
+cite$ -- 26
+duplicate$ -- 316
+empty$ -- 601
+format.name$ -- 56
+if$ -- 1502
 int.to.chr$ -- 0
-int.to.str$ -- 1
-missing$ -- 2
-newline$ -- 6
-num.names$ -- 1
-pop$ -- 8
+int.to.str$ -- 22
+missing$ -- 19
+newline$ -- 72
+num.names$ -- 20
+pop$ -- 84
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 1
+skip$ -- 223
 stack$ -- 0
-substring$ -- 0
-swap$ -- 1
+substring$ -- 428
+swap$ -- 131
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 2
-while$ -- 1
-width$ -- 2
-write$ -- 8
-(There were 2 warnings)
+warning$ -- 4
+while$ -- 60
+width$ -- 24
+write$ -- 214
+(There were 4 warnings)

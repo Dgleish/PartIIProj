@@ -55,17 +55,24 @@ class ListCRDT(object):
         if isinstance(op, OpAddRightRemote):
 
             self.clock.increment()
-            vertex_deleted, self.cursor = self.olist.delete(op.vertex_to_add[1])
+
+            vertex_deleted, new_cursor = self.olist.delete(op.vertex_to_add[1])
+            if vertex_deleted is not None:
+                self.cursor = new_cursor
+
             return CRDTOpDeleteRemote(op.vertex_to_add, copy(self.clock)), True
 
         elif isinstance(op, CRDTOpDeleteRemote):
             self.clock.increment()
-            op.vertex_id.clock.update(self.clock)
+            # op.vertex_id.clock.update(self.clock)
             curr_clock = copy(self.clock)
 
-            # ONLY WORKS FOR POSITIONAL IDENTIFIERS
+            # ONLY WORKS FOR PATHIDs
             left_id, vertex_added = self.olist.insert_remote(None, (op.vertex_atom, op.vertex_id))
-            self.cursor = vertex_added[1]
+            # there is equality when insert was called but nothing was added (due to concurrent deletions)
+            # in that case the cursor stays where it is
+            if left_id != vertex_added[1]:
+                self.cursor = vertex_added[1]
 
             return OpAddRightRemote(left_id, vertex_added, curr_clock), True
         else:

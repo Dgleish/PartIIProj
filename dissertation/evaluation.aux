@@ -7,6 +7,7 @@
 \@writefile{toc}{\contentsline {section}{\numberline {1.2}Core Library}{1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2.1}Unit tests}{1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2.2}CRDT Operation Latency}{2}}
+\newlabel{sec:oplat}{{1.2.2}{2}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:add_ll}{{1.1a}{4}}
 \newlabel{sub@fig:add_ll}{{a}{4}}
@@ -14,7 +15,7 @@
 \newlabel{sub@fig:add_lseq}{{b}{4}}
 \newlabel{fig:add_arr}{{1.1c}{4}}
 \newlabel{sub@fig:add_arr}{{c}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces AddRightLocal latencies plotted against the length of the document\relax }}{4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces AddRightLocal latencies plotted against the length of the document. Note the difference in scales.\relax }}{4}}
 \newlabel{fig:add_latencies}{{1.1}{4}}
 \newlabel{fig:del_ll}{{1.2a}{5}}
 \newlabel{sub@fig:del_ll}{{a}{5}}
@@ -22,12 +23,16 @@
 \newlabel{sub@fig:del_lseq}{{b}{5}}
 \newlabel{fig:del_arr}{{1.2c}{5}}
 \newlabel{sub@fig:del_arr}{{c}{5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces DeleteLocal latencies plotted against the length of the document\relax }}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces DeleteLocal latencies plotted against the length of the document. Again note the difference in scales.\relax }}{5}}
 \newlabel{fig:del_latencies}{{1.2}{5}}
+\newlabel{fig:ll_log}{{\caption@xref {fig:ll_log}{ on input line 112}}{6}}
+\newlabel{sub@fig:ll_log}{{}{6}}
+\newlabel{fig:lseq_log}{{1.3b}{6}}
+\newlabel{sub@fig:lseq_log}{{b}{6}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces Latency for 50,000 AddRightLocal operations on logarithmic scales\relax }}{6}}
 \newlabel{fig:logs}{{1.3}{6}}
-\citation{wiki_edits}
-\citation{wikilongpages}
+\citation{lseq}
+\citation{logootundo}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2.3}Memory usage}{7}}
 \newlabel{fig:sehna}{{1.4a}{8}}
 \newlabel{sub@fig:sehna}{{a}{8}}
@@ -37,10 +42,17 @@
 \newlabel{sub@fig:wiki_admin}{{c}{8}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1.4}{\ignorespaces Memory usage of my implementations of RGA (\texttt  {LLOrderedList}) and LSEQ when simulating editing on Wikipedia revision history.\relax }}{8}}
 \newlabel{fig:wiki_edits}{{1.4}{8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}Undo correctness (proof)}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.3}Networking}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Network Latency (show latency profiles of different Tor circuit setups)}{10}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Security}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}Reliability (tbd)}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.4}Network Architecture}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.5}TODO REMOVE}{12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2.4}Undo correctness}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Networking}{9}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.1}Network Latency (show latency profiles of different Tor circuit setups)}{9}}
+\newlabel{fig:tor1}{{1.5a}{10}}
+\newlabel{sub@fig:tor1}{{a}{10}}
+\newlabel{fig:tor2}{{1.5b}{10}}
+\newlabel{sub@fig:tor2}{{b}{10}}
+\newlabel{fig:tor3}{{1.5c}{10}}
+\newlabel{sub@fig:tor3}{{c}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.5}{\ignorespaces Locations of Tor relays used in a Hidden Service circuit and the latency profiles for sending 100 operations through them\relax }}{10}}
+\newlabel{fig:tortime}{{1.5}{10}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.2}Reliability}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.3}Network Architecture}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3.4}Security}{12}}
