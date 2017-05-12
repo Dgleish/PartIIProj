@@ -183,68 +183,71 @@ class CRDTApp(object):
 
     def consume_op_queue(self):
         """
-        Continually take operations from the central queue and do them
+        Continually take operations from the op queue and perform them
+        1. Retrieve the operation
+        2. Perform it
+        3. Store it in the op store
+        4. Update the UI
+        5. Send to all connected replicas
+        6. Recovery - check if any out of order ops can now be done
         """
-        ops_done = 0
         while True:
-            # get item from the queue
+            # 1. get item from the queue
             op = self.op_queue.pop()
+            # Does condition sync. with connect().
+            # Stops operations from being sent to
+            # some but not all connected replicas
             self.can_consume_sem.acquire()
 
+            # if undo/redo operation, fill with the op to invert
             if isinstance(op, OpUndo):
                 op_to_undo = self.op_store.undo(self.puid)
-                # if there was nothing to undo or redo, just ignore and move on
+                # if there was nothing to undo or redo, move on
                 if op_to_undo is None:
                     self.can_consume_sem.release()
                     continue
                 op.set_op(op_to_undo)
             elif isinstance(op, OpRedo):
                 op_to_undo = self.op_store.redo(self.puid)
-                # if there was nothing to undo or redo, just ignore and move on
                 if op_to_undo is None:
                     self.can_consume_sem.release()
                     continue
                 op.set_op(op_to_undo)
             elif isinstance(op, LocalOp):
+                # Clear the undo stack to stop history branching
                 self.op_store.clear_undo()
 
-            logging.debug('about to do {}'.format(op))
+            # 2. do the operation on the local CRDT
             try:
-                # do the operation on the local CRDT
                 op_to_store, should_send = self.crdt.perform_op(op)
 
+                # was NOP (eg delete in empty doc)
                 if op_to_store is None:
                     self.can_consume_sem.release()
                     continue
 
                 assert isinstance(op_to_store, RemoteOp)
             except VertexNotFound as e:
-                logging.warning('{} Failed to do op {}, {}'.format(self.puid, op, e))
-                # add op indexed by the (missing) operation it was referencing
+                # hold back op indexed by the (missing) operation
                 self.held_back_ops.add_op(op.vertex_id, op)
                 self.can_consume_sem.release()
                 continue
 
-            # Store operation and add to the undo stack if it was an undo
+            # 3. Store operation.
+            # If op is an undo, put it on the stack instead
             self.op_store.add_op(op_to_store.op_id.puid, op_to_store, isinstance(op, OpUndo))
-            logging.debug(
-                '{} did and stored op {} giving state {}'.format(self.puid, op_to_store, self.crdt.detail_print()))
 
-            # Update UI
-            # LENGTH MEASUREMENT
+            # 4. Update UI
             self.local_client.update(self.crdt.pretty_print())
-            # ops_done += 1
-            # if ops_done >= 100:
-            #     self.can_consume_sem.release()
-            #     return
 
-            # if we've got something to send to others, send to others
+            # 5. Send to others if it was a LocalOp
             if should_send:
                 self.network_client.send_op(op_to_store)
             else:
                 # increment corresponding component of vector clock
                 self.seen_ops_vc.update(op_to_store)
 
+            # 6. Recover
             self.recover(op_to_store)
 
             self.can_consume_sem.release()

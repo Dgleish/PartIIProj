@@ -76,36 +76,37 @@ class CRDTP2PClient(NetworkClient):
 
     def do_p2p_protocol(self, sock, peer_ip, encrypt):
         """
-        Generate key and synchronise operations with the peer
+        (Generate key) and synchronise operations with the new peer
         """
         cipher = None
 
         try:
             if encrypt:
-                logging.debug('Doing DH with {}'.format(peer_ip))
+                # The application's encryption flag is set
+                # Returns object with encrypt()/decrypt() methods
                 cipher = self.do_DH(sock)
-                logging.debug('cipher ready for {}'.format(peer_ip))
 
             # synchronise operations
-            logging.debug('requesting sync ops with {}'.format(peer_ip))
+            # Send your vector clock to them
             self.sync_ops_req(sock, cipher)
-            logging.debug('requested sync ops with {}'.format(peer_ip))
+            # Receive their vector clock
+            # Work out set difference of yours - theirs
+            # Send those operations
             self.sync_ops(sock, cipher)
-            logging.debug('synced ops with {}'.format(peer_ip))
 
             # Note that we're connected to this peer
+            # And no longer in the process of connecting
             self.connected_peers.add_peer(peer_ip, sock, cipher)
             self.connecting_peers.remove_peer(peer_ip)
 
         except socket.error as e:
+            # Communication failure, so stop trying and connect to the next peer
             self.connecting_peers.remove_peer(peer_ip)
-            logging.error('failed to do protocol with {} {}'.format(peer_ip, e))
             return
 
-            # logging.debug('starting op thread for {}'.format(peer_ip))
-        # start listening for other operations from this peer
-        # LENGTH_MEASUREMENT
-        op_thread = threading.Thread(target=self.listen_for_ops, args=(peer_ip, sock, cipher))
+        # Start listening for operations from this new peer
+        op_thread = threading.Thread(target=self.listen_for_ops,
+                                     args=(peer_ip, sock, cipher))
         op_thread.daemon = True
         op_thread.start()
 

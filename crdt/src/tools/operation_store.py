@@ -53,6 +53,7 @@ class OperationStore(object):
 
     @synchronized
     def clear_undo(self):
+        self.missing_ops += self.undone_ops
         self.undone_ops.clear()
 
     @synchronized

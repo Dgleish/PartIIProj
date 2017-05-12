@@ -27,8 +27,8 @@ class LSEQOrderedList(BaseOrderedList):
         self.boundary = 10
         self.base = 5
 
-        head_id = PathId(None, None, 1)
-        end_id = PathId(None, None, ((1 << self.base) - 1))
+        head_id = PathId('', [(1, '')])
+        end_id = PathId('', [(((1 << self.base) - 1), '')])
         self.head = Node((None, head_id), flag='START')
         end_node = Node((None, end_id), flag='END')
         self.head.next_node = end_node
@@ -56,7 +56,7 @@ class LSEQOrderedList(BaseOrderedList):
             self.cemetary[id] = degree
 
     def start_of_list_check(self, id: PathId):
-        return id.num == 1
+        return id.get_clock(1)[0] == 1
 
     def __len__(self):
         return sum(n.id.get_num_bits() for n in self.nodes.values())
@@ -66,24 +66,64 @@ class LSEQOrderedList(BaseOrderedList):
 
     def alloc(self, left_id: PathId, right_id: PathId, clock: ClockID):
         depth = 0
+        gap_found = False
+        my_puid = clock.puid
         interval = 0
-        # work out how many ids lie between left_id and right_id and at what depth
-        while interval < 1:
-            depth += 1
-            r = right_id.prefix(depth)
-            l = left_id.prefix(depth)
-            interval = (r - l) - 1
-        # choose random number to allocate id in the interval
-        step = min(self.boundary, interval)
-        add_val = randint(1, step)
 
-        # LSEQ strategy
-        if depth not in self.alloc_strategy:
-            self.alloc_strategy[depth] = alloc_hash(depth)
-        if self.alloc_strategy[depth]:
-            vertex_id = PathId(self.puid, clock, left_id.prefix(depth) + add_val, depth)
+        logging.debug('alloc {} {}'.format(left_id, right_id))
+
+        while not gap_found:
+            depth += 1
+            (lt, lpuid) = left_id.get_clock(depth, left_id.puid)
+            (rt, rpuid) = right_id.get_clock(depth, right_id.puid)
+
+            interval = rt - lt - 1
+
+            logging.debug('depth {} interval {}'.format(depth, interval))
+
+            if interval > 0:
+                gap_found = True
+            elif lpuid < my_puid < rpuid:
+                gap_found = True
+            elif interval == 0:
+                while interval <= 0:
+                    depth += 1
+                    lt, _ = left_id.get_clock(depth, left_id.puid)
+                    interval = ((1 << (self.base + depth)) - 1) - lt - 1
+                    logging.debug('depth {} interval {}'.format(depth, interval))
+
+                gap_found = True
+
+        left_clocks = left_id.prefix(depth, left_id.puid)
+
+        logging.debug('left clocks {}'.format(left_clocks))
+        (t, puid) = left_clocks[-1]
+
+        if interval > 0:
+            # choose random number to allocate id in the interval
+            step = min(self.boundary, interval)
+            add_val = randint(1, step)
+
+            # LSEQ strategy
+            if depth not in self.alloc_strategy:
+                self.alloc_strategy[depth] = alloc_hash(depth)
+
+            if self.alloc_strategy[depth]:
+                left_clocks[-1] = (t + add_val, my_puid)
+                logging.debug('left clocks now {}'.format(left_clocks))
+                vertex_id = PathId(self.puid, left_clocks)
+            else:
+                if depth > right_id.get_length():
+                    left_clocks[-1] = ((1 << (self.base + depth)) - 1 - add_val, my_puid)
+                else:
+                    left_clocks[-1] = (right_id.get_clock(depth)[0] - add_val, my_puid)
+                vertex_id = PathId(self.puid, left_clocks)
+            if not left_id < vertex_id < right_id:
+                logging.error('FAIL {} {} {}'.format(left_id, vertex_id, right_id))
+                assert left_id < vertex_id < right_id
         else:
-            vertex_id = PathId(self.puid, clock, right_id.prefix(depth) - add_val, depth)
+            left_clocks[-1] = (t, my_puid)
+            vertex_id = PathId(self.puid, left_clocks)
 
         return vertex_id
 

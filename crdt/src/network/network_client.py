@@ -1,4 +1,3 @@
-import logging
 import pickle
 import socket
 import struct
@@ -79,25 +78,12 @@ class NetworkClient(object):
         :param sock: socket object to receive from
         :param cipher: the crypto object
         """
-
         their_vc = recvall(sock, cipher)
-        # logging.debug('got vector clock {}'.format(their_vc))
         assert isinstance(their_vc, VectorClock)
         # determine which ops to send
         ops_to_send = self.stored_ops.determine_ops_after_vc(their_vc)
-        logging.debug('{} means sync ops sending over {}'.format(their_vc, ops_to_send))
         for op in ops_to_send:
             pack_and_send(op, sock, cipher)
-            # MEASUREMENTS
-            # if self.can_send:
-            #     self.can_send = False
-            #     with open(self.puid + 'send', 'w+') as f:
-            #         for op in ops_to_send:
-            #             sleep(0.1)
-            #             pack_and_send(op, sock, cipher)
-            #             t = perf_counter()
-            #             f.write('{}\n'.format(t))
-            #     logging.debug('sent all ops')
 
 
     def do_DH(self, sock):
